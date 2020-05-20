@@ -15,7 +15,7 @@ export default (theme) => ({
       width: 600,
     },
     [theme.breakpoints.down(634)]: {
-      width: 460,
+      width: 465,
     },
   },
   gradient: {

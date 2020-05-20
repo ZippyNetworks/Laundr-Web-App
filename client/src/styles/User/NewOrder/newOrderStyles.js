@@ -10,7 +10,7 @@ export default (theme) => ({
       width: 600,
     },
     [theme.breakpoints.down(634)]: {
-      width: 400,
+      width: 465,
     },
   },
   root: {
