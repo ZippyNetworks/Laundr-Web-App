@@ -38,7 +38,7 @@ class OrderStatus extends Component {
   }
 
   handleOrderCancel = () => {
-    alert("order canceled");
+    alert("Cancel clicked");
   };
 
   handleDialogClose = () => {

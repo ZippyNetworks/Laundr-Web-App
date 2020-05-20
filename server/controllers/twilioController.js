@@ -28,7 +28,7 @@ const twilioVerify = (req, res) => {
       });
     })
     .catch((error) => {
-      return res.json({ success: false, message: error });
+      return res.json({ success: false, message: error }); //this is an object, todo: return the code property and handle it (probably what we care about)
     });
 };
 
