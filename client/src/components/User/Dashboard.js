@@ -3,15 +3,18 @@ import { Grid, withStyles, Paper, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import baseURL from "../../baseURL";
 import NewOrder from "./NewOrder/NewOrder";
 import OrderStatus from "./OrderStatus/OrderStatus";
-import baseURL from "../../baseURL";
+import AutoRotatingCarousel from "./components/Carousel/AutoRotatingCarousel";
+import Slide from "./components/Carousel/Slide";
 import dashboardStyles from "../../styles/User/dashboardStyles";
 import sectionBorder from "../../images/UserDashboard/sectionBorder.png";
 import sectionBorderWhite from "../../images/UserDashboard/sectionBorderWhite.jpeg";
-
-import AutoRotatingCarousel from "./components/Carousel/AutoRotatingCarousel";
-import Slide from "./components/Carousel/Slide";
+import StudentPlanLogo from "../../images/UserDashboard/StudentPlanLogo.png";
+import LaundrBombsLogo from "../../images/UserDashboard/LaundrBombsLogo.png";
+import InstagramLogo from "../../images/UserDashboard/InstagramLogo.png";
+import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 
 //todo: add loading backdrop
 //todo: implement status 8 feature for order status when order is delivered
@@ -167,45 +170,49 @@ class Dashboard extends Component {
                     open={true}
                     autoplay={true}
                     mobile={false}
+                    interval={6000}
                     style={{ position: "absolute" }}
                   >
                     <Slide
-                      media={
-                        <img
-                          src="http://www.icons101.com/icon_png/size_256/id_79394/youtube.png"
-                          alt="Test 1"
-                        />
-                      }
+                      media={<img src={LaundrBombsLogo} alt="Laundr Bombs" />}
                       mediaBackgroundStyle={{ backgroundColor: "#DC3825" }}
-                      style={{ backgroundColor: "#9F1909" }}
-                      title="This is a very cool feature"
-                      subtitle="Just using this will blow your mind."
+                      style={{ backgroundColor: "#A2261D" }}
+                      title="Try our new Laundr Bombs"
+                      subtitle="Freshen up your laundry with specialized scents!"
                       buttonText="Learn more"
                       buttonLink="https://www.laundr.io/"
                     />
                     <Slide
                       media={
                         <img
-                          src="http://www.icons101.com/icon_png/size_256/id_80975/GoogleInbox.png"
-                          alt="Test 2"
+                          src={StudentPlanLogo}
+                          alt="Student Subscriptions"
                         />
                       }
                       mediaBackgroundStyle={{ backgroundColor: "#2F92EA" }}
                       style={{ backgroundColor: "#0E62AE" }}
-                      title="Ever wanted to be popular?"
-                      subtitle="Well just mix two colors and you are good to go!"
+                      title="Student Subscriptions now available"
+                      subtitle="If you're a student, you can get a discount on a Laundr subscription!"
+                      buttonText="Learn more"
+                      buttonLink="https://www.laundr.io/"
                     />
                     <Slide
-                      media={
-                        <img
-                          src="http://www.icons101.com/icon_png/size_256/id_76704/Google_Settings.png"
-                          alt="Test 3"
-                        />
-                      }
-                      mediaBackgroundStyle={{ backgroundColor: "#32a852" }}
-                      style={{ backgroundColor: "#239439" }}
-                      title="May the force be with you"
-                      subtitle="The Force is a metaphysical and ubiquitous power in the Star Wars fictional universe."
+                      media={<img src={InstagramLogo} alt="Instagram" />}
+                      mediaBackgroundStyle={{ backgroundColor: "#C560D2" }}
+                      style={{ backgroundColor: "#8D2B9A" }}
+                      title="Check us out on Instagram"
+                      subtitle="Visit our Instagram for the latest updates and a chance for free stuff!"
+                      buttonText="Go"
+                      buttonLink="https://www.instagram.com/laundrofficial/"
+                    />
+                    <Slide
+                      media={<img src={SupportLogo} alt="Customer Support" />}
+                      mediaBackgroundStyle={{ backgroundColor: "#817A7A" }}
+                      style={{ backgroundColor: "#695F5F" }}
+                      title="Need help?"
+                      subtitle="Feel free to call our customer support line at (352) 363-5211 or click below to chat with a representative!"
+                      buttonText="Go"
+                      buttonLink="https://www.messenger.com/t/laundrofficial"
                     />
                   </AutoRotatingCarousel>
                 </div>

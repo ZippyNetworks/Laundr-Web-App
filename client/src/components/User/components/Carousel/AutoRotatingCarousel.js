@@ -275,6 +275,7 @@ class AutoRotatingCarousel extends Component {
                       [classes.dotsMobile]: mobile,
                       [classes.dotsMobileLandscape]: landscape,
                     })}
+                    style={{ marginTop: 35 }}
                     onDotClick={this.handleChange}
                   />
                 )}
