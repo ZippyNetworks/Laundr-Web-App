@@ -244,7 +244,7 @@ class Login extends Component {
 
   render() {
     if (this.state.validLogin) {
-      return <Redirect push to="/userDashboard" />;
+      return <Redirect push to="/userDashTest" />;
     }
 
     const classes = this.props.classes;

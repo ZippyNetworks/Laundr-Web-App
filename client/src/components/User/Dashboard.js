@@ -1,12 +1,5 @@
 import React, { Component } from "react";
-import {
-  Grid,
-  Card,
-  CardContent,
-  withStyles,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { Grid, withStyles, Paper, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -78,66 +71,6 @@ class Dashboard extends Component {
       orderComponent: component,
       orderComponentName: componentName,
     });
-  };
-
-  renderCarousel = (option, classes) => {
-    //for testing purposes only
-    if (option) {
-      return (
-        <React.Fragment>
-          <main className={classes.layout}>
-            <div className={classes.root}>
-              <div id="carouselContainer">
-                <AutoRotatingCarousel
-                  label="Get started"
-                  open={true}
-                  autoplay={true}
-                  mobile={false}
-                  style={{ position: "absolute" }}
-                >
-                  <Slide
-                    media={
-                      <img
-                        src="http://www.icons101.com/icon_png/size_256/id_79394/youtube.png"
-                        alt="Test 1"
-                      />
-                    }
-                    mediaBackgroundStyle={{ backgroundColor: "#DC3825" }}
-                    style={{ backgroundColor: "#9F1909" }}
-                    title="This is a very cool feature"
-                    subtitle="Just using this will blow your mind."
-                  />
-                  <Slide
-                    media={
-                      <img
-                        src="http://www.icons101.com/icon_png/size_256/id_80975/GoogleInbox.png"
-                        alt="Test 2"
-                      />
-                    }
-                    mediaBackgroundStyle={{ backgroundColor: "#2F92EA" }}
-                    style={{ backgroundColor: "#0E62AE" }}
-                    title="Ever wanted to be popular?"
-                    subtitle="Well just mix two colors and you are good to go!"
-                  />
-                  <Slide
-                    media={
-                      <img
-                        src="http://www.icons101.com/icon_png/size_256/id_76704/Google_Settings.png"
-                        alt="Test 3"
-                      />
-                    }
-                    mediaBackgroundStyle={{ backgroundColor: "#32a852" }}
-                    style={{ backgroundColor: "#239439" }}
-                    title="May the force be with you"
-                    subtitle="The Force is a metaphysical and ubiquitous power in the Star Wars fictional universe."
-                  />
-                </AutoRotatingCarousel>
-              </div>
-            </div>
-          </main>
-        </React.Fragment>
-      );
-    }
   };
 
   render() {
@@ -226,7 +159,59 @@ class Dashboard extends Component {
               Check these out!
             </Typography>
           </Grid>
-          <Grid item>{this.renderCarousel(true, classes)}</Grid>
+          <Grid item>
+            <main className={classes.layout}>
+              <div className={classes.root}>
+                <div id="carouselContainer">
+                  <AutoRotatingCarousel
+                    open={true}
+                    autoplay={true}
+                    mobile={false}
+                    style={{ position: "absolute" }}
+                  >
+                    <Slide
+                      media={
+                        <img
+                          src="http://www.icons101.com/icon_png/size_256/id_79394/youtube.png"
+                          alt="Test 1"
+                        />
+                      }
+                      mediaBackgroundStyle={{ backgroundColor: "#DC3825" }}
+                      style={{ backgroundColor: "#9F1909" }}
+                      title="This is a very cool feature"
+                      subtitle="Just using this will blow your mind."
+                      buttonText="Learn more"
+                      buttonLink="https://www.laundr.io/"
+                    />
+                    <Slide
+                      media={
+                        <img
+                          src="http://www.icons101.com/icon_png/size_256/id_80975/GoogleInbox.png"
+                          alt="Test 2"
+                        />
+                      }
+                      mediaBackgroundStyle={{ backgroundColor: "#2F92EA" }}
+                      style={{ backgroundColor: "#0E62AE" }}
+                      title="Ever wanted to be popular?"
+                      subtitle="Well just mix two colors and you are good to go!"
+                    />
+                    <Slide
+                      media={
+                        <img
+                          src="http://www.icons101.com/icon_png/size_256/id_76704/Google_Settings.png"
+                          alt="Test 3"
+                        />
+                      }
+                      mediaBackgroundStyle={{ backgroundColor: "#32a852" }}
+                      style={{ backgroundColor: "#239439" }}
+                      title="May the force be with you"
+                      subtitle="The Force is a metaphysical and ubiquitous power in the Star Wars fictional universe."
+                    />
+                  </AutoRotatingCarousel>
+                </div>
+              </div>
+            </main>
+          </Grid>
         </Grid>
         <Grid
           container

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
+import Link from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import blue from "@material-ui/core/colors/blue";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -93,6 +94,8 @@ function Slide(props) {
     title,
     mobile,
     landscape,
+    buttonText,
+    buttonLink,
     ...other
   } = props;
 
@@ -130,8 +133,12 @@ function Slide(props) {
       >
         <Typography className={classes.title}>{title}</Typography>
         <Typography className={classes.subtitle}>{subtitle}</Typography>
-        <Button variant="contained" style={{ marginTop: 5 }}>
-          Test
+        <Button
+          variant="contained"
+          style={{ marginTop: 5 }}
+          onClick={(event) => window.open(buttonLink)}
+        >
+          {buttonText}
         </Button>
       </div>
     </div>
