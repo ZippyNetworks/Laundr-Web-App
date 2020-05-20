@@ -28,6 +28,8 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: fix bottom scrollbar appearing before sm resize?
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile
 //todo: !!!fix insta logo since its not centered on mobile, its probably the image itself
+//todo: !!!visiting the dash on my phone/viewing with mobile viewer - the carousel causes bleeding and lots of other issues
+//-^^same issue with login and register pages, likely due to logo. solution: use vw and vh?
 //todo: post vs put? ehh...
 
 class Dashboard extends Component {
