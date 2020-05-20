@@ -206,7 +206,7 @@ class NewOrder extends Component {
     //time checks, military time format: check if logged in user is gainesville or etc, hardcode gnv for now
     let scheduledTime = moment(this.state.rawTime, "HH:mm:ss"); //note: converting Date() to moment obj
     let lowerBound = moment("10:00:00", "HH:mm:ss");
-    let upperBound = moment("19:00:00", "HH:mm:ss").add(1, "minutes");
+    let upperBound = moment("19:00:00", "HH:mm:ss").add(1, "minutes"); //so accepts 7 PM as a time
 
     console.log("scheduled time raw:" + scheduledTime);
 

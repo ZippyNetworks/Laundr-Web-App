@@ -3,10 +3,9 @@ import {
   withStyles,
   Backdrop,
   CircularProgress,
-  Card,
-  CardHeader,
-  CardContent,
-  Divider,
+  Grid,
+  Paper,
+  Typography,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 import axios from "axios";
@@ -14,6 +13,7 @@ import jwtDecode from "jwt-decode";
 import OrderTable from "./components/OrderTable";
 import baseURL from "../../baseURL";
 import availableDashboardStyles from "../../styles/Driver/availableDashboardStyles";
+import SectionBorder from "../../images/UserDashboard/SectionBorder.png";
 
 //todo: add isDriver to user, also iswasher, etc.
 //todo: conditional redirects
@@ -32,6 +32,10 @@ import availableDashboardStyles from "../../styles/Driver/availableDashboardStyl
 class AvailableDashboard extends Component {
   constructor(props) {
     super(props);
+
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+    this.userFname = data.fname;
 
     this.state = { orders: [], showLoading: false };
   }
@@ -120,27 +124,57 @@ class AvailableDashboard extends Component {
 
     return (
       <React.Fragment>
-        <Card>
-          <CardHeader
-            title="Available Orders"
-            titleTypographyProps={{ variant: "h1", align: "center" }}
+        <Grid
+          container
+          spacing={2}
+          direction="column"
+          justify="center"
+          alignItems="center" /*main page column*/
+          style={{
+            paddingTop: 8,
+            backgroundColor: "#21d0e5",
+          }}
+        >
+          <Grid item>
+            <Paper elevation={3} className={classes.welcomeCard}>
+              <Typography variant="h3" className={classes.welcomeText}>
+                {`Welcome, ${this.userFname}`}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Typography variant="h1" className={classes.componentName}>
+              Available Orders
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          spacing={2}
+          direction="column"
+          justify="center"
+          alignItems="center" /*main page column*/
+        >
+          <img
+            src={SectionBorder}
+            style={{
+              width: "100%",
+              height: "100%",
+              paddingTop: 8,
+              paddingBottom: 15,
+            }}
+            alt="Section border"
           />
-          <Divider />
-          <CardContent>
-            <OrderTable
-              orders={this.state.orders}
-              getOrders={this.getOrders}
-              handlePickupAccept={this.handlePickupAccept}
-              handleDropoffAccept={this.handleDropoffAccept}
-            />
-            <Backdrop
-              className={classes.backdrop}
-              open={this.state.showLoading}
-            >
-              <CircularProgress color="inherit" />
-            </Backdrop>
-          </CardContent>
-        </Card>
+        </Grid>
+        <OrderTable
+          orders={this.state.orders}
+          getOrders={this.getOrders}
+          handlePickupAccept={this.handlePickupAccept}
+          handleDropoffAccept={this.handleDropoffAccept}
+        />
+        <Backdrop className={classes.backdrop} open={this.state.showLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </React.Fragment>
     );
   }

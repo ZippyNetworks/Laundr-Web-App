@@ -9,8 +9,8 @@ import OrderStatus from "./OrderStatus/OrderStatus";
 import AutoRotatingCarousel from "./components/Carousel/AutoRotatingCarousel";
 import Slide from "./components/Carousel/Slide";
 import dashboardStyles from "../../styles/User/dashboardStyles";
-import sectionBorder from "../../images/UserDashboard/sectionBorder.png";
-import sectionBorderWhite from "../../images/UserDashboard/sectionBorderWhite.jpeg";
+import SectionBorder from "../../images/UserDashboard/SectionBorder.png";
+import SectionBorderWhite from "../../images/UserDashboard/SectionBorderWhite.jpeg";
 import StudentPlanLogo from "../../images/UserDashboard/StudentPlanLogo.png";
 import LaundrBombsLogo from "../../images/UserDashboard/LaundrBombsLogo.png";
 import InstagramLogo from "../../images/UserDashboard/InstagramLogo.png";
@@ -120,7 +120,7 @@ class Dashboard extends Component {
           alignItems="center" /*main page column*/
         >
           <img
-            src={sectionBorder}
+            src={SectionBorder}
             style={{ width: "100%", height: "100%", paddingTop: 8 }}
             alt="Section border"
           />
@@ -142,7 +142,7 @@ class Dashboard extends Component {
           alignItems="center" /*main page column*/
         >
           <img
-            src={sectionBorderWhite}
+            src={SectionBorderWhite}
             style={{
               width: "100%",
               height: "100%",
@@ -207,7 +207,7 @@ class Dashboard extends Component {
                       mediaBackgroundStyle={{ backgroundColor: "#C560D2" }}
                       style={{ backgroundColor: "#8D2B9A" }}
                       title="Check us out on Instagram"
-                      subtitle="Visit our Instagram for the latest updates and a chance for free stuff!"
+                      subtitle="Visit our Instagram for the latest updates and chances for free stuff!"
                       buttonText="Go"
                       buttonLink="https://www.instagram.com/laundrofficial/"
                     />
@@ -234,7 +234,7 @@ class Dashboard extends Component {
           alignItems="center" /*main page column*/
         >
           <img
-            src={sectionBorder}
+            src={SectionBorder}
             style={{ width: "100%", height: "100%", paddingTop: 8 }}
             alt="Section border"
           />

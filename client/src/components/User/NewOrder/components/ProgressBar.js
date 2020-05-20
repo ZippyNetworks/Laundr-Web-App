@@ -16,8 +16,6 @@ import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import RateReviewIcon from "@material-ui/icons/RateReview";
 import progressBarStyles from "../../../../styles/User/OrderStatus/components/progressBarStyles";
 
-//todo: use this card format as a basis for all other pages
-
 const ColorlibConnector = withStyles({
   alternativeLabel: {
     top: 22,
