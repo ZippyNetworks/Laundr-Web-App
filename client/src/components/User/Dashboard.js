@@ -26,6 +26,8 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: review carousel resizing
 //todo: refactor carousel to be more organized/reusable (button, images, etc)
 //todo: fix bottom scrollbar appearing before sm resize?
+//todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile
+//todo: !!!fix insta logo since its not centered on mobile, its probably the image itself
 //todo: post vs put? ehh...
 
 class Dashboard extends Component {
@@ -158,7 +160,11 @@ class Dashboard extends Component {
           style={{ backgroundColor: "#21d0e5" }}
         >
           <Grid item>
-            <Typography variant="h1" className={classes.carouselTitle}>
+            <Typography
+              variant="h1"
+              className={classes.carouselTitle}
+              style={{ marginBottom: -25 }}
+            >
               Check these out!
             </Typography>
           </Grid>
@@ -180,7 +186,7 @@ class Dashboard extends Component {
                       title="Try our new Laundr Bombs"
                       subtitle="Freshen up your laundry with specialized scents!"
                       buttonText="Learn more"
-                      buttonLink="https://www.laundr.io/"
+                      buttonLink="https://www.laundr.io/laundr-bombs/"
                     />
                     <Slide
                       media={

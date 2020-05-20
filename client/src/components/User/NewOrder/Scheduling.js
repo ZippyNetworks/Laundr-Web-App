@@ -73,6 +73,7 @@ class Scheduling extends Component {
                   margin="normal"
                   variant="dialog"
                   label="Click to select a time"
+                  multiline
                   onChange={(value) => {
                     this.props.handleTimeChange(value);
                   }}
@@ -98,10 +99,16 @@ class Scheduling extends Component {
                 />
               </MuiPickersUtilsProvider>
             </ThemeProvider>
-
-            <br />
           </Grid>
         </Grid>
+        <Typography variant="h6">Please note:</Typography>
+        <Typography variant="h6">
+          •Operating times are 10 AM to 7 PM, Monday to Friday
+        </Typography>
+        <Typography variant="h6" gutterBottom>
+          •You will be able to schedule a delivery time after your clothes are
+          weighed by the driver
+        </Typography>
       </React.Fragment>
     );
   }
