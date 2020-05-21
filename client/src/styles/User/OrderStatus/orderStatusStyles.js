@@ -8,14 +8,13 @@ export default (theme) => ({
     textAlign: "center",
   },
   layout: {
-    width: "auto",
     marginLeft: "auto",
     marginRight: "auto",
-    [theme.breakpoints.up(635)]: {
+    [theme.breakpoints.up(649)]: {
       width: 600,
     },
-    [theme.breakpoints.down(634)]: {
-      width: 465,
+    [theme.breakpoints.down(650)]: {
+      width: "90vw",
     },
   },
   gradient: {

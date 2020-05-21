@@ -50,7 +50,7 @@ class OrderStatus extends Component {
 
     return (
       <React.Fragment>
-        <main className={classes.layout}>
+        <div className={classes.layout}>
           <div className={classes.root}>
             <Dialog
               disableEnforceFocus
@@ -157,7 +157,7 @@ class OrderStatus extends Component {
               </Grid>
             </CardContent>
           </div>
-        </main>
+        </div>
       </React.Fragment>
     );
   }

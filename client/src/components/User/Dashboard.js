@@ -29,7 +29,9 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile
 //todo: !!!fix insta logo since its not centered on mobile, its probably the image itself
 //todo: !!!visiting the dash on my phone/viewing with mobile viewer - the carousel causes bleeding and lots of other issues
+//todo: stepper has too many steps for mobile compatability
 //-^^same issue with login and register pages, likely due to logo. solution: use vw and vh?
+//todo: fix white line appearing when small mobile
 //todo: post vs put? ehh...
 
 class Dashboard extends Component {
@@ -170,8 +172,8 @@ class Dashboard extends Component {
               Check these out!
             </Typography>
           </Grid>
-          <Grid item>
-            <main className={classes.layout}>
+          {/* <Grid item>
+            <div className={classes.layout}>
               <div className={classes.root}>
                 <div id="carouselContainer">
                   <AutoRotatingCarousel
@@ -225,8 +227,8 @@ class Dashboard extends Component {
                   </AutoRotatingCarousel>
                 </div>
               </div>
-            </main>
-          </Grid>
+            </div>
+          </Grid> */}
         </Grid>
         <Grid
           container

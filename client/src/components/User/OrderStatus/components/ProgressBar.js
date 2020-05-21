@@ -7,6 +7,8 @@ import {
   Step,
   StepLabel,
   StepConnector,
+  Grid,
+  Typography,
 } from "@material-ui/core";
 import clsx from "clsx";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
@@ -140,6 +142,26 @@ class ProgressBar extends Component {
               </Step>
             ))}
           </Stepper>
+        </div>
+        <div className={classes.secondaryStepper}>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item>
+              <ColorlibStepIcon
+                active
+                icon={this.renderStep(this.props.status) + 1}
+              />
+            </Grid>
+            <Grid item>
+              <Typography variant="h4" className={classes.secondaryStepText}>
+                {steps[this.renderStep(this.props.status)]}
+              </Typography>
+            </Grid>
+          </Grid>
         </div>
       </React.Fragment>
     );

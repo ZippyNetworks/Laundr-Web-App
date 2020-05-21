@@ -7,6 +7,8 @@ import {
   Step,
   StepLabel,
   StepConnector,
+  Grid,
+  Typography,
 } from "@material-ui/core";
 import clsx from "clsx";
 import DateRangeIcon from "@material-ui/icons/DateRange";
@@ -124,6 +126,28 @@ class ProgressBar extends Component {
               </Step>
             ))}
           </Stepper>
+        </div>
+        <div
+          className={classes.secondaryStepper}
+          style={{
+            display: this.props.step === steps.length ? "none" : "",
+          }}
+        >
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item>
+              <ColorlibStepIcon active icon={this.props.step + 1} />
+            </Grid>
+            <Grid item>
+              <Typography variant="h4" className={classes.secondaryStepText}>
+                {steps[this.props.step]}
+              </Typography>
+            </Grid>
+          </Grid>
         </div>
       </React.Fragment>
     );

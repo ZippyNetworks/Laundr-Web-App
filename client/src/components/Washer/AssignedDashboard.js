@@ -20,9 +20,9 @@ import SectionBorder from "../../images/UserDashboard/SectionBorder.png";
 //2: weight entered
 //3: order dropped off to washer
 //4: order done by washer
-//6: order accept by driver to be delivered back to user
-//7: order delivered to user
-//8: canceled
+//5: order accept by driver to be delivered back to user
+//6: order delivered to user
+//7: canceled
 
 //only display status 0 and 4, ones able to be "accepted"
 
