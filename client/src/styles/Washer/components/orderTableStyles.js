@@ -1,11 +1,6 @@
 export default (theme) => ({
   root: {},
-  content: {
-    padding: 0,
-  },
-  inner: {
-    minWidth: 1050,
-  },
+  inner: {},
   nameContainer: {
     display: "flex",
     alignItems: "center",
@@ -20,5 +15,16 @@ export default (theme) => ({
     backgroundImage:
       "linear-gradient( 136deg, rgb(102, 255, 255) 0%, rgb(0, 153, 255) 50%, rgb(0, 51, 204) 100%)",
     color: "white",
+  },
+  cardCell: {
+    display: "flex",
+    alignItems: "center",
+    padding: 5,
+  },
+  noPaddingCard: {
+    padding: 0,
+    "&:last-child": {
+      paddingBottom: 0,
+    },
   },
 });
