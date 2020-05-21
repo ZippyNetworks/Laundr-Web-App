@@ -19,18 +19,10 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: add loading backdrop
 //todo: implement status 8 feature for order status when order is delivered
 //todo: test button gradients, normal vs login one
-//todo: refine carousel to expand correctly, edit the actual component itself
-//todo: order status not centering properly on mobile like new order does, maybe because its too big?? definitely - removing delivered fixes it...
 //todo: change time picker in scheduling so no scrollbar on desktop view
-//todo: fix odd pixel line on section section border
-//todo: review carousel resizing
-//todo: refactor carousel to be more organized/reusable (button, images, etc)
-//todo: fix bottom scrollbar appearing before sm resize?
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile
 //todo: !!!fix insta logo since its not centered on mobile, its probably the image itself
-//todo: !!!visiting the dash on my phone/viewing with mobile viewer - the carousel causes bleeding and lots of other issues
-//todo: stepper has too many steps for mobile compatability
-//-^^same issue with login and register pages, likely due to logo. solution: use vw and vh?
+//todo: !!!configure rest of pages for mobile, for login and register use vw vh
 //todo: fix white line appearing when small mobile
 //todo: post vs put? ehh...
 
