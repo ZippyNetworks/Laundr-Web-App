@@ -172,63 +172,58 @@ class Dashboard extends Component {
               Check these out!
             </Typography>
           </Grid>
-          {/* <Grid item>
+          <Grid item>
             <div className={classes.layout}>
-              <div className={classes.root}>
-                <div id="carouselContainer">
-                  <AutoRotatingCarousel
-                    open={true}
-                    autoplay={true}
-                    mobile={false}
-                    interval={6000}
-                    style={{ position: "absolute" }}
-                  >
-                    <Slide
-                      media={<img src={LaundrBombsLogo} alt="Laundr Bombs" />}
-                      mediaBackgroundStyle={{ backgroundColor: "#DC3825" }}
-                      style={{ backgroundColor: "#A2261D" }}
-                      title="Try our new Laundr Bombs"
-                      subtitle="Freshen up your laundry with specialized scents!"
-                      buttonText="Learn more"
-                      buttonLink="https://www.laundr.io/laundr-bombs/"
-                    />
-                    <Slide
-                      media={
-                        <img
-                          src={StudentPlanLogo}
-                          alt="Student Subscriptions"
-                        />
-                      }
-                      mediaBackgroundStyle={{ backgroundColor: "#2F92EA" }}
-                      style={{ backgroundColor: "#0E62AE" }}
-                      title="Student Subscriptions now available"
-                      subtitle="If you're a student, you can get a discount on a Laundr subscription!"
-                      buttonText="Learn more"
-                      buttonLink="https://www.laundr.io/"
-                    />
-                    <Slide
-                      media={<img src={InstagramLogo} alt="Instagram" />}
-                      mediaBackgroundStyle={{ backgroundColor: "#C560D2" }}
-                      style={{ backgroundColor: "#8D2B9A" }}
-                      title="Check us out on Instagram"
-                      subtitle="Visit our Instagram for the latest updates and chances for free stuff!"
-                      buttonText="Go"
-                      buttonLink="https://www.instagram.com/laundrofficial/"
-                    />
-                    <Slide
-                      media={<img src={SupportLogo} alt="Customer Support" />}
-                      mediaBackgroundStyle={{ backgroundColor: "#817A7A" }}
-                      style={{ backgroundColor: "#695F5F" }}
-                      title="Need help?"
-                      subtitle="Feel free to call our customer support line at (352) 363-5211 or click below to chat with a representative!"
-                      buttonText="Go"
-                      buttonLink="https://www.messenger.com/t/laundrofficial"
-                    />
-                  </AutoRotatingCarousel>
-                </div>
+              <div id="carouselContainer">
+                <AutoRotatingCarousel
+                  open={true}
+                  autoplay={true}
+                  mobile={false}
+                  interval={6000}
+                  style={{ position: "absolute" }}
+                >
+                  <Slide
+                    media={<img src={LaundrBombsLogo} alt="Laundr Bombs" />}
+                    mediaBackgroundStyle={{ backgroundColor: "#DC3825" }}
+                    style={{ backgroundColor: "#A2261D" }}
+                    title="Try our new Laundr Bombs"
+                    subtitle="Freshen up your laundry with specialized scents!"
+                    buttonText="Learn more"
+                    buttonLink="https://www.laundr.io/laundr-bombs/"
+                  />
+                  <Slide
+                    media={
+                      <img src={StudentPlanLogo} alt="Student Subscriptions" />
+                    }
+                    mediaBackgroundStyle={{ backgroundColor: "#2F92EA" }}
+                    style={{ backgroundColor: "#0E62AE" }}
+                    title="Student Subscriptions now available"
+                    subtitle="If you're a student, you can get a discount on a Laundr subscription!"
+                    buttonText="Learn more"
+                    buttonLink="https://www.laundr.io/"
+                  />
+                  <Slide
+                    media={<img src={InstagramLogo} alt="Instagram" />}
+                    mediaBackgroundStyle={{ backgroundColor: "#C560D2" }}
+                    style={{ backgroundColor: "#8D2B9A" }}
+                    title="Check us out on Instagram"
+                    subtitle="Visit our Instagram for the latest updates and chances for free stuff!"
+                    buttonText="Go"
+                    buttonLink="https://www.instagram.com/laundrofficial/"
+                  />
+                  <Slide
+                    media={<img src={SupportLogo} alt="Customer Support" />}
+                    mediaBackgroundStyle={{ backgroundColor: "#817A7A" }}
+                    style={{ backgroundColor: "#695F5F" }}
+                    title="Need help?"
+                    subtitle="Feel free to call us at 352-363-5211 or click below to chat with a representative!"
+                    buttonText="Go"
+                    buttonLink="https://www.messenger.com/t/laundrofficial"
+                  />
+                </AutoRotatingCarousel>
               </div>
             </div>
-          </Grid> */}
+          </Grid>
         </Grid>
         <Grid
           container

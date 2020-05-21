@@ -12,12 +12,16 @@ export default (theme) => ({
     textAlign: "center",
   },
   root: {
+    width: "100%",
+    position: "relative",
+  },
+  layout: {
     [theme.breakpoints.down("sm")]: {
-      width: 450,
+      width: "90vw",
       height: 600,
     },
     [theme.breakpoints.up(800)]: {
-      width: 700,
+      width: "90vw",
       height: 600,
     },
     [theme.breakpoints.up(1034)]: {
@@ -28,13 +32,10 @@ export default (theme) => ({
       width: 1200,
       height: 600,
     },
-
-    //height: "100vh",
-    //width: "100vw",
     position: "relative",
-  },
-  layout: {
-    width: "auto",
+    width: "100%",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   carouselTitle: {
     color: "white",
