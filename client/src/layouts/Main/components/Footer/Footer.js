@@ -17,7 +17,7 @@ const Footer = (props) => {
 
   return (
     <div {...rest} className={clsx(classes.root, className)}>
-      <Typography variant="body2" color="textSecondary" align="center">
+      {/* <Typography variant="body2" color="textSecondary" align="center">
         {"Copyright © "}
         <Link
           color="inherit"
@@ -29,7 +29,7 @@ const Footer = (props) => {
         </Link>{" "}
         {new Date().getFullYear()}
         {"."}
-      </Typography>
+      </Typography> */}
     </div>
   );
 };

@@ -25,6 +25,9 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: !!!configure rest of pages for mobile, for login and register use vw vh
 //todo: fix white line appearing when small mobile
 //todo: post vs put? ehh...
+//todo: implement admin stuff...later
+//todo: change redirect on login pg to right  component based on user
+//todo: change sidebar based on user
 
 class Dashboard extends Component {
   constructor(props) {

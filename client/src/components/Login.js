@@ -18,6 +18,7 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
+import jwtDecode from "jwt-decode";
 import loginStyles from "../styles/loginStyles";
 import axios from "axios";
 import baseURL from "../baseURL";
@@ -58,6 +59,9 @@ class Login extends Component {
       password: "",
       invalidLogin: false,
       validLogin: false,
+      isWasher: false,
+      isDriver: false,
+      isAdmin: false,
     };
   }
 
@@ -105,8 +109,13 @@ class Login extends Component {
           const token = res.data.token;
           localStorage.setItem("token", token); //use stuff here. check token in constructor.
           //axios.defaults.headers.common["token"] = token;
-          //const data = jwtDecode(token);
-          this.setState({ validLogin: true });
+          const data = jwtDecode(token);
+          this.setState({
+            validLogin: true,
+            isWasher: data.isWasher,
+            isDriver: data.isDriver,
+            isAdmin: data.isAdmin,
+          });
         } else {
           this.setState({ invalidLogin: true });
         }
@@ -244,7 +253,15 @@ class Login extends Component {
 
   render() {
     if (this.state.validLogin) {
-      return <Redirect push to="/userDashTest" />;
+      if (this.state.isWasher) {
+        return <Redirect push to="/washerAssigned" />;
+      } else if (this.state.isDriver) {
+        return <Redirect push to="/driverAvailable" />;
+      } else if (this.state.isAdmin) {
+        return <Redirect push to="/placeholder" />;
+      } else {
+        return <Redirect push to="/userDashboard" />;
+      }
     }
 
     const classes = this.props.classes;

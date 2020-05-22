@@ -1,107 +1,133 @@
-import React from "react";
+import React, { Component } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/styles";
-import { Divider, Drawer } from "@material-ui/core";
+import { Divider, Drawer, withStyles } from "@material-ui/core";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import PeopleIcon from "@material-ui/icons/People";
-import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
-import TextFieldsIcon from "@material-ui/icons/TextFields";
-import ImageIcon from "@material-ui/icons/Image";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import SettingsIcon from "@material-ui/icons/Settings";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
+import HistoryIcon from "@material-ui/icons/History";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import LocalLaundryServiceIcon from "@material-ui/icons/LocalLaundryService";
+import { Profile, SidebarNav /*UpgradePlan*/ } from "./components";
+import jwtDecode from "jwt-decode";
+import sidebarStyles from "../../../../styles/layouts/Main/components/Sidebar/sidebarStyles";
 
-import { Profile, SidebarNav, UpgradePlan } from "./components";
-
-const useStyles = makeStyles((theme) => ({
-  drawer: {
-    width: 240,
-    [theme.breakpoints.up("lg")]: {
-      marginTop: 64,
-      height: "calc(100% - 64px)",
-    },
+const userPages = [
+  {
+    title: "Dashboard",
+    href: "/userDashboard",
+    icon: <DashboardIcon />,
   },
-  root: {
-    backgroundColor: theme.palette.white,
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-    padding: theme.spacing(2),
+  {
+    title: "Order History",
+    href: "/placeholder",
+    icon: <HistoryIcon />,
   },
-  divider: {
-    margin: theme.spacing(2, 0),
+  {
+    title: "Subscription",
+    href: "/placeholder",
+    icon: <LocalLaundryServiceIcon />,
   },
-  nav: {
-    marginBottom: theme.spacing(2),
+  {
+    title: "Account",
+    href: "/placeholder",
+    icon: <AccountBoxIcon />,
   },
-}));
+  {
+    title: "Help",
+    href: "/placeholder",
+    icon: <HelpOutlineIcon />,
+  },
+];
 
-const Sidebar = (props) => {
-  const { open, variant, onClose, className, ...rest } = props;
+const driverPages = [
+  {
+    title: "Available Orders",
+    href: "/driverAvailable",
+    icon: <AssignmentIcon />,
+  },
+  {
+    title: "Accepted Orders",
+    href: "/driverAccepted",
+    icon: <AssignmentTurnedInIcon />,
+  },
+  {
+    title: "Order History",
+    href: "/placeholder",
+    icon: <HistoryIcon />,
+  },
+  {
+    title: "Account",
+    href: "/placeholder",
+    icon: <AccountBoxIcon />,
+  },
+];
 
-  const classes = useStyles();
+const washerPages = [
+  {
+    title: "Assigned Orders",
+    href: "/washerAssigned",
+    icon: <AssignmentIcon />,
+  },
+  {
+    title: "Order History",
+    href: "/placeholder",
+    icon: <HistoryIcon />,
+  },
+  {
+    title: "Account",
+    href: "/placeholder",
+    icon: <AccountBoxIcon />,
+  },
+];
 
-  const pages = [
-    {
-      title: "Dashboard",
-      href: "/dashboard",
-      icon: <DashboardIcon />,
-    },
-    {
-      title: "Users",
-      href: "/users",
-      icon: <PeopleIcon />,
-    },
-    {
-      title: "Products",
-      href: "/products",
-      icon: <ShoppingBasketIcon />,
-    },
-    {
-      title: "Authentication",
-      href: "/sign-in",
-      icon: <LockOpenIcon />,
-    },
-    {
-      title: "Typography",
-      href: "/typography",
-      icon: <TextFieldsIcon />,
-    },
-    {
-      title: "Icons",
-      href: "/icons",
-      icon: <ImageIcon />,
-    },
-    {
-      title: "Account",
-      href: "/account",
-      icon: <AccountBoxIcon />,
-    },
-    {
-      title: "Settings",
-      href: "/settings",
-      icon: <SettingsIcon />,
-    },
-  ];
+class Sidebar extends Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <Drawer
-      anchor="left"
-      classes={{ paper: classes.drawer }}
-      onClose={onClose}
-      open={open}
-      variant={variant}
-    >
-      <div {...rest} className={clsx(classes.root, className)}>
-        <Profile />
-        <Divider className={classes.divider} />
-        <SidebarNav className={classes.nav} pages={pages} />
-        {/* <UpgradePlan /> */}
-      </div>
-    </Drawer>
-  );
-};
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+    this.state = {
+      isWasher: data.isWasher,
+      isDriver: data.isDriver,
+      isAdmin: data.isAdmin,
+    };
+  }
+
+  render() {
+    const { open, variant, onClose, className, ...rest } = this.props;
+    const classes = this.props.classes;
+    let pagesConfig = null;
+
+    if (this.state.isWasher) {
+      pagesConfig = washerPages;
+    } else if (this.state.isDriver) {
+      pagesConfig = driverPages;
+    } else if (this.state.isAdmin) {
+      pagesConfig = washerPages;
+    } else {
+      pagesConfig = userPages;
+    }
+
+    return (
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.drawer }}
+        onClose={onClose}
+        open={open}
+        variant={variant}
+      >
+        <div {...rest} className={clsx(classes.root, className)}>
+          <Profile />
+          <Divider className={classes.divider} />
+          <SidebarNav className={classes.nav} pages={pagesConfig} />
+          {/* <UpgradePlan /> */}
+        </div>
+      </Drawer>
+    );
+  }
+}
 
 Sidebar.propTypes = {
   className: PropTypes.string,
@@ -110,4 +136,4 @@ Sidebar.propTypes = {
   variant: PropTypes.string.isRequired,
 };
 
-export default Sidebar;
+export default withStyles(sidebarStyles)(Sidebar);

@@ -2,13 +2,10 @@ import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import UserDashboard from "./components/UserDashboard";
-import NewOrder from "./components/User/NewOrder/NewOrder";
 import AvailableDriverDashboard from "./components/Driver/AvailableDashboard";
 import AcceptedDriverDashboard from "./components/Driver/AcceptedDashboard";
 import AssignedWasherDashboard from "./components/Washer/AssignedDashboard";
-import UserOrderStatus from "./components/User/OrderStatus/OrderStatus";
-import UserDashboardTest from "./components/User/Dashboard";
+import UserDashboard from "./components/User/Dashboard";
 import theme from "./theme";
 import { ThemeProvider } from "@material-ui/styles";
 import { Main as MainLayout } from "./layouts";
@@ -23,8 +20,6 @@ export default class App extends Component {
         <Switch>
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/userDashboard" component={UserDashboard} />
-          <Route exact path="/newOrderTest" component={NewOrder} />
           <ThemeProvider theme={theme}>
             <Switch>
               <RouteWithLayout
@@ -46,16 +41,10 @@ export default class App extends Component {
                 path="/washerAssigned"
               />
               <RouteWithLayout
-                component={UserOrderStatus}
+                component={UserDashboard}
                 exact
                 layout={MainLayout}
-                path="/userOrderStatus"
-              />
-              <RouteWithLayout
-                component={UserDashboardTest}
-                exact
-                layout={MainLayout}
-                path="/userDashTest"
+                path="/userDashboard"
               />
               <Route path="/">
                 <Redirect to="/login" />

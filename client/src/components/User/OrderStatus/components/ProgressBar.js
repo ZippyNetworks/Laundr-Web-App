@@ -15,7 +15,7 @@ import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
 import CheckIcon from "@material-ui/icons/Check";
 import RoomIcon from "@material-ui/icons/Room";
-import LocalLaundryServiceIcon from "@material-ui/icons/LocalLaundryService";
+import LocalDrinkIcon from "@material-ui/icons/LocalDrink";
 import progressBarStyles from "../../../../styles/User/OrderStatus/components/progressBarStyles";
 
 const ColorlibConnector = withStyles({
@@ -73,7 +73,7 @@ const ColorlibStepIcon = (props) => {
     1: <AssignmentTurnedInIcon />,
     2: <DirectionsCarIcon />,
     3: <RoomIcon />,
-    4: <LocalLaundryServiceIcon />,
+    4: <LocalDrinkIcon />,
     5: <DirectionsCarIcon />,
     6: <CheckIcon />,
   };
