@@ -14,6 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
 import InputIcon from "@material-ui/icons/Input";
 import topbarStyles from "../../../../styles/layouts/Main/components/Topbar/topbarStyles";
+import LaundrLogo from "../../../../images/Topbar/Logo_2020.jpeg";
 
 class Topbar extends Component {
   constructor(props) {
@@ -45,7 +46,9 @@ class Topbar extends Component {
               height: 60,
             }}
             alt="Company Logo"
-            src="https://www.laundr.io/wp-content/uploads/2020/03/user_img.png"
+            src={
+              "https://www.laundr.io/wp-content/uploads/2020/03/user_img.png"
+            }
           />
           <div className={classes.flexGrow} />
           <IconButton color="inherit">

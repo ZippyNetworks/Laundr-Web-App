@@ -21,7 +21,6 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: test button gradients, normal vs login one
 //todo: change time picker in scheduling so no scrollbar on desktop view
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile
-//todo: !!!fix insta logo since its not centered on mobile, its probably the image itself
 //todo: !!!configure rest of pages for mobile, for login and register use vw vh
 //todo: fix white line appearing when small mobile
 //todo: post vs put? ehh...see hhh.docx for conventions, maybe apply it to controllers
@@ -32,6 +31,7 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: add isUser? maybe when im less lazy
 //todo: maybe refactor loading to load EVERYTHING first, atm for dashboards its just for the order fetching
 //todo: maybe remove help slide and on help pg just have call, chat, dm, ticket?
+//todo: add color scheme to gradients
 
 class Dashboard extends Component {
   constructor(props) {
