@@ -1,38 +1,44 @@
-import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import React, { Component } from "react";
+import { Link as RouterLink, Redirect } from "react-router-dom";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/styles";
-import { AppBar, Toolbar, Badge, Hidden, IconButton } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  Badge,
+  Hidden,
+  IconButton,
+  withStyles,
+} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
 import InputIcon from "@material-ui/icons/Input";
+import topbarStyles from "../../../../styles/layouts/Main/components/Topbar/topbarStyles";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    boxShadow: "none",
-    backgroundImage:
-      "linear-gradient( 136deg, rgb(102, 255, 255) 0%, rgb(0, 153, 255) 50%, rgb(0, 51, 204) 100%)",
-  },
-  flexGrow: {
-    flexGrow: 1,
-  },
-  signOutButton: {
-    marginLeft: theme.spacing(1),
-  },
-}));
+class Topbar extends Component {
+  constructor(props) {
+    super(props);
 
-const Topbar = (props) => {
-  const { className, onSidebarOpen, ...rest } = props;
+    this.state = { notifications: [], logout: false };
+  }
 
-  const classes = useStyles();
+  handleLogout = () => {
+    localStorage.clear();
 
-  const [notifications] = useState([]);
+    this.setState({ logout: true });
+  };
 
-  return (
-    <AppBar {...rest} className={clsx(classes.root, className)}>
-      <Toolbar>
-        <RouterLink to="/">
+  render() {
+    const { className, onSidebarOpen, ...rest } = this.props;
+    const classes = this.props.classes;
+
+    if (this.state.logout) {
+      return <Redirect push to="/login" />;
+    }
+
+    return (
+      <AppBar {...rest} className={clsx(classes.root, className)}>
+        <Toolbar>
           <img
             style={{
               width: 150,
@@ -41,35 +47,37 @@ const Topbar = (props) => {
             alt="Company Logo"
             src="https://www.laundr.io/wp-content/uploads/2020/03/user_img.png"
           />
-        </RouterLink>
-        <div className={classes.flexGrow} />
-        <Hidden mdDown>
+          <div className={classes.flexGrow} />
           <IconButton color="inherit">
             <Badge
-              badgeContent={notifications.length}
+              badgeContent={this.state.notifications.length}
               color="primary"
               variant="dot"
             >
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton className={classes.signOutButton} color="inherit">
+          <IconButton
+            className={classes.signOutButton}
+            color="inherit"
+            onClick={this.handleLogout}
+          >
             <InputIcon />
           </IconButton>
-        </Hidden>
-        <Hidden lgUp>
-          <IconButton color="inherit" onClick={onSidebarOpen}>
-            <MenuIcon />
-          </IconButton>
-        </Hidden>
-      </Toolbar>
-    </AppBar>
-  );
-};
+          <Hidden lgUp>
+            <IconButton color="inherit" onClick={onSidebarOpen}>
+              <MenuIcon />
+            </IconButton>
+          </Hidden>
+        </Toolbar>
+      </AppBar>
+    );
+  }
+}
 
 Topbar.propTypes = {
   className: PropTypes.string,
   onSidebarOpen: PropTypes.func,
 };
 
-export default Topbar;
+export default withStyles(topbarStyles)(Topbar);

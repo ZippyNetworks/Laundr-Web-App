@@ -26,8 +26,8 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: fix white line appearing when small mobile
 //todo: post vs put? ehh...
 //todo: implement admin stuff...later
-//todo: change redirect on login pg to right  component based on user
-//todo: change sidebar based on user
+//todo: can also use "hidden" component to achieve the single progress icon
+//todo: maybe move logout button since if on mobile hitting sidebar button is close
 
 class Dashboard extends Component {
   constructor(props) {
