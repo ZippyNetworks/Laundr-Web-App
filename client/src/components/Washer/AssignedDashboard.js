@@ -13,7 +13,7 @@ import jwtDecode from "jwt-decode";
 import OrderTable from "./components/OrderTable";
 import baseURL from "../../baseURL";
 import assignedDashboardStyles from "../../styles/Washer/assignedDashboardStyles";
-import SectionBorder from "../../images/UserDashboard/SectionBorder.png";
+import sectionBorder from "../../images/UserDashboard/sectionBorder.png";
 
 //0: order just placed
 //1: order accepted by driver to be picked up from user
@@ -131,7 +131,7 @@ class AssignedDashboard extends Component {
           alignItems="center" /*main page column*/
         >
           <img
-            src={SectionBorder}
+            src={sectionBorder}
             style={{
               width: "100%",
               height: "100%",

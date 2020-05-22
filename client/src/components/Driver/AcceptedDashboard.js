@@ -12,7 +12,7 @@ import jwtDecode from "jwt-decode";
 import OrderTable from "./components/OrderTable";
 import baseURL from "../../baseURL";
 import acceptedDashboardStyles from "../../styles/Driver/acceptedDashboardStyles";
-import SectionBorder from "../../images/UserDashboard/SectionBorder.png";
+import sectionBorder from "../../images/UserDashboard/sectionBorder.png";
 
 //todo: refresh list after completing an action, and THEN show the snackbar?
 
@@ -175,7 +175,7 @@ class AcceptedDashboard extends Component {
           alignItems="center" /*main page column*/
         >
           <img
-            src={SectionBorder}
+            src={sectionBorder}
             style={{
               width: "100%",
               height: "100%",

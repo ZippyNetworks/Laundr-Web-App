@@ -13,7 +13,7 @@ import jwtDecode from "jwt-decode";
 import OrderTable from "./components/OrderTable";
 import baseURL from "../../baseURL";
 import availableDashboardStyles from "../../styles/Driver/availableDashboardStyles";
-import SectionBorder from "../../images/UserDashboard/SectionBorder.png";
+import sectionBorder from "../../images/UserDashboard/sectionBorder.png";
 
 //todo: add isDriver to user, also iswasher, etc.
 //todo: conditional redirects
@@ -155,7 +155,7 @@ class AvailableDashboard extends Component {
           alignItems="center" /*main page column*/
         >
           <img
-            src={SectionBorder}
+            src={sectionBorder}
             style={{
               width: "100%",
               height: "100%",

@@ -9,8 +9,8 @@ import OrderStatus from "./OrderStatus/OrderStatus";
 import AutoRotatingCarousel from "./components/Carousel/AutoRotatingCarousel";
 import Slide from "./components/Carousel/Slide";
 import dashboardStyles from "../../styles/User/dashboardStyles";
-import SectionBorder from "../../images/UserDashboard/SectionBorder.png";
-import SectionBorderWhite from "../../images/UserDashboard/SectionBorderWhite.jpeg";
+import sectionBorder from "../../images/UserDashboard/sectionBorder.png";
+import sectionBorderWhite from "../../images/UserDashboard/sectionBorderWhite.jpeg";
 import StudentPlanLogo from "../../images/UserDashboard/StudentPlanLogo.png";
 import LaundrBombsLogo from "../../images/UserDashboard/LaundrBombsLogo.png";
 import InstagramLogo from "../../images/UserDashboard/InstagramLogo.png";
@@ -29,7 +29,9 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: can also use "hidden" component to achieve the single progress icon
 //todo: research efficient querying, maybe better to sort in the query rather than grab all orders?
 //todo: maybe move logout button since if on mobile hitting sidebar button is close
+//todo: add isUser? maybe when im less lazy
 //todo: maybe refactor loading to load EVERYTHING first, atm for dashboards its just for the order fetching
+//todo: maybe remove help slide and on help pg just have call, chat, dm, ticket?
 
 class Dashboard extends Component {
   constructor(props) {
@@ -124,7 +126,7 @@ class Dashboard extends Component {
           alignItems="center" /*main page column*/
         >
           <img
-            src={SectionBorder}
+            src={sectionBorder}
             style={{ width: "100%", height: "100%", paddingTop: 8 }}
             alt="Section border"
           />
@@ -146,7 +148,7 @@ class Dashboard extends Component {
           alignItems="center" /*main page column*/
         >
           <img
-            src={SectionBorderWhite}
+            src={sectionBorderWhite}
             style={{
               width: "100%",
               height: "100%",
@@ -233,7 +235,7 @@ class Dashboard extends Component {
           alignItems="center" /*main page column*/
         >
           <img
-            src={SectionBorder}
+            src={sectionBorder}
             style={{ width: "100%", height: "100%", paddingTop: 8 }}
             alt="Section border"
           />
