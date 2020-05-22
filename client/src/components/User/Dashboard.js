@@ -16,7 +16,7 @@ import LaundrBombsLogo from "../../images/UserDashboard/LaundrBombsLogo.png";
 import InstagramLogo from "../../images/UserDashboard/InstagramLogo.png";
 import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 
-//todo: add loading backdrop
+//todo: add loading backdrop, other dashboards (order related) already have it
 //todo: implement status 8 feature for order status when order is delivered
 //todo: test button gradients, normal vs login one
 //todo: change time picker in scheduling so no scrollbar on desktop view
@@ -24,10 +24,12 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: !!!fix insta logo since its not centered on mobile, its probably the image itself
 //todo: !!!configure rest of pages for mobile, for login and register use vw vh
 //todo: fix white line appearing when small mobile
-//todo: post vs put? ehh...
+//todo: post vs put? ehh...see hhh.docx for conventions, maybe apply it to controllers
 //todo: implement admin stuff...later
 //todo: can also use "hidden" component to achieve the single progress icon
+//todo: research efficient querying, maybe better to sort in the query rather than grab all orders?
 //todo: maybe move logout button since if on mobile hitting sidebar button is close
+//todo: maybe refactor loading to load EVERYTHING first, atm for dashboards its just for the order fetching
 
 class Dashboard extends Component {
   constructor(props) {
@@ -35,9 +37,12 @@ class Dashboard extends Component {
 
     let token = localStorage.getItem("token");
     const data = jwtDecode(token);
-    this.userFname = data.fname;
 
-    this.state = { orderComponent: null, orderComponentName: "" };
+    this.state = {
+      orderComponent: null,
+      orderComponentName: "",
+      userFname: data.fname,
+    };
   }
 
   componentDidMount = () => {
@@ -96,7 +101,7 @@ class Dashboard extends Component {
           <Grid item>
             <Paper elevation={3} className={classes.welcomeCard}>
               <Typography variant="h3" className={classes.welcomeText}>
-                {`Welcome, ${this.userFname}`}
+                {`Welcome, ${this.state.userFname}`}
               </Typography>
             </Paper>
           </Grid>

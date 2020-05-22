@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link as RouterLink, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import {

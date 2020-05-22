@@ -1,56 +1,76 @@
-import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+import React, { Component } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/styles";
-import { Avatar, Typography } from "@material-ui/core";
+import { Avatar, Typography, withStyles } from "@material-ui/core";
+import jwtDecode from "jwt-decode";
+import PersonIcon from "@material-ui/icons/Person";
+import LocalLaundryServiceIcon from "@material-ui/icons/LocalLaundryService";
+import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
+import VpnKeyIcon from "@material-ui/icons/VpnKey";
+import profileStyles from "../../../../../../styles/layouts/Main/components/Sidebar/components/profileStyles";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    minHeight: "fit-content",
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-  },
-  name: {
-    marginTop: theme.spacing(1),
-  },
-}));
+class Profile extends Component {
+  constructor(props) {
+    super(props);
 
-const Profile = (props) => {
-  const { className, ...rest } = props;
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
 
-  const classes = useStyles();
+    this.state = {
+      userFname: data.fname,
+      userLname: data.lname,
+      isWasher: data.isWasher,
+      isDriver: data.isDriver,
+      isAdmin: data.isAdmin,
+    };
+  }
 
-  const user = {
-    name: "First Last",
-    avatar: "/images/avatars/avatar_11.png",
-    bio: "Place Holder",
+  handleBio = () => {
+    if (this.state.isWasher) {
+      return "Washer";
+    } else if (this.state.isDriver) {
+      return "Driver";
+    } else if (this.state.isAdmin) {
+      return "Admin";
+    } else {
+      return "User";
+    }
   };
 
-  return (
-    <div {...rest} className={clsx(classes.root, className)}>
-      <Avatar
-        alt="Person"
-        className={classes.avatar}
-        component={RouterLink}
-        src={user.avatar}
-        to="/settings"
-      />
-      <Typography className={classes.name} variant="h4">
-        {user.name}
-      </Typography>
-      <Typography variant="body2">{user.bio}</Typography>
-    </div>
-  );
-};
+  renderAvatarIcon = (classes) => {
+    if (this.state.isWasher) {
+      return <LocalLaundryServiceIcon className={classes.icon} />;
+    } else if (this.state.isDriver) {
+      return <DirectionsCarIcon className={classes.icon} />;
+    } else if (this.state.isAdmin) {
+      return <VpnKeyIcon className={classes.icon} />;
+    } else {
+      return <PersonIcon className={classes.icon} />;
+    }
+  };
+
+  render() {
+    const { className, ...rest } = this.props;
+    const classes = this.props.classes;
+
+    let bio = this.handleBio();
+
+    return (
+      <div {...rest} className={clsx(classes.root, className)}>
+        <Avatar alt="Person" className={classes.avatar}>
+          {this.renderAvatarIcon(classes)}
+        </Avatar>
+        <Typography className={classes.name} variant="h4">
+          {this.state.userFname} {this.state.userLname}
+        </Typography>
+        <Typography variant="body2">{bio}</Typography>
+      </div>
+    );
+  }
+}
 
 Profile.propTypes = {
   className: PropTypes.string,
 };
 
-export default Profile;
+export default withStyles(profileStyles)(Profile);

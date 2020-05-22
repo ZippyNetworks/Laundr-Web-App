@@ -88,6 +88,7 @@ class Sidebar extends Component {
 
     let token = localStorage.getItem("token");
     const data = jwtDecode(token);
+
     this.state = {
       isWasher: data.isWasher,
       isDriver: data.isDriver,
@@ -95,20 +96,23 @@ class Sidebar extends Component {
     };
   }
 
+  handlePagesConfig = () => {
+    if (this.state.isWasher) {
+      return washerPages;
+    } else if (this.state.isDriver) {
+      return driverPages;
+    } else if (this.state.isAdmin) {
+      return washerPages;
+    } else {
+      return userPages;
+    }
+  };
+
   render() {
     const { open, variant, onClose, className, ...rest } = this.props;
     const classes = this.props.classes;
-    let pagesConfig = null;
 
-    if (this.state.isWasher) {
-      pagesConfig = washerPages;
-    } else if (this.state.isDriver) {
-      pagesConfig = driverPages;
-    } else if (this.state.isAdmin) {
-      pagesConfig = washerPages;
-    } else {
-      pagesConfig = userPages;
-    }
+    let pages = this.handlePagesConfig();
 
     return (
       <Drawer
@@ -121,7 +125,7 @@ class Sidebar extends Component {
         <div {...rest} className={clsx(classes.root, className)}>
           <Profile />
           <Divider className={classes.divider} />
-          <SidebarNav className={classes.nav} pages={pagesConfig} />
+          <SidebarNav className={classes.nav} pages={pages} />
           {/* <UpgradePlan /> */}
         </div>
       </Drawer>

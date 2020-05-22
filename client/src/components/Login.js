@@ -251,17 +251,21 @@ class Login extends Component {
     this.setState({ invalidLogin: false });
   };
 
+  handleLoginRedirect = () => {
+    if (this.state.isWasher) {
+      return <Redirect push to="/washerAssigned" />;
+    } else if (this.state.isDriver) {
+      return <Redirect push to="/driverAvailable" />;
+    } else if (this.state.isAdmin) {
+      return <Redirect push to="/placeholder" />;
+    } else {
+      return <Redirect push to="/userDashboard" />;
+    }
+  };
+
   render() {
     if (this.state.validLogin) {
-      if (this.state.isWasher) {
-        return <Redirect push to="/washerAssigned" />;
-      } else if (this.state.isDriver) {
-        return <Redirect push to="/driverAvailable" />;
-      } else if (this.state.isAdmin) {
-        return <Redirect push to="/placeholder" />;
-      } else {
-        return <Redirect push to="/userDashboard" />;
-      }
+      return this.handleLoginRedirect();
     }
 
     const classes = this.props.classes;

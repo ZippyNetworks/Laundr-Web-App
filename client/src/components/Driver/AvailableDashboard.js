@@ -35,9 +35,8 @@ class AvailableDashboard extends Component {
 
     let token = localStorage.getItem("token");
     const data = jwtDecode(token);
-    this.userFname = data.fname;
 
-    this.state = { orders: [], showLoading: false };
+    this.state = { orders: [], showLoading: false, userFname: data.fname };
   }
 
   componentDidMount = async () => {
@@ -138,7 +137,7 @@ class AvailableDashboard extends Component {
           <Grid item>
             <Paper elevation={3} className={classes.welcomeCard}>
               <Typography variant="h3" className={classes.welcomeText}>
-                {`Welcome, ${this.userFname}`}
+                {`Welcome, ${this.state.userFname}`}
               </Typography>
             </Paper>
           </Grid>
