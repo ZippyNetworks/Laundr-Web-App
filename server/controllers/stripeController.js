@@ -49,7 +49,7 @@ const createCheckoutSession = async (req, res) => {
     mode: "subscription",
     success_url: "https://example.com/success?session_id={CHECKOUT_SESSION_ID}", //after they successfully checked out
     cancel_url: "http://localhost:3000/paymentTest", //usually the page they were at before. if they click to go back
-    customer: "cus_HKPtDOoUXba3lO", //hardcode for now, will be the id stored for every registered user (create new stripe customer for every registered user!)
+    customer: "", //hardcode for now, will be the id stored for every registered user (create new stripe customer for every registered user!)
   });
 
   if (session) {
@@ -59,7 +59,19 @@ const createCheckoutSession = async (req, res) => {
   }
 };
 
-module.exports = { createCheckoutSession };
+const createSetupIntent = async (req, res) => {
+  const intent = await stripe.setupIntents.create({
+    customer: "", //hardcode for now, will be the id stored for every registered user (create new stripe customer for every registered user!)
+  });
+
+  if (intent) {
+    res.json({ success: true, message: intent.client_secret });
+  } else {
+    res.json({ success: false, message: "Unable to create SetupIntent" });
+  }
+};
+
+module.exports = { createCheckoutSession, createSetupIntent };
 
 const createCustomer = async () => {
   let testEmail = "jackzheng10@yahoo.com";

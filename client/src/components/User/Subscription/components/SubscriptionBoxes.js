@@ -6,6 +6,8 @@ import axios from "axios";
 import baseURL from "../../../../baseURL";
 import subscriptionBoxesStyles from "../../../../styles/User/Subscription/components/subscriptionBoxesStyles";
 
+import CardInfo from "./CardInfo";
+
 const stripeKEY =
   process.env.STRIPE_PUBLISHABLE_KEY ||
   require("../../../../config").stripe.publishableKEY;
@@ -96,6 +98,10 @@ class SubscriptionBoxes extends Component {
         >
           Family
         </Button>
+        <br />
+        <br />
+        <br />
+        <CardInfo />
       </React.Fragment>
     );
   }
