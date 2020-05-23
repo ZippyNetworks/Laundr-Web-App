@@ -34,6 +34,7 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: add color scheme to gradients
 //todo: reorganize user folder, have a folder for each page on left
 //todo: make all errors show up on dialog, .catch errors show in alert. every error should have a "please contact us". maybe a please try again
+//todo: stripe self-serve portal handles all the payment info stuff??
 
 class Dashboard extends Component {
   constructor(props) {
