@@ -6,6 +6,7 @@ import AvailableDriverDashboard from "./components/Driver/AvailableDashboard";
 import AcceptedDriverDashboard from "./components/Driver/AcceptedDashboard";
 import AssignedWasherDashboard from "./components/Washer/AssignedDashboard";
 import UserDashboard from "./components/User/Dashboard";
+import SubscriptionBoxes from "./components/User/Subscription/components/SubscriptionBoxes";
 import theme from "./theme";
 import { ThemeProvider } from "@material-ui/styles";
 import { Main as MainLayout } from "./layouts";
@@ -45,6 +46,12 @@ export default class App extends Component {
                 exact
                 layout={MainLayout}
                 path="/userDashboard"
+              />
+              <RouteWithLayout
+                component={SubscriptionBoxes}
+                exact
+                layout={MainLayout}
+                path="/paymentTest"
               />
               <Route path="/">
                 <Redirect to="/login" />

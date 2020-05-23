@@ -32,6 +32,8 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: maybe refactor loading to load EVERYTHING first, atm for dashboards its just for the order fetching
 //todo: maybe remove help slide and on help pg just have call, chat, dm, ticket?
 //todo: add color scheme to gradients
+//todo: reorganize user folder, have a folder for each page on left
+//todo: make all errors show up on dialog, .catch errors show in alert. every error should have a "please contact us". maybe a please try again
 
 class Dashboard extends Component {
   constructor(props) {

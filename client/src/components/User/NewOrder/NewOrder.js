@@ -163,7 +163,7 @@ class NewOrder extends Component {
           this.setState({
             error: true,
             errorMessage:
-              "There was an error with placing your order. Please try again later.",
+              "There was an error with placing your order. Please try again later. If this problem continues, please contact us.",
           });
           canNext = false;
         }

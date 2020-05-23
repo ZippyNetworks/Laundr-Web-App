@@ -42,13 +42,12 @@ class Topbar extends Component {
         <Toolbar>
           <img
             style={{
-              width: 150,
+              width: 60,
               height: 60,
+              marginLeft: -25,
             }}
             alt="Company Logo"
-            src={
-              "https://www.laundr.io/wp-content/uploads/2020/03/user_img.png"
-            }
+            src={LaundrLogo}
           />
           <div className={classes.flexGrow} />
           <IconButton color="inherit">
