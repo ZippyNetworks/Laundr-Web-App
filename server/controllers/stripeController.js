@@ -92,7 +92,7 @@ const chargeCustomer = async (req, res) => {
     });
 
   //set payment id of their default card, the one first added
-  //!!!TODO: OR JUST STORE A PAYMENT ID AND USE THAT FOR THESE ON-DEMAND CHARGES
+  //!!!TODO: OR JUST STORE A PAYMENT ID AND USE THAT FOR THESE ON-DEMAND CHARGES while keeping the sub payment method separate (self service thru stripe)
   let defaultCardID;
 
   if (cards.data.length === 0) {
