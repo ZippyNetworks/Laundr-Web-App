@@ -92,6 +92,21 @@ class CardInfo extends Component {
     }
   };
 
+  handleChargeCard = async () => {
+    await axios
+      .post(baseURL + "/stripe/chargeCustomer", {})
+      .then(async (res) => {
+        if (res.data.success) {
+          alert("nice");
+        } else {
+          alert("Error with fetching cards");
+        }
+      })
+      .catch((error) => {
+        alert("Error: " + error);
+      });
+  };
+
   render() {
     const classes = this.props.classes;
 
@@ -110,7 +125,16 @@ class CardInfo extends Component {
           className={classes.gradientButton}
           onClick={this.handleCardSetup}
         >
-          Save Card
+          Save Card to jackzheng10
+        </Button>
+        <br />
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.gradientButton}
+          onClick={this.handleChargeCard}
+        >
+          Charge jackzheng10 $10 with first paymentmethod
         </Button>
       </React.Fragment>
     );

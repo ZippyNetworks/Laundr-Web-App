@@ -35,6 +35,7 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: reorganize user folder, have a folder for each page on left
 //todo: make all errors show up on dialog, .catch errors show in alert. every error should have a "please contact us". maybe a please try again
 //todo: stripe self-serve portal handles all the payment info stuff??
+//todo: maybe just store their payment id, check if it exists every time a on-demand charge is made, use the id to modify method. sub is separate card?
 
 class Dashboard extends Component {
   constructor(props) {
