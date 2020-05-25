@@ -36,6 +36,8 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: make all errors show up on dialog, .catch errors show in alert. every error should have a "please contact us". maybe a please try again
 //todo: stripe self-serve portal handles all the payment info stuff??
 //todo: maybe just store their payment id, check if it exists every time a on-demand charge is made, use the id to modify method. sub is separate card?
+//todo: 10lb minimum on orders - so if you send one sock you get charged 10 lbs.
+//todo: sort out customer email thing (different: login vs stripe - can be changed with checkout session)
 
 class Dashboard extends Component {
   constructor(props) {
