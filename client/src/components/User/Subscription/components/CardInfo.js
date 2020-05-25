@@ -11,6 +11,8 @@ import axios from "axios";
 import baseURL from "../../../../baseURL";
 import cardInfoStyles from "../../../../styles/User/Subscription/components/cardInfoStyles";
 
+//todo: see dashboard to dos, configure self-service portal. going w/2 attached payment IDs (one for on-demand, one for sub). modify on-site
+
 const stripeKEY =
   process.env.STRIPE_PUBLISHABLE_KEY ||
   require("../../../../config").stripe.publishableKEY;
