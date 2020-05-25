@@ -93,13 +93,39 @@ class CardInfo extends Component {
   };
 
   handleChargeCard = async () => {
+    const { stripe } = this.props;
+
     await axios
       .post(baseURL + "/stripe/chargeCustomer", {})
       .then(async (res) => {
         if (res.data.success) {
           alert("nice");
         } else {
-          alert("Error with fetching cards");
+          if (res.data.message === "authentication_required") {
+            // Pass the failed PaymentIntent to your client from your server
+            let intent = res.data.paymentIntent;
+            await stripe
+              .confirmCardPayment(intent.client_secret, {
+                payment_method: intent.last_payment_error.payment_method.id,
+              })
+              .then(function (result) {
+                if (result.error) {
+                  // Show error to your customer
+                  alert(result.error.message);
+                } else {
+                  if (result.paymentIntent.status === "succeeded") {
+                    // The payment is complete!
+                    alert("Payment complete!");
+                  }
+                }
+              });
+          } else {
+            alert(
+              "Error with charging card: " +
+                res.data.message +
+                ". Please contact us."
+            );
+          }
         }
       })
       .catch((error) => {

@@ -13,7 +13,7 @@ module.exports = {
   },
   secret: "", //place the secret that will be used to hash jwt tokens
   stripe: {
-    secret: "", //place your stripe secret key here, either the live or test version
+    secret: "", //place your stripe secret key here, either the live or test version. all variables in here will be from only the live OR test version.
     familyAPI_ID: "", //place the API ID of the family subscription plan here
     plusAPI_ID: "", //place the API ID of the plus subscription plan here
     standardAPI_ID: "", //place the API ID of the standard subscription plan here
