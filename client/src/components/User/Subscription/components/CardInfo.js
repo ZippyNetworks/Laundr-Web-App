@@ -8,6 +8,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Button, withStyles, Grid } from "@material-ui/core";
 import PropTypes from "prop-types";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 import baseURL from "../../../../baseURL";
 import cardInfoStyles from "../../../../styles/User/Subscription/components/cardInfoStyles";
 
@@ -92,7 +93,25 @@ class CardInfo extends Component {
       // The setup has succeeded. Display a success message and send
       // result.setupIntent.payment_method to your server to save the
       // card to a Customer
-      alert("setup successful");
+      alert("card stored");
+      let token = localStorage.getItem("token");
+      const data = jwtDecode(token);
+      let userEmail = data.email;
+
+      let regPaymentID = result.setupIntent.payment_method;
+
+      await axios
+        .post(baseURL + "/stripe/setRegPaymentID", { userEmail, regPaymentID })
+        .then((res) => {
+          if (res.data.success) {
+            alert("card attached to user");
+          } else {
+            alert("error with storing card to user");
+          }
+        })
+        .catch((error) => {
+          alert("Error: " + error);
+        });
     }
   };
 
@@ -140,11 +159,15 @@ class CardInfo extends Component {
   };
 
   handleGetCardDetails = async () => {
+    //todo: update token when card updated, since when the card is attached to user the token theyre using to login is the old one
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+    let paymentID = data.stripe.regPaymentID;
+
     await axios
-      .post(baseURL + "/stripe/getCardDetails", {})
+      .post(baseURL + "/stripe/getCardDetails", { paymentID })
       .then((res) => {
         if (res.data.success) {
-          alert("See console for card details");
           let card = res.data.message.card;
           this.setState({
             brand: card.brand,
@@ -179,7 +202,7 @@ class CardInfo extends Component {
           className={classes.gradientButton}
           onClick={this.handleCardSetup}
         >
-          Save Card to jackzheng10
+          Save reg card to jackzheng10
         </Button>
         <br />
         <br />
@@ -205,7 +228,7 @@ class CardInfo extends Component {
               className={classes.gradientButton}
               onClick={this.handleGetCardDetails}
             >
-              Fetch card details for hardcode card
+              Fetch card details for reg payment card
             </Button>
           </Grid>
         </Grid>

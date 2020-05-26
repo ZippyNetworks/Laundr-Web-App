@@ -1,4 +1,4 @@
-const Order = require("../models/Order");
+const User = require("../models/User");
 
 // Set your secret key. Remember to switch to your live secret key in production!
 // See your keys here: https://dashboard.stripe.com/account/apikeys
@@ -145,7 +145,7 @@ const chargeCustomer = async (req, res) => {
 
 const getCardDetails = async (req, res) => {
   await stripe.paymentMethods
-    .retrieve(hardcodePaymentID)
+    .retrieve(req.body.paymentID)
     .then((paymentMethod, err) => {
       if (err || !paymentMethod) {
         return res.json({
@@ -161,11 +161,62 @@ const getCardDetails = async (req, res) => {
     });
 };
 
+const setRegPaymentID = async (req, res) => {
+  await User.findOneAndUpdate(
+    { email: req.body.userEmail },
+    {
+      "stripe.regPaymentID": req.body.regPaymentID,
+    }
+  )
+    .then((user) => {
+      let oldRegPaymentID = user.stripe.regPaymentID;
+      let oldDeleted = true;
+
+      if (oldRegPaymentID != "N/A") {
+        stripe.paymentMethods
+          .detach(oldRegPaymentID)
+          .then((paymentMethod, err) => {
+            if (err || !paymentMethod) {
+              oldDeleted = false;
+            }
+          });
+      }
+
+      //todo: send these error messages to user
+      if (user && oldDeleted) {
+        return res.json({
+          success: true,
+          message:
+            "Regular payment ID successfully attached to user and old ID, if any, was detached in Stripe",
+        });
+      } else if (!user) {
+        return res.json({
+          success: false,
+          message:
+            "Error with attaching default payment ID to user. Please try again. If the issue persists, contact us.",
+        });
+      } else {
+        return res.json({
+          success: false,
+          message:
+            "Error with detaching old payment method in Stripe. Please try again. If the issue persists, contact us.",
+        });
+      }
+    })
+    .catch((error) => {
+      return res.json({
+        success: false,
+        message: error,
+      });
+    });
+};
+
 module.exports = {
   createCheckoutSession,
   createSetupIntent,
   chargeCustomer,
   getCardDetails,
+  setRegPaymentID,
 };
 
 const createCustomer = async () => {

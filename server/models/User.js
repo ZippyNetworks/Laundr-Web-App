@@ -52,6 +52,18 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: false,
   },
+  stripe: {
+    regPaymentID: {
+      type: String,
+      required: true,
+      unique: false,
+    },
+    subPaymentID: {
+      type: String,
+      required: true,
+      unique: false,
+    },
+  },
 });
 
 //the following password methods need to be before "const User..."

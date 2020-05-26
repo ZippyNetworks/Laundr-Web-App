@@ -57,6 +57,10 @@ const register = (req, res) => {
     isWasher: false,
     isDriver: false,
     isAdmin: false,
+    stripe: {
+      regPaymentID: "N/A",
+      subPaymentID: "N/A",
+    },
   })
     .then((user) => {
       if (user) {
