@@ -5,7 +5,7 @@ import {
   ElementsConsumer,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { Button, withStyles } from "@material-ui/core";
+import { Button, withStyles, Grid } from "@material-ui/core";
 import PropTypes from "prop-types";
 import axios from "axios";
 import baseURL from "../../../../baseURL";
@@ -42,6 +42,8 @@ const CARD_ELEMENT_OPTIONS = {
 class CardInfo extends Component {
   constructor(props) {
     super(props);
+
+    this.state = { brand: "", expMonth: "", expYear: "", lastFour: "" };
   }
 
   handleSetupIntent = async (type) => {
@@ -49,7 +51,7 @@ class CardInfo extends Component {
 
     await axios
       .post(baseURL + "/stripe/createSetupIntent", {})
-      .then(async (res) => {
+      .then((res) => {
         if (res.data.success) {
           secret = res.data.message;
         } else {
@@ -99,28 +101,30 @@ class CardInfo extends Component {
 
     await axios
       .post(baseURL + "/stripe/chargeCustomer", {})
-      .then(async (res) => {
+      .then((res) => {
         if (res.data.success) {
           alert("nice");
         } else {
           if (res.data.message === "authentication_required") {
-            // Pass the failed PaymentIntent to your client from your server
-            let intent = res.data.paymentIntent;
-            await stripe
-              .confirmCardPayment(intent.client_secret, {
-                payment_method: intent.last_payment_error.payment_method.id,
-              })
-              .then(function (result) {
-                if (result.error) {
-                  // Show error to your customer
-                  alert(result.error.message);
-                } else {
-                  if (result.paymentIntent.status === "succeeded") {
-                    // The payment is complete!
-                    alert("Payment complete!");
-                  }
-                }
-              });
+            // // Pass the failed PaymentIntent to your client from your server
+            // let intent = res.data.paymentIntent;
+            // await stripe
+            //   .confirmCardPayment(intent.client_secret, {
+            //     payment_method: intent.last_payment_error.payment_method.id,
+            //   })
+            //   .then(function (result) {
+            //     if (result.error) {
+            //       // Show error to your customer
+            //       alert(result.error.message);
+            //     } else {
+            //       if (result.paymentIntent.status === "succeeded") {
+            //         // The payment is complete!
+            //         alert("Payment complete!");
+            //       }
+            //     }
+            //   });
+
+            alert("Error: Card requires authentication. Please contact us.");
           } else {
             alert(
               "Error with charging card: " +
@@ -128,6 +132,28 @@ class CardInfo extends Component {
                 ". Please contact us."
             );
           }
+        }
+      })
+      .catch((error) => {
+        alert("Error: " + error);
+      });
+  };
+
+  handleGetCardDetails = async () => {
+    await axios
+      .post(baseURL + "/stripe/getCardDetails", {})
+      .then((res) => {
+        if (res.data.success) {
+          alert("See console for card details");
+          let card = res.data.message.card;
+          this.setState({
+            brand: card.brand,
+            expMonth: card.exp_month,
+            expYear: card.exp_year,
+            lastFour: card.last4,
+          });
+        } else {
+          alert("Error with getting card details");
         }
       })
       .catch((error) => {
@@ -156,14 +182,33 @@ class CardInfo extends Component {
           Save Card to jackzheng10
         </Button>
         <br />
+        <br />
         <Button
           variant="contained"
           color="primary"
           className={classes.gradientButton}
           onClick={this.handleChargeCard}
         >
-          Charge jackzheng10 $10 with first paymentmethod
+          Charge jackzheng10 $10 w/hardcode card
         </Button>
+        <br />
+        <br />
+        <Grid container direction="column">
+          <Grid item>
+            <h2>brand: {this.state.brand}</h2>
+            <h2>exp month: {this.state.expMonth}</h2>
+            <h2>exp year: {this.state.expYear}</h2>
+            <h2>last four: {this.state.lastFour}</h2>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.gradientButton}
+              onClick={this.handleGetCardDetails}
+            >
+              Fetch card details for hardcode card
+            </Button>
+          </Grid>
+        </Grid>
       </React.Fragment>
     );
   }

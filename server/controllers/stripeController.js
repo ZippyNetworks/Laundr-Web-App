@@ -1,3 +1,5 @@
+const Order = require("../models/Order");
+
 // Set your secret key. Remember to switch to your live secret key in production!
 // See your keys here: https://dashboard.stripe.com/account/apikeys
 const stripeSECRET =
@@ -141,7 +143,30 @@ const chargeCustomer = async (req, res) => {
   }
 };
 
-module.exports = { createCheckoutSession, createSetupIntent, chargeCustomer };
+const getCardDetails = async (req, res) => {
+  await stripe.paymentMethods
+    .retrieve(hardcodePaymentID)
+    .then((paymentMethod, err) => {
+      if (err || !paymentMethod) {
+        return res.json({
+          success: false,
+          message: "Error with fetching payment method: " + err,
+        });
+      } else {
+        return res.json({
+          success: true,
+          message: paymentMethod,
+        });
+      }
+    });
+};
+
+module.exports = {
+  createCheckoutSession,
+  createSetupIntent,
+  chargeCustomer,
+  getCardDetails,
+};
 
 const createCustomer = async () => {
   let testEmail = "jackzheng10@yahoo.com";
