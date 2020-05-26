@@ -143,6 +143,7 @@ const chargeCustomer = async (req, res) => {
   }
 };
 
+//dont let req get through if its "N/A"
 const getCardDetails = async (req, res) => {
   await stripe.paymentMethods
     .retrieve(req.body.paymentID)

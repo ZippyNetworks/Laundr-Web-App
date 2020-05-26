@@ -14,6 +14,10 @@ import cardInfoStyles from "../../../../styles/User/Subscription/components/card
 
 //todo: see dashboard to dos, configure self-service portal. going w/2 attached payment IDs (one for on-demand, one for sub). modify on-site
 //todo: note that when a subscription is cancelled, its payment method is not removed from stripe. refer to the user's reg payment id for the one used for on-demand charges
+//todo:
+//add regular payment method and update regular payment method - DONE
+//card details - if reg payment ID is N/A, display add a card and dont let the network req get through. else, getCardDetails
+//webhook for sub cancel (for lbs/month logic)
 
 const stripeKEY =
   process.env.STRIPE_PUBLISHABLE_KEY ||
