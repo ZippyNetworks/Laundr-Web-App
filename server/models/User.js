@@ -58,11 +58,6 @@ const UserSchema = new mongoose.Schema({
       required: true,
       unique: false,
     },
-    subPaymentID: {
-      type: String,
-      required: true,
-      unique: false,
-    },
   },
 });
 

@@ -59,7 +59,6 @@ const register = (req, res) => {
     isAdmin: false,
     stripe: {
       regPaymentID: "N/A",
-      subPaymentID: "N/A",
     },
   })
     .then((user) => {
