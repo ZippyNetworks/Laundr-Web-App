@@ -13,6 +13,7 @@ import baseURL from "../../../../baseURL";
 import cardInfoStyles from "../../../../styles/User/Subscription/components/cardInfoStyles";
 
 //todo: see dashboard to dos, configure self-service portal. going w/2 attached payment IDs (one for on-demand, one for sub). modify on-site
+//todo: note that when a subscription is cancelled, its payment method is not removed from stripe. refer to the user's reg payment id for the one used for on-demand charges
 
 const stripeKEY =
   process.env.STRIPE_PUBLISHABLE_KEY ||
@@ -102,9 +103,23 @@ class CardInfo extends Component {
 
       await axios
         .post(baseURL + "/stripe/setRegPaymentID", { userEmail, regPaymentID })
-        .then((res) => {
+        .then(async (res) => {
           if (res.data.success) {
             alert("card attached to user");
+            await axios
+              .post(baseURL + "/user/updateToken", { userEmail })
+              .then((res) => {
+                if (res.data.success) {
+                  const token = res.data.token;
+                  localStorage.setItem("token", token);
+                  alert("token updated");
+                } else {
+                  alert("error with updating token");
+                }
+              })
+              .catch((error) => {
+                alert("Error: " + error);
+              });
           } else {
             alert("error with storing card to user");
           }

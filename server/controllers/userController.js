@@ -103,4 +103,30 @@ const login = (req, res) => {
     });
 };
 
-module.exports = { checkDuplicate, register, login };
+const updateToken = (req, res) => {
+  User.findOne({ email: req.body.userEmail })
+    .then(async (user) => {
+      if (user) {
+        //granting access to the token, the information for current user
+        const token = await signToken(user);
+        res.json({
+          success: true,
+          message: "Token is attached",
+          token: token,
+        });
+      } else {
+        return res.json({
+          success: false,
+          message: "Could not find user",
+        });
+      }
+    })
+    .catch((error) => {
+      return res.json({
+        success: false,
+        message: error,
+      });
+    });
+};
+
+module.exports = { checkDuplicate, register, login, updateToken };
