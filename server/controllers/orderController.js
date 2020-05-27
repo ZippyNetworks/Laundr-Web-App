@@ -45,7 +45,7 @@ const placeOrder = async (req, res) => {
     });
 
   console.log("2");
-  Order.create({
+  await Order.create({
     userInfo: {
       email: req.body.email,
       phone: req.body.phone,
@@ -106,8 +106,8 @@ const placeOrder = async (req, res) => {
   //todo: in future, handle payment stuff here as well? return false if payment fails, modify error msg on frontend to notify user
 };
 
-const getOrders = (req, res) => {
-  Order.find({})
+const getOrders = async (req, res) => {
+  await Order.find({})
     .then((orders) => {
       if (orders) {
         return res.json({ success: true, message: orders });

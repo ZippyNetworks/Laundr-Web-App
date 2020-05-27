@@ -7,11 +7,11 @@ const authToken =
 const client = require("twilio")(accountSID, authToken);
 const from = process.env.TWILIO_FROM || require("../config/config").twilio.from;
 
-const twilioVerify = (req, res) => {
+const twilioVerify = async (req, res) => {
   let code = cryptoRandomString({ length: 6, type: "numeric" });
   let to = req.body.to;
 
-  client.messages
+  await client.messages
     .create({
       body:
         "Thanks for signing up! Your Laundr verification code is: " +

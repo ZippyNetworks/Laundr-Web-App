@@ -58,6 +58,11 @@ const UserSchema = new mongoose.Schema({
       required: true,
       unique: false,
     },
+    customerID: {
+      type: String,
+      required: true,
+      unique: false,
+    },
   },
 });
 

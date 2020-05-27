@@ -1,5 +1,9 @@
 const User = require("../models/User");
 const signToken = require("../authHelpers").signToken;
+const stripeSECRET =
+  process.env.STRIPE_SECRET || require("../config/config").stripe.secret;
+
+const stripe = require("stripe")(stripeSECRET);
 
 const checkDuplicate = async (req, res) => {
   let email = req.body.email.toLowerCase();
@@ -45,8 +49,12 @@ const checkDuplicate = async (req, res) => {
   }
 };
 
-const register = (req, res) => {
-  User.create({
+const register = async (req, res) => {
+  const customer = await stripe.customers.create({
+    email: req.body.email,
+  });
+
+  await User.create({
     email: req.body.email,
     fname: req.body.fname,
     lname: req.body.lname,
@@ -59,6 +67,7 @@ const register = (req, res) => {
     isAdmin: false,
     stripe: {
       regPaymentID: "N/A",
+      customerID: customer.id,
     },
   })
     .then((user) => {
@@ -76,8 +85,8 @@ const register = (req, res) => {
     });
 };
 
-const login = (req, res) => {
-  User.findOne({ email: req.body.email })
+const login = async (req, res) => {
+  await User.findOne({ email: req.body.email })
     .then(async (user) => {
       if (!user || !user.validPassword(req.body.password)) {
         return res.json({
@@ -102,8 +111,8 @@ const login = (req, res) => {
     });
 };
 
-const updateToken = (req, res) => {
-  User.findOne({ email: req.body.userEmail })
+const updateToken = async (req, res) => {
+  await User.findOne({ email: req.body.userEmail })
     .then(async (user) => {
       if (user) {
         //granting access to the token, the information for current user
