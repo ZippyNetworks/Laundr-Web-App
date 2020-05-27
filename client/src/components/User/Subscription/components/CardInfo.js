@@ -54,9 +54,12 @@ class CardInfo extends Component {
 
   handleSetupIntent = async (type) => {
     let secret = "";
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+    let customerID = data.stripe.customerID;
 
     await axios
-      .post(baseURL + "/stripe/createSetupIntent", {})
+      .post(baseURL + "/stripe/createSetupIntent", { customerID })
       .then((res) => {
         if (res.data.success) {
           secret = res.data.message;
@@ -182,6 +185,7 @@ class CardInfo extends Component {
     let token = localStorage.getItem("token");
     const data = jwtDecode(token);
     let paymentID = data.stripe.regPaymentID;
+    let customerID = data.stripe.customerID;
 
     await axios
       .post(baseURL + "/stripe/getCardDetails", { paymentID })
@@ -221,7 +225,7 @@ class CardInfo extends Component {
           className={classes.gradientButton}
           onClick={this.handleCardSetup}
         >
-          Save reg card to jackzheng10
+          Save reg card
         </Button>
         <br />
         <br />

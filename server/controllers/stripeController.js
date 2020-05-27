@@ -54,7 +54,7 @@ const createCheckoutSession = async (req, res) => {
     mode: "subscription",
     success_url: "https://example.com/success?session_id={CHECKOUT_SESSION_ID}", //after they successfully checked out
     cancel_url: "http://localhost:3000/paymentTest", //usually the page they were at before. if they click to go back
-    customer: hardCodeCustomerID, //hardcode for now, will be the id stored for every registered user (create new stripe customer for every registered user!)
+    customer: req.body.customerID,
   });
 
   if (session) {
@@ -66,7 +66,7 @@ const createCheckoutSession = async (req, res) => {
 
 const createSetupIntent = async (req, res) => {
   const intent = await stripe.setupIntents.create({
-    customer: hardCodeCustomerID, //hardcode for now, will be the id stored for every registered user (create new stripe customer for every registered user!)
+    customer: req.body.customerID,
   });
 
   if (intent) {

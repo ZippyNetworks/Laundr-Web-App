@@ -3,6 +3,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Button, withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 import baseURL from "../../../../baseURL";
 import subscriptionBoxesStyles from "../../../../styles/User/Subscription/components/subscriptionBoxesStyles";
 
@@ -24,8 +25,12 @@ class SubscriptionBoxes extends Component {
   handleCheckout = async (type) => {
     // When the customer clicks on the button, redirect them to Checkout.
     // Call your backend to create the Checkout session.
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+    let customerID = data.stripe.customerID;
+
     await axios
-      .post(baseURL + "/stripe/createCheckoutSession", { type })
+      .post(baseURL + "/stripe/createCheckoutSession", { type, customerID })
       .then(async (res) => {
         if (res.data.success) {
           let sessionId = res.data.message;
