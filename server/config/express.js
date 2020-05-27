@@ -9,6 +9,7 @@ const path = require("path"),
   driverRoutes = require("../routes/driverRoutes"),
   washerRoutes = require("../routes/washerRoutes"),
   stripeRoutes = require("../routes/stripeRoutes"),
+  webhookRoutes = require("../routes/webhookRoutes"),
   cors = require("cors");
 
 module.exports.init = () => {
@@ -27,6 +28,9 @@ module.exports.init = () => {
 
   //morgan used for logging HTTP requests to the console
   app.use(morgan("dev"));
+
+  //add routes for stripe webhooks before bodyparser is used, error if put with other routes
+  app.use("/webhook", webhookRoutes);
 
   //bodyParser middleware used for resolving the req and res body objects (urlEncoded and json formats)
   app.use(bodyParser.urlencoded({ extended: true }));

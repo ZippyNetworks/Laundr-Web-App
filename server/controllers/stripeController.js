@@ -220,15 +220,11 @@ module.exports = {
   setRegPaymentID,
 };
 
-const createCustomer = async () => {
-  let testEmail = "jackzheng10@yahoo.com";
-
+const createCustomer = async (req, res) => {
   const customer = await stripe.customers.create({
-    email: "jackzheng10@yahoo.com",
+    email: req.body.userEmail,
   });
 
   // Recommendation: save the customer.id in your database, attach it to the user
   // important: doesnt check for duplicate emails
-
-  console.log(customer);
 };
