@@ -38,6 +38,7 @@ class NewOrder extends Component {
     super(props);
 
     this.now = moment();
+    //console.log("now: " + this.now);
     this.today = this.now.format("MM/DD/YYYY");
     this.tomorrow = this.now.add(1, "days").format("MM/DD/YYYY");
     this.nowFormattedTime = moment(this.now, "HH:mm:ss").format("LT");

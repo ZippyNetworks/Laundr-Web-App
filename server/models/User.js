@@ -1,3 +1,4 @@
+const SubscriptionSchema = require("./Subscription");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt-nodejs");
 
@@ -65,7 +66,7 @@ const UserSchema = new mongoose.Schema({
     },
   },
   subscription: {
-    type: Object,
+    type: SubscriptionSchema,
     required: false,
     unique: false,
     default: null,
