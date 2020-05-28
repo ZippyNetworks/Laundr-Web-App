@@ -26,7 +26,7 @@ const SubscriptionSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
-  planID: {
+  plan: {
     type: String,
     unique: true,
     required: true,
