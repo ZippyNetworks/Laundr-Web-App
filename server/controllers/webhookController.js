@@ -1,6 +1,19 @@
 const User = require("../models/User");
 const moment = require("moment");
 
+const familyAPI_ID =
+  process.env.STRIPE_FAMILY_API_ID ||
+  require("../config/config").stripe.familyAPI_ID;
+const plusAPI_ID =
+  process.env.STRIPE_PLUS_API_ID ||
+  require("../config/config").stripe.plusAPI_ID;
+const standardAPI_ID =
+  process.env.STANDARD_FAMILY_API_ID ||
+  require("../config/config").stripe.standardAPI_ID;
+const studentAPI_ID =
+  process.env.STUDENT_FAMILY_API_ID ||
+  require("../config/config").stripe.studentAPI_ID;
+
 //todo: use webhooks to handle email change in chckout
 
 const handleWebhook = async (req, res) => {
@@ -20,27 +33,27 @@ const handleWebhook = async (req, res) => {
       console.log("subscription updated: ");
       console.log(subscriptionUpdated);
 
-      console.log(
-        "test 1: " +
-          moment.unix(subscriptionUpdated.billing_cycle_anchor).format()
-      );
+      // console.log(
+      //   "test 1: " +
+      //     moment.unix(subscriptionUpdated.billing_cycle_anchor).format()
+      // ); //iso8601
 
-      console.log(
-        "test 2: " + moment.unix(subscriptionUpdated.billing_cycle_anchor)
-      );
+      // console.log(
+      //   "test 2: " + moment.unix(subscriptionUpdated.billing_cycle_anchor)
+      // ); //moment object, basically a Date
 
-      console.log(
-        "this shit: " +
-          moment
-            .unix(subscriptionUpdated.billing_cycle_anchor)
-            .format("HH:mm:ss")
-      );
-      console.log(
-        "this other shit: " +
-          moment
-            .unix(subscriptionUpdated.billing_cycle_anchor)
-            .format("MM/DD/YYYY")
-      ); //format("MM/DD/YYYY");
+      // console.log(
+      //   "this 1: " +
+      //     moment
+      //       .unix(subscriptionUpdated.billing_cycle_anchor)
+      //       .format("HH:mm:ss")
+      // );
+      // console.log(
+      //   "this 2: " +
+      //     moment
+      //       .unix(subscriptionUpdated.billing_cycle_anchor)
+      //       .format("MM/DD/YYYY")
+      // ); //format("MM/DD/YYYY");
 
       let subscription = {
         id: subscriptionUpdated.id,
@@ -52,7 +65,7 @@ const handleWebhook = async (req, res) => {
           .unix(subscriptionUpdated.current_period_start)
           .format(),
         periodEnd: moment.unix(subscriptionUpdated.current_period_end).format(),
-        planID: subscriptionUpdated.plan.product,
+        planID: subscriptionUpdated.plan.id,
         status: subscriptionUpdated.status,
       };
 
