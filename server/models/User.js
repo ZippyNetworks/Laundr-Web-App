@@ -64,6 +64,12 @@ const UserSchema = new mongoose.Schema({
       unique: false,
     },
   },
+  subscription: {
+    type: Object,
+    required: false,
+    unique: false,
+    default: null,
+  },
 });
 
 //the following password methods need to be before "const User..."

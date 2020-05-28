@@ -185,7 +185,6 @@ class CardInfo extends Component {
     let token = localStorage.getItem("token");
     const data = jwtDecode(token);
     let paymentID = data.stripe.regPaymentID;
-    let customerID = data.stripe.customerID;
 
     await axios
       .post(baseURL + "/stripe/getCardDetails", { paymentID })

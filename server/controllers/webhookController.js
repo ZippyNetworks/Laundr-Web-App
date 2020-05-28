@@ -1,5 +1,8 @@
-const handleWebhook = (req, res) => {
-  console.log("Reached webhook handler");
+const User = require("../models/User");
+
+//todo: use webhooks to handle email change in chckout
+
+const handleWebhook = async (req, res) => {
   let event;
 
   try {
@@ -8,29 +11,47 @@ const handleWebhook = (req, res) => {
     res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  console.log("Event: ");
-  console.log(event);
+  console.log("Event: " + event.type);
 
   // Handle the event
   switch (event.type) {
-    case "payment_intent.succeeded":
-      const paymentIntent = event.data.object;
-      // Then define and call a method to handle the successful payment intent.
-      // handlePaymentIntentSucceeded(paymentIntent);
-      break;
-    case "payment_method.attached":
-      const paymentMethod = event.data.object;
-      // Then define and call a method to handle the successful attachment of a PaymentMethod.
-      // handlePaymentMethodAttached(paymentMethod);
-      break;
-    // ... handle other event types
-    default:
-      // Unexpected event type
-      return res.status(400).end();
-  }
+    case "customer.subscription.updated":
+      const subscriptionUpdated = event.data.object;
+      console.log("subscription updated: ");
+      console.log(subscriptionUpdated);
 
-  // Return a response to acknowledge receipt of the event
-  res.json({ received: true });
+      await User.findOneAndUpdate(
+        { "stripe.customerID": subscriptionUpdated.customer },
+        { subscription: subscriptionUpdated }
+      )
+        .then((user) => {
+          if (user) {
+            return res.json({
+              success: true,
+              message: "Updated user subscription object",
+            });
+          } else {
+            return res.json({
+              success: false,
+              message: "Could not find user associated with subscription",
+            });
+          }
+        })
+        .catch((error) => {
+          return res.json({
+            success: false,
+            message: error,
+          });
+        });
+      break;
+    default:
+      // Unexpected event type or one not handled
+      console.log("Received an event not handled");
+      return res.json({
+        success: false,
+        message: "Received an event not handled",
+      });
+  }
 };
 
 module.exports = { handleWebhook };
