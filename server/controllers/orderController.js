@@ -28,13 +28,9 @@ const placeOrder = async (req, res) => {
   await Order.countDocuments({})
     .then((count) => {
       if (count) {
-        console.log("1");
         orderCount = count;
       } else {
-        return res.json({
-          success: false,
-          message: "Error with getting number of total orders",
-        });
+        orderCount = 0;
       }
     })
     .catch((error) => {

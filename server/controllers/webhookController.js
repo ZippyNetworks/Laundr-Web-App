@@ -129,8 +129,8 @@ const handleWebhook = async (req, res) => {
           message: error,
         });
       });
-  } else if (event.type === "invoice.failed") {
-    //when sub cycle payment fails - since invoices only used for subs
+  } else if (event.type === "invoice.payment_failed") {
+    //when sub cycle payment fails - since invoices only used for subs, todo
     console.log("\x1b[32m%s\x1b[0m", "Event handled: " + event.type); //green
 
     return res.json({
