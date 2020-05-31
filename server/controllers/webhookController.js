@@ -56,19 +56,24 @@ const handleWebhook = async (req, res) => {
       // ); //format("MM/DD/YYYY");
 
       let plan;
+      let lbsLeft;
 
       switch (subscriptionUpdated.plan.id) {
         case familyAPI_ID:
           plan = "Family";
+          lbsLeft = 84;
           break;
         case plusAPI_ID:
           plan = "Plus";
+          lbsLeft = 66;
           break;
         case standardAPI_ID:
           plan = "Standard";
+          lbsLeft = 48;
           break;
         case studentAPI_ID:
           plan = "Student";
+          lbsLeft = 40;
           break;
       }
 
@@ -84,6 +89,7 @@ const handleWebhook = async (req, res) => {
         periodEnd: moment.unix(subscriptionUpdated.current_period_end).format(),
         plan: plan,
         status: subscriptionUpdated.status,
+        lbsLeft: lbsLeft,
       };
 
       await User.findOneAndUpdate(

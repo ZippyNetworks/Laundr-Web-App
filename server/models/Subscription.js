@@ -3,37 +3,42 @@ const mongoose = require("mongoose");
 const SubscriptionSchema = new mongoose.Schema({
   id: {
     type: String,
-    unique: true,
+    unique: false,
     required: true,
   },
   anchorDate: {
     type: String,
-    unique: true,
+    unique: false,
     required: true,
   },
   startDate: {
     type: String,
-    unique: true,
+    unique: false,
     required: true,
   },
   periodStart: {
     type: String,
-    unique: true,
+    unique: false,
     required: true,
   },
   periodEnd: {
     type: String,
-    unique: true,
+    unique: false,
     required: true,
   },
   plan: {
     type: String,
-    unique: true,
+    unique: false,
     required: true,
   },
   status: {
     type: String,
-    unique: true,
+    unique: false,
+    required: true,
+  },
+  lbsLeft: {
+    type: Number,
+    unique: false,
     required: true,
   },
 });

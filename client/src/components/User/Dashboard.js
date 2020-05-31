@@ -40,6 +40,7 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: 10lb minimum on orders - so if you send one sock you get charged 10 lbs. (add to new order notes)
 //todo: sort out customer email thing (different: login vs stripe - can be changed with checkout session)
 //todo: webhook for cancelled subs
+//todo: move moment to higher level package.json
 
 class Dashboard extends Component {
   constructor(props) {
