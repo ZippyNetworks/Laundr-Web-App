@@ -38,118 +38,141 @@ const handleWebhook = async (req, res) => {
   }
 
   // Handle the event
-  switch (event.type) {
-    case "invoice.payment_succeeded":
-      //when sub cycle payment succeeds - since invoices only used for subs. also applies for first one
-      /*===============================================================*/
-      console.log("Event handled: " + event.type);
-      const invoice = event.data.object;
+  if (event.type === "invoice.payment_succeeded") {
+    //when sub cycle payment succeeds - since invoices only used for subs. also applies for first one
+    console.log("Event handled: " + event.type);
+    const invoice = event.data.object;
 
-      let subscriptionID = invoice.subscription;
-      let subscriptionObj;
-      let retrievalError = false;
+    let subscriptionID = invoice.subscription;
+    let successfulSubscription;
+    let retrievalError = false;
 
-      //retrieve associated sub
-      await stripe.subscriptions
-        .retrieve(subscriptionID)
-        .then((subscription, err) => {
-          if (err || !subscription) {
-            retrievalError = true;
-          } else {
-            subscriptionObj = subscription;
-          }
-        });
+    //retrieve associated sub
+    await stripe.subscriptions
+      .retrieve(subscriptionID)
+      .then((subscription, err) => {
+        if (err || !subscription) {
+          retrievalError = true;
+        } else {
+          successfulSubscription = subscription;
+        }
+      });
 
-      if (retrievalError) {
-        return res.json({
-          success: false,
-          message: "Could not fetch subscription",
-        });
-      }
+    if (retrievalError) {
+      return res.json({
+        success: false,
+        message: "Could not fetch subscription",
+      });
+    }
 
-      //create the new sub object from the updated subscription
-      let plan;
-      let lbsLeft;
+    //create the new sub object from the updated subscription
+    let plan;
+    let lbsLeft;
 
-      switch (subscriptionObj.plan.id) {
-        case familyAPI_ID:
-          plan = "Family";
-          lbsLeft = 84;
-          break;
-        case plusAPI_ID:
-          plan = "Plus";
-          lbsLeft = 66;
-          break;
-        case standardAPI_ID:
-          plan = "Standard";
-          lbsLeft = 48;
-          break;
-        case studentAPI_ID:
-          plan = "Student";
-          lbsLeft = 40;
-          break;
-      }
+    switch (successfulSubscription.plan.id) {
+      case familyAPI_ID:
+        plan = "Family";
+        lbsLeft = 84;
+        break;
+      case plusAPI_ID:
+        plan = "Plus";
+        lbsLeft = 66;
+        break;
+      case standardAPI_ID:
+        plan = "Standard";
+        lbsLeft = 48;
+        break;
+      case studentAPI_ID:
+        plan = "Student";
+        lbsLeft = 40;
+        break;
+    }
 
-      let subscription = {
-        id: subscriptionObj.id,
-        anchorDate: moment.unix(subscriptionObj.billing_cycle_anchor).format(),
-        startDate: moment.unix(subscriptionObj.start_date).format(),
-        periodStart: moment.unix(subscriptionObj.current_period_start).format(),
-        periodEnd: moment.unix(subscriptionObj.current_period_end).format(),
-        plan: plan,
-        status: subscriptionObj.status,
-        lbsLeft: lbsLeft,
-      };
+    let updatedSubscription = {
+      id: successfulSubscription.id,
+      anchorDate: moment
+        .unix(successfulSubscription.billing_cycle_anchor)
+        .format(),
+      startDate: moment.unix(successfulSubscription.start_date).format(),
+      periodStart: moment
+        .unix(successfulSubscription.current_period_start)
+        .format(),
+      periodEnd: moment
+        .unix(successfulSubscription.current_period_end)
+        .format(),
+      plan: plan,
+      status: successfulSubscription.status,
+      lbsLeft: lbsLeft,
+    };
 
-      //update user's "subscription" property with the updated sub object
-      await User.findOneAndUpdate(
-        { "stripe.customerID": subscriptionObj.customer },
-        { subscription: subscription }
-      )
-        .then((user) => {
-          if (user) {
-            return res.json({
-              success: true,
-              message: "Updated user subscription object",
-            });
-          } else {
-            return res.json({
-              success: false,
-              message: "Could not find user associated with subscription",
-            });
-          }
-        })
-        .catch((error) => {
+    //update user's "subscription" property with the updated sub object
+    await User.findOneAndUpdate(
+      { "stripe.customerID": successfulSubscription.customer },
+      { subscription: updatedSubscription }
+    )
+      .then((user) => {
+        if (user) {
+          return res.json({
+            success: true,
+            message: "Updated user subscription object",
+          });
+        } else {
           return res.json({
             success: false,
-            message: error,
+            message: "Could not find user associated with subscription",
           });
+        }
+      })
+      .catch((error) => {
+        return res.json({
+          success: false,
+          message: error,
         });
-
-      /*===============================================================*/
-      break;
-
-    case "invoice.failed":
-      //when sub cycle payment fails - since invoices only used for subs
-      /*===============================================================*/
-      console.log("Event handled: " + event.type);
-      return res.json({
-        success: false,
-        message: "Received an event not handled",
       });
-      /*===============================================================*/
-      break;
+  } else if (event.type === "invoice.failed") {
+    //when sub cycle payment fails - since invoices only used for subs
+    console.log("Event handled: " + event.type);
 
-    default:
-      //unexpected event type or one not handled
-      /*===============================================================*/
-      console.log("Event NOT handled: " + event.type);
-      return res.json({
-        success: false,
-        message: "Received an event not handled",
+    return res.json({
+      success: false,
+      message: "Event not handled",
+    });
+  } else if (event.type === "customer.subscription.deleted") {
+    //when sub cancelled by you or them via their self-service portal
+    console.log("Event handled: " + event.type);
+
+    let cancelledSubscription = event.data.object;
+
+    await User.findOneAndUpdate(
+      { "stripe.customerID": cancelledSubscription.customer },
+      { "subscription.status": "cancelled", "subscription.lbsLeft": 0 }
+    )
+      .then((user) => {
+        if (user) {
+          return res.json({
+            success: true,
+            message: "Updated user subscription object",
+          });
+        } else {
+          return res.json({
+            success: false,
+            message: "Could not find user associated with subscription",
+          });
+        }
+      })
+      .catch((error) => {
+        return res.json({
+          success: false,
+          message: error,
+        });
       });
-      /*===============================================================*/
-      break;
+  } else {
+    //unexpected event type or one not handled
+    console.log("Event NOT handled: " + event.type);
+    return res.json({
+      success: false,
+      message: "Event not handled",
+    });
   }
 };
 
@@ -176,3 +199,156 @@ module.exports = { handleWebhook };
 //       .unix(subscription.billing_cycle_anchor)
 //       .format("MM/DD/YYYY")
 // ); //format("MM/DD/YYYY");
+
+// switch (event.type) {
+//   case "invoice.payment_succeeded":
+//     /*==================================================================*/
+//     //when sub cycle payment succeeds - since invoices only used for subs. also applies for first one
+//     console.log("Event handled: " + event.type);
+//     const invoice = event.data.object;
+
+//     let subscriptionID = invoice.subscription;
+//     let successfulSubscription;
+//     let retrievalError = false;
+
+//     //retrieve associated sub
+//     await stripe.subscriptions
+//       .retrieve(subscriptionID)
+//       .then((subscription, err) => {
+//         if (err || !subscription) {
+//           retrievalError = true;
+//         } else {
+//           successfulSubscription = subscription;
+//         }
+//       });
+
+//     if (retrievalError) {
+//       return res.json({
+//         success: false,
+//         message: "Could not fetch subscription",
+//       });
+//     }
+
+//     //create the new sub object from the updated subscription
+//     let plan;
+//     let lbsLeft;
+
+//     switch (successfulSubscription.plan.id) {
+//       case familyAPI_ID:
+//         plan = "Family";
+//         lbsLeft = 84;
+//         break;
+//       case plusAPI_ID:
+//         plan = "Plus";
+//         lbsLeft = 66;
+//         break;
+//       case standardAPI_ID:
+//         plan = "Standard";
+//         lbsLeft = 48;
+//         break;
+//       case studentAPI_ID:
+//         plan = "Student";
+//         lbsLeft = 40;
+//         break;
+//     }
+
+//     let updatedSubscription = {
+//       id: successfulSubscription.id,
+//       anchorDate: moment
+//         .unix(successfulSubscription.billing_cycle_anchor)
+//         .format(),
+//       startDate: moment.unix(successfulSubscription.start_date).format(),
+//       periodStart: moment
+//         .unix(successfulSubscription.current_period_start)
+//         .format(),
+//       periodEnd: moment
+//         .unix(successfulSubscription.current_period_end)
+//         .format(),
+//       plan: plan,
+//       status: successfulSubscription.status,
+//       lbsLeft: lbsLeft,
+//     };
+
+//     //update user's "subscription" property with the updated sub object
+//     await User.findOneAndUpdate(
+//       { "stripe.customerID": successfulSubscription.customer },
+//       { subscription: updatedSubscription }
+//     )
+//       .then((user) => {
+//         if (user) {
+//           return res.json({
+//             success: true,
+//             message: "Updated user subscription object",
+//           });
+//         } else {
+//           return res.json({
+//             success: false,
+//             message: "Could not find user associated with subscription",
+//           });
+//         }
+//       })
+//       .catch((error) => {
+//         return res.json({
+//           success: false,
+//           message: error,
+//         });
+//       });
+//     /*==================================================================*/
+//     break;
+
+//   case "invoice.failed":
+//     /*==================================================================*/
+//     //when sub cycle payment fails - since invoices only used for subs
+//     console.log("Event handled: " + event.type);
+
+//     return res.json({
+//       success: false,
+//       message: "Event not handled",
+//     });
+//     /*==================================================================*/
+//     break;
+
+//   case "customer.subscription.deleted":
+//     /*==================================================================*/
+//     //when sub cancelled by you or them via their self-service portal
+//     console.log("Event handled: " + event.type);
+
+//     let cancelledSubscription = event.data.object;
+
+//     await User.findOneAndUpdate(
+//       { "stripe.customerID": cancelledSubscription.customer },
+//       { "subscription.status": "cancelled", "subscription.lbsLeft": 0 }
+//     )
+//       .then((user) => {
+//         if (user) {
+//           return res.json({
+//             success: true,
+//             message: "Updated user subscription object",
+//           });
+//         } else {
+//           return res.json({
+//             success: false,
+//             message: "Could not find user associated with subscription",
+//           });
+//         }
+//       })
+//       .catch((error) => {
+//         return res.json({
+//           success: false,
+//           message: error,
+//         });
+//       });
+//     /*==================================================================*/
+//     break;
+
+//   default:
+//     /*==================================================================*/
+//     //unexpected event type or one not handled
+//     console.log("Event NOT handled: " + event.type);
+//     return res.json({
+//       success: false,
+//       message: "Event not handled",
+//     });
+//     /*==================================================================*/
+//     break;
+// }
