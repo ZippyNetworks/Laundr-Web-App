@@ -72,7 +72,7 @@ class OrderTable extends Component {
         return (
           <React.Fragment>
             <Typography variant="body1">
-              Plese confirm that you have finished washing the order from:
+              Please confirm that you have finished washing the order from:
             </Typography>
             <Typography
               variant="body1"

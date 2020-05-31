@@ -31,7 +31,12 @@ class AcceptedDashboard extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { orders: [], weight: "" };
+    this.state = {
+      orders: [],
+      weight: "",
+      weightError: false,
+      weightErrorMsg: "",
+    };
   }
 
   componentDidMount = async () => {
@@ -79,6 +84,26 @@ class AcceptedDashboard extends Component {
 
     if (weight === "" || regex.test(weight)) {
       this.setState({ weight: weight });
+    }
+  };
+
+  handleWeightMinimum = () => {
+    if (!this.state.weight.replace(/\s/g, "").length) {
+      this.setState({
+        weightError: true,
+        weightErrorMsg: "Please enter a weight.",
+      });
+
+      return false;
+    } else if (this.state.weight < 10) {
+      this.setState({
+        weightError: true,
+        weightErrorMsg: "Minimum weight to be entered is 10 lbs.",
+      });
+
+      return false;
+    } else {
+      return true;
     }
   };
 
@@ -189,7 +214,10 @@ class AcceptedDashboard extends Component {
           orders={this.state.orders}
           getOrders={this.getOrders}
           weight={this.state.weight}
+          weightError={this.state.weightError}
+          weightErrorMsg={this.state.weightErrorMsg}
           handleWeightChange={this.handleWeightChange}
+          handleWeightMinimum={this.handleWeightMinimum}
           handleWeightEntered={this.handleWeightEntered}
           handleWasherReceived={this.handleWasherReceived}
           handleUserReceived={this.handleUserReceived}

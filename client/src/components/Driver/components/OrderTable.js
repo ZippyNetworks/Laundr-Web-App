@@ -111,7 +111,7 @@ class OrderTable extends Component {
         return (
           <React.Fragment>
             <Typography variant="body1">
-              Plese confirm that you are accepting an order from:&nbsp;
+              Please confirm that you are accepting an order from:&nbsp;
             </Typography>
             <Typography
               variant="body1"
@@ -125,7 +125,7 @@ class OrderTable extends Component {
         return (
           <React.Fragment>
             <Typography variant="body1">
-              Plese enter the weight, in pounds, of the order from:&nbsp;
+              Please enter the weight, in pounds, of the order from:&nbsp;
             </Typography>
             <Typography
               variant="body1"
@@ -138,20 +138,30 @@ class OrderTable extends Component {
                 autoFocus
                 margin="dense"
                 label="Weight"
+                error={this.props.weightError}
+                helperText={this.props.weightErrorMsg}
                 value={this.props.weight}
                 onChange={(event) => {
                   this.props.handleWeightChange(event.target.value);
                 }}
-                style={{ width: 100 }}
+                style={{ width: 105 }}
               />
             </div>
+            <Typography style={{ textAlign: "center" }}>
+              <Typography variant="body1">
+                They will be charged:&nbsp;
+              </Typography>
+              <Typography variant="body1" style={{ fontWeight: 600 }}>
+                ${this.props.weight * 1.5}
+              </Typography>
+            </Typography>
           </React.Fragment>
         );
       } else if (status === 2) {
         return (
           <React.Fragment>
             <Typography variant="body1">
-              Plese confirm that you have delivered the order to the washer.
+              Please confirm that you have delivered the order to the washer.
             </Typography>
           </React.Fragment>
         );
@@ -159,7 +169,7 @@ class OrderTable extends Component {
         return (
           <React.Fragment>
             <Typography variant="body1">
-              Plese confirm that you are accepting an order from the following
+              Please confirm that you are accepting an order from the following
               user for final delivery:&nbsp;
             </Typography>
             <Typography
@@ -174,7 +184,7 @@ class OrderTable extends Component {
         return (
           <React.Fragment>
             <Typography variant="body1">
-              Plese confirm that you have delivered the order to:
+              Please confirm that you have delivered the order to:
             </Typography>
             <Typography
               variant="body1"
@@ -236,13 +246,15 @@ class OrderTable extends Component {
             </Button>
             <Button
               onClick={async () => {
-                let success = await this.props.handleWeightEntered(
-                  this.state.currentOrder
-                );
-                if (success) {
-                  this.renderWeightSuccessMsg();
-                } else {
-                  this.renderWeightErrorMsg();
+                if (this.props.handleWeightMinimum()) {
+                  let success = await this.props.handleWeightEntered(
+                    this.state.currentOrder
+                  );
+                  if (success) {
+                    this.renderWeightSuccessMsg();
+                  } else {
+                    this.renderWeightErrorMsg();
+                  }
                 }
               }}
               color="primary"
@@ -455,9 +467,7 @@ class OrderTable extends Component {
             <React.Fragment>
               <Dialog open={this.state.dialog} onClose={this.handleDialogClose}>
                 <DialogTitle>{this.state.dialogTitle}</DialogTitle>
-                <DialogContent>
-                  {this.renderDialogContent(classes)}
-                </DialogContent>
+                <DialogContent>{this.renderDialogContent()}</DialogContent>
                 <DialogActions>
                   {this.renderDialogActions(classes)}
                 </DialogActions>

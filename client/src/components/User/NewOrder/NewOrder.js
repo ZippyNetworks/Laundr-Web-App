@@ -135,7 +135,7 @@ class NewOrder extends Component {
           this.setState({
             error: true,
             errorMessage:
-              "The address entered is not valid or it is not within our service range. Please try again.",
+              "The address entered is not valid or is not within our service range. Please try again.",
           });
           console.log("distance: " + distance);
           console.log("====================================");
