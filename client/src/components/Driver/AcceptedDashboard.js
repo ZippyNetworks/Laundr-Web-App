@@ -107,6 +107,10 @@ class AcceptedDashboard extends Component {
     }
   };
 
+  handleClearWeightError = () => {
+    this.setState({ weightError: false, weightErrorMsg: "" });
+  };
+
   handleWeightEntered = async (order) => {
     console.log("entered weight: " + this.state.weight);
 
@@ -218,6 +222,7 @@ class AcceptedDashboard extends Component {
           weightErrorMsg={this.state.weightErrorMsg}
           handleWeightChange={this.handleWeightChange}
           handleWeightMinimum={this.handleWeightMinimum}
+          handleClearWeightError={this.handleClearWeightError}
           handleWeightEntered={this.handleWeightEntered}
           handleWasherReceived={this.handleWasherReceived}
           handleUserReceived={this.handleUserReceived}

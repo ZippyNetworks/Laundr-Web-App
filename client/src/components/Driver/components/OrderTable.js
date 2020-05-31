@@ -135,7 +135,6 @@ class OrderTable extends Component {
             </Typography>
             <div style={{ textAlign: "center" }}>
               <TextField
-                autoFocus
                 margin="dense"
                 label="Weight"
                 error={this.props.weightError}
@@ -360,14 +359,17 @@ class OrderTable extends Component {
   };
 
   handleDialogClose = () => {
-    this.setState({ dialog: false });
+    this.setState({ dialog: false }, () => {
+      let order = this.state.currentOrder;
 
-    let order = this.state.currentOrder;
+      if (order.orderInfo.status === 1) {
+        //clear weight text field
+        this.props.handleWeightChange("");
 
-    if (order.orderInfo.status === 1) {
-      //clear weight text field
-      this.props.handleWeightChange("");
-    }
+        //clear any weight errors
+        this.props.handleClearWeightError();
+      }
+    });
   };
 
   renderAcceptedMsg = () => {
