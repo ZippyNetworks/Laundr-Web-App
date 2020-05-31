@@ -41,6 +41,7 @@ import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
 //todo: sort out customer email thing (different: login vs stripe - can be changed with checkout session)
 //todo: webhook for cancelled subs
 //todo: move moment to higher level package.json
+//todo: change all catch errors to include a msg about the error itself?
 
 class Dashboard extends Component {
   constructor(props) {

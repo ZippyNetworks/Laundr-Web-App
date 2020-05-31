@@ -1,5 +1,11 @@
 const User = require("../models/User");
 const moment = require("moment");
+var cron = require("node-cron");
+
+const stripeSECRET =
+  process.env.STRIPE_SECRET || require("../config/config").stripe.secret;
+
+const stripe = require("stripe")(stripeSECRET);
 
 const familyAPI_ID =
   process.env.STRIPE_FAMILY_API_ID ||
@@ -16,6 +22,12 @@ const studentAPI_ID =
 
 //todo: use webhooks to handle email change in chckout
 
+var task = cron.schedule("* * * * * *", () => {
+  console.log("will execute every second until stopped");
+});
+
+task.stop();
+
 const handleWebhook = async (req, res) => {
   let event;
 
@@ -27,38 +39,39 @@ const handleWebhook = async (req, res) => {
 
   // Handle the event
   switch (event.type) {
-    case "customer.subscription.updated":
+    case "invoice.payment_succeeded":
+      //when sub cycle payment succeeds - since invoices only used for subs. also applies for first one
+      /*===============================================================*/
       console.log("Event handled: " + event.type);
-      const subscriptionUpdated = event.data.object;
-      console.log("subscription updated: ");
-      console.log(subscriptionUpdated);
+      const invoice = event.data.object;
 
-      // console.log(
-      //   "test 1: " +
-      //     moment.unix(subscriptionUpdated.billing_cycle_anchor).format()
-      // ); //iso8601
+      let subscriptionID = invoice.subscription;
+      let subscriptionObj;
+      let retrievalError = false;
 
-      // console.log(
-      //   "test 2: " + moment.unix(subscriptionUpdated.billing_cycle_anchor)
-      // ); //moment object, basically a Date
+      //retrieve associated sub
+      await stripe.subscriptions
+        .retrieve(subscriptionID)
+        .then((subscription, err) => {
+          if (err || !subscription) {
+            retrievalError = true;
+          } else {
+            subscriptionObj = subscription;
+          }
+        });
 
-      // console.log(
-      //   "this 1: " +
-      //     moment
-      //       .unix(subscriptionUpdated.billing_cycle_anchor)
-      //       .format("HH:mm:ss")
-      // );
-      // console.log(
-      //   "this 2: " +
-      //     moment
-      //       .unix(subscriptionUpdated.billing_cycle_anchor)
-      //       .format("MM/DD/YYYY")
-      // ); //format("MM/DD/YYYY");
+      if (retrievalError) {
+        return res.json({
+          success: false,
+          message: "Could not fetch subscription",
+        });
+      }
 
+      //create the new sub object from the updated subscription
       let plan;
       let lbsLeft;
 
-      switch (subscriptionUpdated.plan.id) {
+      switch (subscriptionObj.plan.id) {
         case familyAPI_ID:
           plan = "Family";
           lbsLeft = 84;
@@ -78,22 +91,19 @@ const handleWebhook = async (req, res) => {
       }
 
       let subscription = {
-        id: subscriptionUpdated.id,
-        anchorDate: moment
-          .unix(subscriptionUpdated.billing_cycle_anchor)
-          .format(),
-        startDate: moment.unix(subscriptionUpdated.start_date).format(),
-        periodStart: moment
-          .unix(subscriptionUpdated.current_period_start)
-          .format(),
-        periodEnd: moment.unix(subscriptionUpdated.current_period_end).format(),
+        id: subscriptionObj.id,
+        anchorDate: moment.unix(subscriptionObj.billing_cycle_anchor).format(),
+        startDate: moment.unix(subscriptionObj.start_date).format(),
+        periodStart: moment.unix(subscriptionObj.current_period_start).format(),
+        periodEnd: moment.unix(subscriptionObj.current_period_end).format(),
         plan: plan,
-        status: subscriptionUpdated.status,
+        status: subscriptionObj.status,
         lbsLeft: lbsLeft,
       };
 
+      //update user's "subscription" property with the updated sub object
       await User.findOneAndUpdate(
-        { "stripe.customerID": subscriptionUpdated.customer },
+        { "stripe.customerID": subscriptionObj.customer },
         { subscription: subscription }
       )
         .then((user) => {
@@ -110,24 +120,59 @@ const handleWebhook = async (req, res) => {
           }
         })
         .catch((error) => {
-          console.log(
-            "Error with updating user with subscription object: " + error
-          );
-
           return res.json({
             success: false,
             message: error,
           });
         });
+
+      /*===============================================================*/
       break;
-    default:
-      // Unexpected event type or one not handled
-      console.log("Received an event not handled: " + event.type);
+
+    case "invoice.failed":
+      //when sub cycle payment fails - since invoices only used for subs
+      /*===============================================================*/
+      console.log("Event handled: " + event.type);
       return res.json({
         success: false,
         message: "Received an event not handled",
       });
+      /*===============================================================*/
+      break;
+
+    default:
+      //unexpected event type or one not handled
+      /*===============================================================*/
+      console.log("Event NOT handled: " + event.type);
+      return res.json({
+        success: false,
+        message: "Received an event not handled",
+      });
+      /*===============================================================*/
+      break;
   }
 };
 
 module.exports = { handleWebhook };
+
+// console.log(
+//   "test 1: " +
+//     moment.unix(subscription.billing_cycle_anchor).format()
+// ); //iso8601
+
+// console.log(
+//   "test 2: " + moment.unix(subscription.billing_cycle_anchor)
+// ); //moment object, basically a Date
+
+// console.log(
+//   "this 1: " +
+//     moment
+//       .unix(subscription.billing_cycle_anchor)
+//       .format("HH:mm:ss")
+// );
+// console.log(
+//   "this 2: " +
+//     moment
+//       .unix(subscription.billing_cycle_anchor)
+//       .format("MM/DD/YYYY")
+// ); //format("MM/DD/YYYY");

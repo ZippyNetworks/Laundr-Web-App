@@ -112,8 +112,8 @@ const chargeCustomer = async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: 1099, //hardcode
       currency: "usd",
-      customer: hardCodeCustomerID, //hardcode
-      payment_method: hardcodePaymentID, //hardcode
+      customer: req.body.customerID,
+      payment_method: req.body.paymentID,
       off_session: true,
       confirm: true,
     });

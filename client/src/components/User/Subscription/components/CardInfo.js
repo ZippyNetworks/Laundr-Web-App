@@ -139,9 +139,13 @@ class CardInfo extends Component {
 
   handleChargeCard = async () => {
     const { stripe } = this.props;
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+    let customerID = data.stripe.customerID;
+    let paymentID = data.stripe.regPaymentID;
 
     await axios
-      .post(baseURL + "/stripe/chargeCustomer", {})
+      .post(baseURL + "/stripe/chargeCustomer", { customerID, paymentID })
       .then((res) => {
         if (res.data.success) {
           alert("nice");
