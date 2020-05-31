@@ -39,8 +39,8 @@ const handleWebhook = async (req, res) => {
 
   // Handle the event
   if (event.type === "invoice.payment_succeeded") {
-    //when sub cycle payment succeeds - since invoices only used for subs. also applies for first one
-    console.log("Event handled: " + event.type);
+    //when sub cycle payment succeeds - since invoices only used for subs. also applies for initial purchase
+    console.log("\x1b[32m%s\x1b[0m", "Event handled: " + event.type); //green
     const invoice = event.data.object;
 
     let subscriptionID = invoice.subscription;
@@ -131,7 +131,7 @@ const handleWebhook = async (req, res) => {
       });
   } else if (event.type === "invoice.failed") {
     //when sub cycle payment fails - since invoices only used for subs
-    console.log("Event handled: " + event.type);
+    console.log("\x1b[32m%s\x1b[0m", "Event handled: " + event.type); //green
 
     return res.json({
       success: false,
@@ -139,7 +139,7 @@ const handleWebhook = async (req, res) => {
     });
   } else if (event.type === "customer.subscription.deleted") {
     //when sub cancelled by you or them via their self-service portal
-    console.log("Event handled: " + event.type);
+    console.log("\x1b[32m%s\x1b[0m", "Event handled: " + event.type); //green
 
     let cancelledSubscription = event.data.object;
 
@@ -168,7 +168,8 @@ const handleWebhook = async (req, res) => {
       });
   } else {
     //unexpected event type or one not handled
-    console.log("Event NOT handled: " + event.type);
+    console.log("\x1b[31m%s\x1b[0m", "Event NOT handled: " + event.type); //red
+
     return res.json({
       success: false,
       message: "Event not handled",

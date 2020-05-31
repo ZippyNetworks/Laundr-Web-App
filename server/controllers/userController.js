@@ -69,6 +69,16 @@ const register = async (req, res) => {
       regPaymentID: "N/A",
       customerID: customer.id,
     },
+    subscription: {
+      id: "N/A",
+      anchorDate: "N/A",
+      startDate: "N/A",
+      periodStart: "N/A",
+      periodEnd: "N/A",
+      plan: "N/A",
+      status: "N/A",
+      lbsLeft: 0,
+    },
   })
     .then((user) => {
       if (user) {

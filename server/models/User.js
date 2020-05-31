@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    unique: false,
+    unique: true,
     required: true,
   },
   password: {
@@ -67,9 +67,8 @@ const UserSchema = new mongoose.Schema({
   },
   subscription: {
     type: SubscriptionSchema,
-    required: false,
+    required: true,
     unique: false,
-    default: null,
   },
 });
 
