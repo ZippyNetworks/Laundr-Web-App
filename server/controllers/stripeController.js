@@ -73,73 +73,6 @@ const createSetupIntent = async (req, res) => {
   }
 };
 
-const chargeCustomer2 = async (req, res) => {
-  // let cards;
-
-  // //get list of payment methods
-  // await stripe.paymentMethods
-  //   .list({ customer: hardCodeCustomerID, type: "card" }) //hardcode customer for now
-  //   .then((paymentMethods, err) => {
-  //     if (err) {
-  //       return res.json({
-  //         success: false,
-  //         message: "Error with fetching payment methods: " + err,
-  //       });
-  //     } else {
-  //       cards = paymentMethods;
-  //     }
-  //   });
-
-  //set payment id of their default card, the one first added
-  //!!!TODO: OR JUST STORE A PAYMENT ID AND USE THAT FOR THESE ON-DEMAND CHARGES while keeping the sub payment method separate (self service thru stripe)
-  // let defaultCardID;
-
-  // if (cards.data.length === 0) {
-  //   return res.json({ success: false, message: "NPM" }); //npm = no payment method
-  // } else {
-  //   //grab the first card they added
-  //   let defaultIndex = cards.data.length - 1;
-  //   let defaultCard = cards.data[defaultIndex];
-
-  //   defaultCardID = defaultCard.id;
-  // }
-
-  //attempt a charge
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: 1099, //hardcode
-      currency: "usd",
-      customer: req.body.customerID,
-      payment_method: req.body.paymentID,
-      off_session: true,
-      confirm: true,
-    });
-
-    return res.json({ success: true, message: "Charged successfully" });
-  } catch (err) {
-    // Error code will be authentication_required if authentication is needed
-    console.log("Error code is: ", err.code);
-
-    if (err.code === "authentication_required") {
-      const paymentIntentRetrieved = await stripe.paymentIntents.retrieve(
-        err.raw.payment_intent.id
-      );
-      console.log("PI retrieved: ", paymentIntentRetrieved.id);
-
-      return res.json({
-        success: false,
-        message: "authentication_required",
-        paymentIntent: paymentIntentRetrieved,
-      });
-    } else {
-      return res.json({
-        success: false,
-        message: err.code,
-      });
-    }
-  }
-};
-
 //dont let req get through if its "N/A"
 const getCardDetails = async (req, res) => {
   await stripe.paymentMethods
@@ -250,22 +183,27 @@ const chargeCustomer = async (req, res, next) => {
       // Error code will be authentication_required if authentication is needed
       console.log("Error code is: ", err.code);
 
-      if (err.code === "authentication_required") {
-        // const paymentIntentRetrieved = await stripe.paymentIntents.retrieve(
-        //   err.raw.payment_intent.id
-        // );
-        // console.log("PI retrieved: ", paymentIntentRetrieved.id);
+      // if (err.code === "authentication_required") {
+      //   // const paymentIntentRetrieved = await stripe.paymentIntents.retrieve(
+      //   //   err.raw.payment_intent.id
+      //   // );
+      //   // console.log("PI retrieved: ", paymentIntentRetrieved.id);
 
-        return res.json({
-          success: false,
-          message: "authentication_required",
-        });
-      } else {
-        return res.json({
-          success: false,
-          message: err.code,
-        });
-      }
+      //   return res.json({
+      //     success: false,
+      //     message: "authentication_required",
+      //   });
+      // } else {
+      //   return res.json({
+      //     success: false,
+      //     message: err.code,
+      //   });
+      // }
+
+      return res.json({
+        success: false,
+        message: err.code,
+      });
     }
   } else {
     //subscriber was not charged, so move on to middleware to update their lbs left
@@ -333,7 +271,6 @@ const updateSubscriptionLbs = async (req, res) => {
 module.exports = {
   createCheckoutSession,
   createSetupIntent,
-  chargeCustomer2,
   getCardDetails,
   setRegPaymentID,
   //real:

@@ -4,7 +4,7 @@ const {
     fetchUser,
     chargeCustomer,
     updateSubscriptionLbs,
-    chargeCustomer2,
+
     getCardDetails,
     setRegPaymentID,
   } = require("../controllers/stripeController"),
@@ -21,7 +21,6 @@ router.post(
   chargeCustomer,
   updateSubscriptionLbs
 );
-router.post("/chargeCustomer2", chargeCustomer2);
 router.post("/getCardDetails", getCardDetails);
 router.post("/setRegPaymentID", setRegPaymentID);
 
