@@ -14,7 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
 import InputIcon from "@material-ui/icons/Input";
 import topbarStyles from "../../../../styles/layouts/Main/components/Topbar/topbarStyles";
-import LaundrLogo from "../../../../images/Topbar/Logo_2020.jpeg";
+import LaundrLogo from "../../../../images/Topbar/LaundrLogo.png";
 
 class Topbar extends Component {
   constructor(props) {
@@ -42,9 +42,8 @@ class Topbar extends Component {
         <Toolbar>
           <img
             style={{
-              width: 60,
               height: 60,
-              marginLeft: -25,
+              marginLeft: -10,
             }}
             alt="Company Logo"
             src={LaundrLogo}
