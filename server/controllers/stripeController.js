@@ -212,7 +212,7 @@ const setRegPaymentID = async (req, res) => {
 const chargeCustomer = async (req, res, next) => {
   let subscription = req.user.subscription;
 
-  console.log(subscription);
+  //console.log(subscription);
 
   //calculate the lbs to be charged, if any
   let chargeLbs;
