@@ -19,9 +19,6 @@ const studentAPI_ID =
   process.env.STUDENT_FAMILY_API_ID ||
   require("../config/config").stripe.studentAPI_ID;
 
-let hardCodeCustomerID = "";
-let hardcodePaymentID = "";
-
 const createCheckoutSession = async (req, res) => {
   let planAPI_ID = "";
 
@@ -76,7 +73,7 @@ const createSetupIntent = async (req, res) => {
   }
 };
 
-const chargeCustomer = async (req, res) => {
+const chargeCustomer2 = async (req, res) => {
   // let cards;
 
   // //get list of payment methods
@@ -212,10 +209,135 @@ const setRegPaymentID = async (req, res) => {
     });
 };
 
+const chargeCustomer = async (req, res, next) => {
+  let subscription = req.user.subscription;
+
+  console.log(subscription);
+
+  //calculate the lbs to be charged, if any
+  let chargeLbs;
+
+  //if the subscription is active, calculate the lbs to be deducted or charged
+  if (subscription.status === "active") {
+    chargeLbs = req.body.weight - subscription.lbsLeft;
+  } else {
+    chargeLbs = req.body.weight;
+  }
+
+  //if the lbs to be charged is greater than 0, charge them. otherwise, they must be a subscriber so update their lbs left
+  if (chargeLbs > 0) {
+    //attempt a charge
+    try {
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: chargeLbs * 1.5 * 100,
+        currency: "usd",
+        customer: req.user.stripe.customerID,
+        payment_method: req.user.stripe.regPaymentID,
+        off_session: true,
+        confirm: true,
+      });
+
+      //if charge successful and they're a subscriber, move on to middleware to update their lbs left if its not already 0
+      if (subscription.status === "active" && subscription.lbsLeft != 0) {
+        next();
+      } else {
+        return res.json({
+          success: true,
+          message: "Non-subscriber charged successfully",
+        });
+      }
+    } catch (err) {
+      // Error code will be authentication_required if authentication is needed
+      console.log("Error code is: ", err.code);
+
+      if (err.code === "authentication_required") {
+        // const paymentIntentRetrieved = await stripe.paymentIntents.retrieve(
+        //   err.raw.payment_intent.id
+        // );
+        // console.log("PI retrieved: ", paymentIntentRetrieved.id);
+
+        return res.json({
+          success: false,
+          message: "authentication_required",
+        });
+      } else {
+        return res.json({
+          success: false,
+          message: err.code,
+        });
+      }
+    }
+  } else {
+    //subscriber was not charged, so move on to middleware to update their lbs left
+    next();
+  }
+};
+
+const fetchUser = async (req, res, next) => {
+  await User.findOne({ email: req.body.userEmail })
+    .then((user) => {
+      if (user) {
+        req.user = user;
+        //user found, move on to next middleware
+        next();
+      } else {
+        return res.json({
+          success: false,
+          message: "User not found",
+        });
+      }
+    })
+    .catch((error) => {
+      return res.json({
+        success: false,
+        message: error,
+      });
+    });
+};
+
+const updateSubscriptionLbs = async (req, res) => {
+  let chargeLbs = req.body.weight - req.user.subscription.lbsLeft;
+  let updatedLbs;
+
+  if (chargeLbs > 0) {
+    updatedLbs = 0;
+  } else {
+    updatedLbs = req.user.subscription.lbsLeft - req.body.weight;
+  }
+
+  await User.findOneAndUpdate(
+    { email: req.body.userEmail },
+    { "subscription.lbsLeft": updatedLbs }
+  )
+    .then((user) => {
+      if (user) {
+        return res.json({
+          success: true,
+          message: "User subscription lbs left updated",
+        });
+      } else {
+        return res.json({
+          success: false,
+          message: "User could not be found",
+        });
+      }
+    })
+    .catch((error) => {
+      return res.json({
+        success: false,
+        message: error,
+      });
+    });
+};
+
 module.exports = {
   createCheckoutSession,
   createSetupIntent,
-  chargeCustomer,
+  chargeCustomer2,
   getCardDetails,
   setRegPaymentID,
+  //real:
+  fetchUser,
+  updateSubscriptionLbs,
+  chargeCustomer,
 };

@@ -146,14 +146,6 @@ class OrderTable extends Component {
                 style={{ width: 105 }}
               />
             </div>
-            <Typography style={{ textAlign: "center" }}>
-              <Typography variant="body1">
-                They will be charged:&nbsp;
-              </Typography>
-              <Typography variant="body1" style={{ fontWeight: 600 }}>
-                ${this.props.weight * 1.5}
-              </Typography>
-            </Typography>
           </React.Fragment>
         );
       } else if (status === 2) {
@@ -244,18 +236,7 @@ class OrderTable extends Component {
               Cancel
             </Button>
             <Button
-              onClick={async () => {
-                if (this.props.handleWeightMinimum()) {
-                  let success = await this.props.handleWeightEntered(
-                    this.state.currentOrder
-                  );
-                  if (success) {
-                    this.renderWeightSuccessMsg();
-                  } else {
-                    this.renderWeightErrorMsg();
-                  }
-                }
-              }}
+              onClick={this.handleWeightEntered}
               color="primary"
               variant="contained"
               className={classes.gradient}
@@ -457,6 +438,29 @@ class OrderTable extends Component {
         snackbarSuccess: false,
       });
     });
+  };
+
+  handleWeightEntered = async () => {
+    let success = await this.props.handleChargeCustomer(
+      this.state.currentOrder
+    );
+
+    if (success.status) {
+      console.log("CHARGED");
+    } else {
+      console.log("DIDNT CHARGE: " + success.message);
+    }
+    // if (this.props.handleWeightMinimum()) {
+
+    //   let success = await this.props.handleWeightEntered(
+    //     this.state.currentOrder
+    //   );
+    //   if (success) {
+    //     this.renderWeightSuccessMsg();
+    //   } else {
+    //     this.renderWeightErrorMsg();
+    //   }
+    // }
   };
 
   render() {

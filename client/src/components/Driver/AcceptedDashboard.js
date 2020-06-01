@@ -134,6 +134,27 @@ class AcceptedDashboard extends Component {
     return success;
   };
 
+  handleChargeCustomer = async (order) => {
+    let weight = this.state.weight;
+    let userEmail = order.userInfo.email;
+
+    let success = { status: true, message: "" };
+
+    await axios
+      .post(baseURL + "/stripe/chargeCustomer", { weight, userEmail })
+      .then((res) => {
+        if (!res.data.success) {
+          success.status = false;
+          success.message = res.data.message;
+        }
+      })
+      .catch((error) => {
+        alert("Error: " + error);
+      });
+
+    return success;
+  };
+
   handleWasherReceived = async (order) => {
     let orderID = order.orderInfo.orderID;
     let success;
@@ -222,6 +243,7 @@ class AcceptedDashboard extends Component {
           weightErrorMsg={this.state.weightErrorMsg}
           handleWeightChange={this.handleWeightChange}
           handleWeightMinimum={this.handleWeightMinimum}
+          handleChargeCustomer={this.handleChargeCustomer}
           handleClearWeightError={this.handleClearWeightError}
           handleWeightEntered={this.handleWeightEntered}
           handleWasherReceived={this.handleWasherReceived}

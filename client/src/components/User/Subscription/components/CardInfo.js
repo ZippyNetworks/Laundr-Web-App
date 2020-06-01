@@ -145,7 +145,7 @@ class CardInfo extends Component {
     let paymentID = data.stripe.regPaymentID;
 
     await axios
-      .post(baseURL + "/stripe/chargeCustomer", { customerID, paymentID })
+      .post(baseURL + "/stripe/chargeCustomer2", { customerID, paymentID })
       .then((res) => {
         if (res.data.success) {
           alert("nice");
