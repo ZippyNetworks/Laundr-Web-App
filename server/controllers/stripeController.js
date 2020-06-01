@@ -150,8 +150,8 @@ const chargeCustomer = async (req, res, next) => {
   //calculate the lbs to be charged, if any
   let chargeLbs;
 
-  //if the subscription is active, calculate the lbs to be deducted or charged
-  if (subscription.status === "active") {
+  //if the subscription has any lbs left, calculate the lbs to be deducted or charged
+  if (subscription.lbsLeft > 0) {
     chargeLbs = req.body.weight - subscription.lbsLeft;
   } else {
     chargeLbs = req.body.weight;
@@ -171,7 +171,7 @@ const chargeCustomer = async (req, res, next) => {
       });
 
       //if charge successful and they're a subscriber, move on to middleware to update their lbs left if its not already 0
-      if (subscription.status === "active" && subscription.lbsLeft != 0) {
+      if (subscription.lbsLeft > 0) {
         next();
       } else {
         return res.json({

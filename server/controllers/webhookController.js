@@ -145,7 +145,7 @@ const handleWebhook = async (req, res) => {
 
     await User.findOneAndUpdate(
       { "stripe.customerID": cancelledSubscription.customer },
-      { "subscription.status": "cancelled", "subscription.lbsLeft": 0 }
+      { "subscription.status": "cancelled" }
     )
       .then((user) => {
         if (user) {
