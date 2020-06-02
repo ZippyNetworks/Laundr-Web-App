@@ -26,7 +26,7 @@ const userPages = [
   },
   {
     title: "Subscription",
-    href: "/placeholder",
+    href: "/userSubscription",
     icon: <LocalLaundryServiceIcon />,
   },
   {
