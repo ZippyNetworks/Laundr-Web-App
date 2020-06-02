@@ -18,7 +18,7 @@ import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import ProgressBar from "./components/ProgressBar";
-import orderStatusStyles from "../../../styles/User/OrderStatus/orderStatusStyles";
+import orderStatusStyles from "../../../../../styles/User/OrderStatus/orderStatusStyles";
 
 //0: order just placed
 //1: order accepted by driver to be picked up from user

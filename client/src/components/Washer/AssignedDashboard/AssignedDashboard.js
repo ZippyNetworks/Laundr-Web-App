@@ -11,9 +11,9 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import OrderTable from "./components/OrderTable";
-import baseURL from "../../baseURL";
-import assignedDashboardStyles from "../../styles/Washer/assignedDashboardStyles";
-import sectionBorder from "../../images/UserDashboard/sectionBorder.png";
+import baseURL from "../../../baseURL";
+import assignedDashboardStyles from "../../../styles/Washer/assignedDashboardStyles";
+import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 
 //0: order just placed
 //1: order accepted by driver to be picked up from user

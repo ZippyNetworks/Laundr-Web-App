@@ -3,18 +3,18 @@ import { Grid, withStyles, Paper, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import baseURL from "../../baseURL";
-import NewOrder from "./NewOrder/NewOrder";
-import OrderStatus from "./OrderStatus/OrderStatus";
+import baseURL from "../../../baseURL";
+import NewOrder from "./components/NewOrder/NewOrder";
+import OrderStatus from "./components/OrderStatus/OrderStatus";
 import AutoRotatingCarousel from "./components/Carousel/AutoRotatingCarousel";
 import Slide from "./components/Carousel/Slide";
-import dashboardStyles from "../../styles/User/dashboardStyles";
-import sectionBorder from "../../images/UserDashboard/sectionBorder.png";
-import sectionBorderWhite from "../../images/UserDashboard/sectionBorderWhite.jpeg";
-import StudentPlanLogo from "../../images/UserDashboard/StudentPlanLogo.png";
-import LaundrBombsLogo from "../../images/UserDashboard/LaundrBombsLogo.png";
-import InstagramLogo from "../../images/UserDashboard/InstagramLogo.png";
-import SupportLogo from "../../images/UserDashboard/SupportLogo.png";
+import dashboardStyles from "../../../styles/User/dashboardStyles";
+import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
+import sectionBorderWhite from "../../../images/UserDashboard/sectionBorderWhite.jpeg";
+import StudentPlanLogo from "../../../images/UserDashboard/StudentPlanLogo.png";
+import LaundrBombsLogo from "../../../images/UserDashboard/LaundrBombsLogo.png";
+import InstagramLogo from "../../../images/UserDashboard/InstagramLogo.png";
+import SupportLogo from "../../../images/UserDashboard/SupportLogo.png";
 
 //todo: add loading backdrop, other dashboards (order related) already have it
 //todo: implement status 8 feature for order status when order is delivered

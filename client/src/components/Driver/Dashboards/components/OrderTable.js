@@ -24,7 +24,7 @@ import {
   Grid,
 } from "@material-ui/core";
 import Close from "@material-ui/icons/Close";
-import orderTableStyles from "../../../styles/Driver/components/orderTableStyles";
+import orderTableStyles from "../../../../styles/Driver/components/orderTableStyles";
 
 //todo: change snackbars to https://github.com/iamhosseindhv/notistack to make it prettier
 
