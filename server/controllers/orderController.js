@@ -1,37 +1,34 @@
 const Order = require("../models/Order");
 
-const placeOrder = async (req, res) => {
-  let orderCount;
-
-  let activeOrder = false;
-
+const findOrder = async (req, res, next) => {
   await Order.findOne({
     "userInfo.email": req.body.email,
     "orderInfo.status": { $nin: [7, 8] },
   })
     .then((order) => {
       if (order) {
-        activeOrder = true;
+        return res.json({
+          success: false,
+          message: "User already has an active order",
+        });
+      } else {
+        next();
       }
     })
     .catch((error) => {
       return res.json({ success: false, message: error });
     });
+};
 
-  if (activeOrder) {
-    return res.json({
-      success: false,
-      message: "User already has an active order",
-    });
-  }
-
+const countOrders = async (req, res, next) => {
   await Order.countDocuments({})
     .then((count) => {
       if (count) {
-        orderCount = count;
+        res.locals.count = count;
       } else {
-        orderCount = 0;
+        res.locals.count = 0;
       }
+      next();
     })
     .catch((error) => {
       return res.json({
@@ -39,8 +36,11 @@ const placeOrder = async (req, res) => {
         message: error,
       });
     });
+};
 
-  console.log("2");
+const placeOrder = async (req, res) => {
+  let orderCount = res.locals.count;
+
   await Order.create({
     userInfo: {
       email: req.body.email,
@@ -98,8 +98,6 @@ const placeOrder = async (req, res) => {
     .catch((error) => {
       return res.json({ success: false, message: error });
     });
-
-  //todo: in future, handle payment stuff here as well? return false if payment fails, modify error msg on frontend to notify user
 };
 
 const getOrders = async (req, res) => {
@@ -143,4 +141,10 @@ const getCurrentOrder = async (req, res) => {
     });
 };
 
-module.exports = { placeOrder, getOrders, getCurrentOrder };
+module.exports = {
+  findOrder,
+  countOrders,
+  placeOrder,
+  getOrders,
+  getCurrentOrder,
+};

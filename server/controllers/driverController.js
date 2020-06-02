@@ -128,13 +128,9 @@ const setWasherDelivered = async (req, res) => {
         if (order.orderInfo.status === 2) {
           order_id = order._id;
 
-          await Order.findByIdAndUpdate(
-            order_id,
-            {
-              "orderInfo.status": 3,
-            },
-            { new: true }
-          )
+          await Order.findByIdAndUpdate(order_id, {
+            "orderInfo.status": 3,
+          })
             .then((order) => {
               if (order) {
                 return res.json({

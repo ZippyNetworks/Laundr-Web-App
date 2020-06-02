@@ -143,9 +143,11 @@ const setRegPaymentID = async (req, res) => {
 };
 
 const chargeCustomer = async (req, res, next) => {
-  let subscription = req.user.subscription;
+  console.log(1);
+  let user = res.locals.user;
+  let subscription = user.subscription;
 
-  //console.log(subscription);
+  //console.log(user);
 
   //calculate the lbs to be charged, if any
   let chargeLbs;
@@ -164,8 +166,8 @@ const chargeCustomer = async (req, res, next) => {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: chargeLbs * 1.5 * 100,
         currency: "usd",
-        customer: req.user.stripe.customerID,
-        payment_method: req.user.stripe.regPaymentID,
+        customer: user.stripe.customerID,
+        payment_method: user.stripe.regPaymentID,
         off_session: true,
         confirm: true,
       });
@@ -215,7 +217,8 @@ const fetchUser = async (req, res, next) => {
   await User.findOne({ email: req.body.userEmail })
     .then((user) => {
       if (user) {
-        req.user = user;
+        //use res.locals for middleware add-on properties!
+        res.locals.user = user;
         //user found, move on to next middleware
         next();
       } else {

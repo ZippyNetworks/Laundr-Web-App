@@ -107,7 +107,7 @@ const login = async (req, res) => {
 
       //granting access to the token, the information for current user
       const token = await signToken(user);
-      res.json({
+      return res.json({
         success: true,
         message: "Successfully logged in, token is attached",
         token: token,
@@ -127,7 +127,7 @@ const updateToken = async (req, res) => {
       if (user) {
         //granting access to the token, the information for current user
         const token = await signToken(user);
-        res.json({
+        return res.json({
           success: true,
           message: "Token is attached",
           token: token,
