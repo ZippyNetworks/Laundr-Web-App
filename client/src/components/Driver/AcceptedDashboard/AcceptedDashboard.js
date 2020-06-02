@@ -9,9 +9,9 @@ import {
 import PropTypes from "prop-types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import OrderTable from "./components/OrderTable";
+import OrderTable from "../components/OrderTable";
 import baseURL from "../../../baseURL";
-import acceptedDashboardStyles from "../../../styles/Driver/acceptedDashboardStyles";
+import acceptedDashboardStyles from "../../../styles/Driver/AcceptedDashboard/acceptedDashboardStyles";
 import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 
 //todo: refresh list after completing an action, and THEN show the snackbar?

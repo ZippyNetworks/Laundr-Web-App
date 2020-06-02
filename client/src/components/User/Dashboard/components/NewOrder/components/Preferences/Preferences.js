@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { Grid, Typography, TextField, withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
-import preferencesStyles from "../../../../../styles/User/NewOrder/preferencesStyles";
+import preferencesStyles from "../../../../../../../styles/User/Dashboard/components/NewOrder/components/Preferences/preferencesStyles";
 import PreferenceCard from "./components/PreferenceCard";
-import ScentedUnselected from "../../../../../images/NewOrder/ScentedUnselected.png";
-import ScentedSelected from "../../../../../images/NewOrder/ScentedSelected.png";
-import DelicatesUnselected from "../../../../../images/NewOrder/DelicatesUnselected.png";
-import DelicatesSelected from "../../../../../images/NewOrder/DelicatesSelected.png";
-import SeparateUnselected from "../../../../../images/NewOrder/SeparateUnselected.png";
-import SeparateSelected from "../../../../../images/NewOrder/SeparateSelected.png";
-import TowelsUnselected from "../../../../../images/NewOrder/TowelsUnselected.png";
-import TowelsSelected from "../../../../../images/NewOrder/TowelsSelected.png";
+import ScentedUnselected from "../../../../../../../images/NewOrder/ScentedUnselected.png";
+import ScentedSelected from "../../../../../../../images/NewOrder/ScentedSelected.png";
+import DelicatesUnselected from "../../../../../../../images/NewOrder/DelicatesUnselected.png";
+import DelicatesSelected from "../../../../../../../images/NewOrder/DelicatesSelected.png";
+import SeparateUnselected from "../../../../../../../images/NewOrder/SeparateUnselected.png";
+import SeparateSelected from "../../../../../../../images/NewOrder/SeparateSelected.png";
+import TowelsUnselected from "../../../../../../../images/NewOrder/TowelsUnselected.png";
+import TowelsSelected from "../../../../../../../images/NewOrder/TowelsSelected.png";
 
 class Preferences extends Component {
   constructor(props) {

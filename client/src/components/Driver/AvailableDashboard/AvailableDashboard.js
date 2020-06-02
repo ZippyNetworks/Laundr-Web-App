@@ -10,9 +10,9 @@ import {
 import PropTypes from "prop-types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import OrderTable from "./components/OrderTable";
+import OrderTable from "../components/OrderTable";
 import baseURL from "../../../baseURL";
-import availableDashboardStyles from "../../../styles/Driver/availableDashboardStyles";
+import availableDashboardStyles from "../../../styles/Driver/AvailableDashboard/availableDashboardStyles";
 import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 
 //todo: add isDriver to user, also iswasher, etc.

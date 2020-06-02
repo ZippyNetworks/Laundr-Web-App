@@ -16,7 +16,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import RateReviewIcon from "@material-ui/icons/RateReview";
-import progressBarStyles from "../../../../../../styles/User/OrderStatus/components/progressBarStyles";
+import progressBarStyles from "../../../../../../styles/User/Dashboard/components/OrderStatus/components/progressBarStyles";
 
 const ColorlibConnector = withStyles({
   alternativeLabel: {

@@ -16,7 +16,7 @@ import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
 import CheckIcon from "@material-ui/icons/Check";
 import RoomIcon from "@material-ui/icons/Room";
 import LocalDrinkIcon from "@material-ui/icons/LocalDrink";
-import progressBarStyles from "../../../../../../styles/User/OrderStatus/components/progressBarStyles";
+import progressBarStyles from "../../../../../../styles/User/Dashboard/components/OrderStatus/components/progressBarStyles";
 
 const ColorlibConnector = withStyles({
   alternativeLabel: {

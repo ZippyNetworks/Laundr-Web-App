@@ -8,7 +8,7 @@ import NewOrder from "./components/NewOrder/NewOrder";
 import OrderStatus from "./components/OrderStatus/OrderStatus";
 import AutoRotatingCarousel from "./components/Carousel/AutoRotatingCarousel";
 import Slide from "./components/Carousel/Slide";
-import dashboardStyles from "../../../styles/User/dashboardStyles";
+import dashboardStyles from "../../../styles/User/Dashboard/dashboardStyles";
 import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 import sectionBorderWhite from "../../../images/UserDashboard/sectionBorderWhite.jpeg";
 import StudentPlanLogo from "../../../images/UserDashboard/StudentPlanLogo.png";

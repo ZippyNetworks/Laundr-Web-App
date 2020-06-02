@@ -12,7 +12,7 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 import OrderTable from "./components/OrderTable";
 import baseURL from "../../../baseURL";
-import assignedDashboardStyles from "../../../styles/Washer/assignedDashboardStyles";
+import assignedDashboardStyles from "../../../styles/Washer/AssignedDashboard/assignedDashboardStyles";
 import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 
 //0: order just placed
