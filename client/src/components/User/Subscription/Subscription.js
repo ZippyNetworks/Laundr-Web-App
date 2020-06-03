@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import { withStyles, Grid, Typography, Paper } from "@material-ui/core";
 import PropTypes from "prop-types";
+import SubscriptionCard from "./components/SubscriptionCard";
 import subscriptionStyles from "../../../styles/User/Subscription/subscriptionStyles";
 import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
+import Standard from "../../../images/Subscription/Standard.png";
+import Plus from "../../../images/Subscription/Plus.png";
+import Family from "../../../images/Subscription/Family.png";
+import Student from "../../../images/Subscription/Student.png";
 
 class Subscription extends Component {
   constructor(props) {
@@ -57,16 +62,36 @@ class Subscription extends Component {
           alignItems="center" /*main page column*/
         >
           <Grid item>
-            <h1>1</h1>
+            <SubscriptionCard
+              planName="Standard"
+              image={Standard}
+              priceText="$15/week"
+              text="48 lbs/month"
+            />
           </Grid>
           <Grid item>
-            <h1>2</h1>
+            <SubscriptionCard
+              planName="Plus"
+              image={Plus}
+              priceText="$20/week"
+              text="66 lbs/month"
+            />
           </Grid>
           <Grid item>
-            <h1>3</h1>
+            <SubscriptionCard
+              planName="Family"
+              image={Family}
+              priceText="$25/week"
+              text="84 lbs/month"
+            />
           </Grid>
           <Grid item>
-            <h1>4</h1>
+            <SubscriptionCard
+              planName="Student"
+              image={Student}
+              priceText="$10/week"
+              text="40 lbs/month"
+            />
           </Grid>
         </Grid>
       </React.Fragment>
