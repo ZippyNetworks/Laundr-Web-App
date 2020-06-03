@@ -114,14 +114,14 @@ class Review extends React.Component {
               <Grid item xs={12} sm={6}>
                 <Card className={classes.root} variant="outlined">
                   <CardContent className={classes.removePadding}>
-                    <Typography gutterBottom>
+                    <Typography>
                       <HomeRoundedIcon
                         fontSize="small"
                         style={{ marginBottom: -4 }}
                       />{" "}
                       Address
                     </Typography>
-                    <Typography color="textSecondary">
+                    <Typography color="textSecondary" gutterBottom>
                       {this.props.address}
                     </Typography>
                     <Grid
@@ -159,7 +159,7 @@ class Review extends React.Component {
               <Grid item xs={12} sm={6}>
                 <Card className={classes.root} variant="outlined">
                   <CardContent className={classes.removePadding}>
-                    <Typography gutterBottom>
+                    <Typography>
                       <DateRangeIcon
                         fontSize="small"
                         style={{ marginBottom: -4 }}
@@ -169,7 +169,7 @@ class Review extends React.Component {
                     <Typography color="textSecondary">
                       {this.props.pickupDate}
                     </Typography>
-                    <Typography gutterBottom>
+                    <Typography>
                       <QueryBuilderIcon
                         fontSize="small"
                         style={{ marginBottom: -4 }}
