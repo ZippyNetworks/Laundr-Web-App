@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import {
   withStyles,
-  Grid,
   Typography,
-  Paper,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardMedia,
@@ -13,7 +10,7 @@ import {
   Divider,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
-import subscriptionCardStyles from "../../../../styles/User/Subscription/components/subscriptionCardStyles";
+import subscriptionCardStyles from "../../../../../../styles/User/Subscription/components/SubscriptionBoxes/components/subscriptionCardStyles";
 
 class SubscriptionCard extends Component {
   constructor(props) {

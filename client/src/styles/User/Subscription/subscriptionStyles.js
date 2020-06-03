@@ -8,4 +8,8 @@ export default (theme) => ({
     color: "white",
     textAlign: "center",
   },
+  infoCard: {
+    width: 500,
+    textAlign: "center",
+  },
 });

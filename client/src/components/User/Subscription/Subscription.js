@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { withStyles, Grid, Typography, Paper } from "@material-ui/core";
+import { withStyles, Grid, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
-import SubscriptionCard from "./components/SubscriptionCard";
+import SubscriptionBoxes from "./components/SubscriptionBoxes/SubscriptionBoxes";
+import SubscriptionStatus from "./components/SubscriptionStatus";
 import subscriptionStyles from "../../../styles/User/Subscription/subscriptionStyles";
 import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
-import Standard from "../../../images/Subscription/Standard.png";
-import Plus from "../../../images/Subscription/Plus.png";
-import Family from "../../../images/Subscription/Family.png";
-import Student from "../../../images/Subscription/Student.png";
+
+//todo: add card header and divider to review page, similar to order status
+//todo: add cost to order
 
 class Subscription extends Component {
   constructor(props) {
@@ -61,38 +61,16 @@ class Subscription extends Component {
           justify="center"
           alignItems="center" /*main page column*/
         >
-          <Grid item>
-            <SubscriptionCard
-              planName="Standard"
-              image={Standard}
-              priceText="$15/week"
-              text="48 lbs/month"
-            />
-          </Grid>
-          <Grid item>
-            <SubscriptionCard
-              planName="Plus"
-              image={Plus}
-              priceText="$20/week"
-              text="66 lbs/month"
-            />
-          </Grid>
-          <Grid item>
-            <SubscriptionCard
-              planName="Family"
-              image={Family}
-              priceText="$25/week"
-              text="84 lbs/month"
-            />
-          </Grid>
-          <Grid item>
-            <SubscriptionCard
-              planName="Student"
-              image={Student}
-              priceText="$10/week"
-              text="40 lbs/month"
-            />
-          </Grid>
+          {/* <SubscriptionBoxes /> */}
+        </Grid>
+        <Grid
+          container
+          spacing={2}
+          direction="row"
+          justify="center"
+          alignItems="center" /*main page column*/
+        >
+          <SubscriptionStatus />
         </Grid>
       </React.Fragment>
     );

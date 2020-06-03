@@ -42,6 +42,7 @@ import SupportLogo from "../../../images/UserDashboard/SupportLogo.png";
 //todo: webhook for cancelled subs
 //todo: move moment to higher level package.json
 //todo: change all catch errors to include a msg about the error itself?
+//todo: add button styling to ALL dialogs
 
 class Dashboard extends Component {
   constructor(props) {

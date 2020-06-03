@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import baseURL from "../../../../baseURL";
-import subscriptionBoxesStyles from "../../../../styles/User/Subscription/components/subscriptionBoxesStyles";
+import paymentTestStyles from "../../../../styles/User/Subscription/components/paymentTestStyles";
 
 import CardInfo from "./CardInfo";
 
@@ -17,7 +17,7 @@ const stripeKEY =
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe(stripeKEY);
 
-class SubscriptionBoxes extends Component {
+class PaymentTest extends Component {
   constructor(props) {
     super(props);
   }
@@ -112,8 +112,8 @@ class SubscriptionBoxes extends Component {
   }
 }
 
-SubscriptionBoxes.propTypes = {
+PaymentTest.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(subscriptionBoxesStyles)(SubscriptionBoxes);
+export default withStyles(paymentTestStyles)(PaymentTest);
