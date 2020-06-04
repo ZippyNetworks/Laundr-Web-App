@@ -119,7 +119,7 @@ class SubscriptionStatus extends Component {
                 value={this.state.subscription.lbsLeft}
                 maxValue={this.renderMaxLbs()}
                 width={290}
-                lineGap={0}
+                lineGap={1}
                 lineWidth={15}
                 fadedOpacity={20}
                 stepsColors={doughnutColors}
@@ -131,7 +131,7 @@ class SubscriptionStatus extends Component {
               >
                 <div
                   style={{
-                    top: 180,
+                    top: 175,
                     left: -210,
                     position: "absolute",
                   }}
