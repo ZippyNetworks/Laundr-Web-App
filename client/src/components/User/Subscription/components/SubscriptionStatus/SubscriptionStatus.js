@@ -12,9 +12,13 @@ import {
 import PropTypes from "prop-types";
 import axios from "axios";
 import ReactScoreIndicator from "react-score-indicator";
+import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import jwtDecode from "jwt-decode";
 import baseURL from "../../../../../baseURL";
 import subscriptionStatusStyles from "../../../../../styles/User/Subscription/components/SubscriptionStatus/subscriptionStatusStyles";
+
+const moment = require("moment");
 
 const doughnutColors = [
   "#01c9e2",
@@ -42,6 +46,8 @@ class SubscriptionStatus extends Component {
     this.state = {
       subscription: defaultSubscription,
       userEmail: data.email,
+      start: "N/A",
+      end: "N/A",
     };
   }
 
@@ -54,8 +60,18 @@ class SubscriptionStatus extends Component {
         if (res.data.success) {
           const token = res.data.token;
           localStorage.setItem("token", token);
+
           const data = jwtDecode(token);
-          this.setState({ subscription: data.subscription });
+          let subscription = data.subscription;
+
+          let startDate = moment(subscription.periodStart).format("MM/DD");
+          let endDate = moment(subscription.periodEnd).format("MM/DD");
+
+          this.setState({
+            subscription: subscription,
+            start: startDate,
+            end: endDate,
+          });
         } else {
           alert("Error with updating token");
         }
@@ -139,16 +155,24 @@ class SubscriptionStatus extends Component {
             >
               <div className={classes.cardCell}>
                 <Typography variant="body1" style={{ fontWeight: 500 }}>
+                  <PlayCircleOutlineIcon
+                    fontSize="small"
+                    style={{ marginBottom: -4 }}
+                  />{" "}
                   Period Start
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
-                  aaa
+                  {this.state.start}
                 </Typography>
                 <Typography variant="body1" style={{ fontWeight: 500 }}>
+                  <HighlightOffIcon
+                    fontSize="small"
+                    style={{ marginBottom: -4 }}
+                  />{" "}
                   Period End
                 </Typography>
                 <Typography variant="body1" color="textSecondary" gutterBottom>
-                  aaa
+                  {this.state.end}
                 </Typography>
               </div>
               <Button variant="contained" className={classes.gradientButton}>
