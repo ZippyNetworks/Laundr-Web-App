@@ -106,8 +106,8 @@ class SubscriptionStatus extends Component {
         <Grid item>
           <div className={classes.infoCard}>
             <CardHeader
-              title={`Current plan: ${this.state.subscription.plan}`}
-              titleTypographyProps={{ variant: "h2" }}
+              title={`Current Plan: ${this.state.subscription.plan}`}
+              titleTypographyProps={{ variant: "h3" }}
             />
             <CardContent
               style={{
@@ -118,7 +118,7 @@ class SubscriptionStatus extends Component {
               <ReactScoreIndicator
                 value={this.state.subscription.lbsLeft}
                 maxValue={this.renderMaxLbs()}
-                width={250}
+                width={290}
                 lineGap={0}
                 lineWidth={15}
                 fadedOpacity={20}
@@ -131,17 +131,17 @@ class SubscriptionStatus extends Component {
               >
                 <div
                   style={{
-                    top: 150,
-                    left: -200,
+                    top: 180,
+                    left: -210,
                     position: "absolute",
                   }}
                 >
-                  <Typography variant="h3">Pounds left:</Typography>
+                  <Typography variant="h3">Pounds Left</Typography>
                 </div>
                 <div
                   style={{
-                    top: 20,
-                    left: -245,
+                    top: 40,
+                    left: -250,
                     position: "absolute",
                   }}
                 >

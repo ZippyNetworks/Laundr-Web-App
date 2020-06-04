@@ -5,7 +5,7 @@ export default (theme) => ({
     marginBottom: -50,
   },
   subInfoCard: {
-    width: 300,
+    width: 280,
     textAlign: "center",
   },
   gradientButton: {
