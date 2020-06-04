@@ -67,7 +67,7 @@ class Subscription extends Component {
         <Grid
           container
           spacing={2}
-          direction="row"
+          direction="column"
           justify="center"
           alignItems="center" /*main page column*/
         >

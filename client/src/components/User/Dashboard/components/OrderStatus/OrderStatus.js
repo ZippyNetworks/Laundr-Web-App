@@ -98,48 +98,48 @@ class OrderStatus extends Component {
                     />
                     <Divider />
                     <CardContent>
-                      <Typography>
+                      <Typography variant="body1" style={{ fontWeight: 500 }}>
                         <HomeRoundedIcon
                           fontSize="small"
                           style={{ marginBottom: -4 }}
                         />{" "}
                         Address
                       </Typography>
-                      <Typography color="textSecondary">
+                      <Typography variant="body1" color="textSecondary">
                         {this.props.order.orderInfo.address}
                       </Typography>
-                      <Typography>
+                      <Typography variant="body1" style={{ fontWeight: 500 }}>
                         <QueryBuilderIcon
                           fontSize="small"
                           style={{ marginBottom: -4 }}
                         />{" "}
                         Pickup Time
                       </Typography>
-                      <Typography color="textSecondary">
+                      <Typography variant="body1" color="textSecondary">
                         {this.props.order.pickupInfo.time}
                       </Typography>
-                      <Typography>
+                      <Typography variant="body1" style={{ fontWeight: 500 }}>
                         <QueryBuilderIcon
                           fontSize="small"
                           style={{ marginBottom: -4 }}
                         />{" "}
                         Dropoff Time
                       </Typography>
-                      <Typography color="textSecondary">
+                      <Typography variant="body1" color="textSecondary">
                         {this.props.order.dropoffInfo.time}
                         "functionality later"
                       </Typography>
-                      <Typography>
+                      <Typography variant="body1" style={{ fontWeight: 500 }}>
                         <LocalMallIcon
                           fontSize="small"
                           style={{ marginBottom: -4 }}
                         />{" "}
                         Weight
                       </Typography>
-                      <Typography color="textSecondary">
+                      <Typography variant="body1" color="textSecondary">
                         {this.props.order.orderInfo.weight} lbs
                       </Typography>
-                      <Typography variant="h5">
+                      <Typography variant="h5" gutterBottom>
                         Price: {this.props.order.orderInfo.cost}
                       </Typography>
                       <Button

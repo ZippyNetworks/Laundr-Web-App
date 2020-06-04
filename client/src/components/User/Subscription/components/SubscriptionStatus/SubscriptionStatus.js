@@ -3,7 +3,7 @@ import {
   withStyles,
   Grid,
   Typography,
-  Paper,
+  Button,
   Card,
   CardHeader,
   Divider,
@@ -87,12 +87,11 @@ class SubscriptionStatus extends Component {
     return (
       <React.Fragment>
         <Grid item>
-          <Card className={classes.infoCard}>
+          <div className={classes.infoCard}>
             <CardHeader
               title={`Current plan: ${this.state.subscription.plan}`}
               titleTypographyProps={{ variant: "h2" }}
             />
-            <Divider />
             <CardContent
               style={{
                 display: "flex",
@@ -123,6 +122,38 @@ class SubscriptionStatus extends Component {
                   <Typography variant="h3">Pounds left:</Typography>
                 </div>
               </div>
+            </CardContent>
+          </div>
+        </Grid>
+        <Grid item>
+          <Card className={classes.subInfoCard}>
+            <CardHeader
+              title="Subscription Information"
+              titleTypographyProps={{ variant: "h5" }}
+            />
+            <Divider />
+            <CardContent
+              style={{
+                justifyContent: "center",
+              }}
+            >
+              <div className={classes.cardCell}>
+                <Typography variant="body1" style={{ fontWeight: 500 }}>
+                  Period Start
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  aaa
+                </Typography>
+                <Typography variant="body1" style={{ fontWeight: 500 }}>
+                  Period End
+                </Typography>
+                <Typography variant="body1" color="textSecondary" gutterBottom>
+                  aaa
+                </Typography>
+              </div>
+              <Button variant="contained" className={classes.gradientButton}>
+                Manage
+              </Button>
             </CardContent>
           </Card>
         </Grid>
