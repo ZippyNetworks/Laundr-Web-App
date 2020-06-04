@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withStyles, Grid, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
 import SubscriptionBoxes from "./components/SubscriptionBoxes/SubscriptionBoxes";
-import SubscriptionStatus from "./components/SubscriptionStatus";
+import SubscriptionStatus from "./components/SubscriptionStatus/SubscriptionStatus";
 import subscriptionStyles from "../../../styles/User/Subscription/subscriptionStyles";
 import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 
