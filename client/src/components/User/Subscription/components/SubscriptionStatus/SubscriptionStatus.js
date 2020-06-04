@@ -118,7 +118,7 @@ class SubscriptionStatus extends Component {
               <ReactScoreIndicator
                 value={this.state.subscription.lbsLeft}
                 maxValue={this.renderMaxLbs()}
-                width={300}
+                width={250}
                 lineGap={0}
                 lineWidth={15}
                 fadedOpacity={20}
@@ -131,8 +131,8 @@ class SubscriptionStatus extends Component {
               >
                 <div
                   style={{
-                    top: 170,
-                    left: -245,
+                    top: 150,
+                    left: -200,
                     position: "absolute",
                   }}
                 >
@@ -140,8 +140,8 @@ class SubscriptionStatus extends Component {
                 </div>
                 <div
                   style={{
-                    top: 40,
-                    left: -290,
+                    top: 20,
+                    left: -245,
                     position: "absolute",
                   }}
                 >

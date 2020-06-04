@@ -1,6 +1,6 @@
 export default (theme) => ({
   infoCard: {
-    width: 400,
+    width: 300,
     textAlign: "center",
     marginBottom: -50,
   },
