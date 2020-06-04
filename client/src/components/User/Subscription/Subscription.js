@@ -9,6 +9,7 @@ import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 //todo: add card header and divider to review page, similar to order status
 //todo: add cost to order
 //todo: if any other page needs an updated token, do that
+//todo: add bottom border section to every page?
 
 class Subscription extends Component {
   constructor(props) {
