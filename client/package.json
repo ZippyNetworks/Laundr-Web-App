@@ -25,6 +25,7 @@
     "react-geocode": "^0.2.1",
     "react-perfect-scrollbar": "^1.5.8",
     "react-router-dom": "^5.1.2",
+    "react-score-indicator": "^2.2.1",
     "react-scripts": "3.4.1",
     "react-swipeable-views": "^0.13.9"
   },
