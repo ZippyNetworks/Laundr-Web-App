@@ -13,6 +13,7 @@ import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 //todo: add cost to order
 //todo: if any other page needs an updated token, do that
 //todo: add bottom border section to every page?
+//todo: after purchasing, the sub object might not get updated by the webhook in time for the redirect to be updated pg?
 
 class Subscription extends Component {
   constructor(props) {

@@ -48,7 +48,7 @@ class SubscriptionStatus extends Component {
         return 84;
 
       default:
-        return -1;
+        return;
     }
   };
 
