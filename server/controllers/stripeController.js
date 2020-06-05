@@ -50,8 +50,8 @@ const createCheckoutSession = async (req, res) => {
       },
     ],
     mode: "subscription",
-    success_url: "https://example.com/success?session_id={CHECKOUT_SESSION_ID}", //after they successfully checked out
-    cancel_url: "http://localhost:3000/paymentTest", //usually the page they were at before. if they click to go back
+    success_url: baseURL + "/userSubscription", //after they successfully checked out
+    cancel_url: baseURL + "/userSubscription", //usually the page they were at before. if they click to go back
     customer: req.body.customerID,
   });
 
@@ -294,7 +294,6 @@ const createSelfPortal = async (req, res) => {
 };
 
 module.exports = {
-  createCheckoutSession,
   createSetupIntent,
   getCardDetails,
   setRegPaymentID,
@@ -303,4 +302,5 @@ module.exports = {
   updateSubscriptionLbs,
   chargeCustomer,
   createSelfPortal,
+  createCheckoutSession,
 };
