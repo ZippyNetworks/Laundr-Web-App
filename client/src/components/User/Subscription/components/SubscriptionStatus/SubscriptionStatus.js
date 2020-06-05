@@ -33,57 +33,8 @@ const doughnutColors = [
 ];
 
 class SubscriptionStatus extends Component {
-  constructor(props) {
-    super(props);
-
-    let defaultSubscription = {
-      plan: "",
-      lbsLeft: "",
-    };
-
-    let token = localStorage.getItem("token");
-    const data = jwtDecode(token);
-
-    this.state = {
-      subscription: defaultSubscription,
-      userEmail: data.email,
-      start: "N/A",
-      end: "N/A",
-    };
-  }
-
-  componentDidMount = async () => {
-    let userEmail = this.state.userEmail;
-
-    await axios
-      .post(baseURL + "/user/updateToken", { userEmail })
-      .then((res) => {
-        if (res.data.success) {
-          const token = res.data.token;
-          localStorage.setItem("token", token);
-
-          const data = jwtDecode(token);
-          let subscription = data.subscription;
-
-          let startDate = moment(subscription.periodStart).format("MM/DD");
-          let endDate = moment(subscription.periodEnd).format("MM/DD");
-
-          this.setState({
-            subscription: subscription,
-            start: startDate,
-            end: endDate,
-          });
-        } else {
-          alert("Error with updating token");
-        }
-      })
-      .catch((error) => {
-        alert("Error: " + error);
-      });
-  };
-
   renderMaxLbs = () => {
-    switch (this.state.subscription.plan) {
+    switch (this.props.subscription.plan) {
       case "Student":
         return 40;
 
@@ -95,7 +46,18 @@ class SubscriptionStatus extends Component {
 
       case "Family":
         return 84;
+
+      default:
+        return -1;
     }
+  };
+
+  renderPeriodStart = () => {
+    return moment(this.props.subscription.periodStart).format("MM/DD");
+  };
+
+  renderPeriodEnd = () => {
+    return moment(this.props.subscription.periodEnd).format("MM/DD");
   };
 
   handleManageSub = async () => {
@@ -126,7 +88,7 @@ class SubscriptionStatus extends Component {
         <Grid item>
           <div className={classes.infoCard}>
             <CardHeader
-              title={`Current Plan: ${this.state.subscription.plan}`}
+              title={`Current Plan: ${this.props.subscription.plan}`}
               titleTypographyProps={{ variant: "h3" }}
             />
             <CardContent
@@ -136,7 +98,7 @@ class SubscriptionStatus extends Component {
               }}
             >
               <ReactScoreIndicator
-                value={this.state.subscription.lbsLeft}
+                value={this.props.subscription.lbsLeft}
                 maxValue={this.renderMaxLbs()}
                 width={290}
                 lineGap={1}
@@ -165,7 +127,11 @@ class SubscriptionStatus extends Component {
                     position: "absolute",
                   }}
                 >
-                  <img style={{ height: 133, width: 214 }} src={BoxPicture} />
+                  <img
+                    style={{ height: 133, width: 214 }}
+                    src={BoxPicture}
+                    alt="Box"
+                  />
                 </div>
               </div>
             </CardContent>
@@ -192,7 +158,7 @@ class SubscriptionStatus extends Component {
                   Period Start
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
-                  {this.state.start}
+                  {this.renderPeriodStart()}
                 </Typography>
                 <Typography variant="body1" style={{ fontWeight: 500 }}>
                   <HighlightOffIcon
@@ -202,7 +168,7 @@ class SubscriptionStatus extends Component {
                   Period End
                 </Typography>
                 <Typography variant="body1" color="textSecondary" gutterBottom>
-                  {this.state.end}
+                  {this.renderPeriodEnd()}
                 </Typography>
               </div>
               <Button

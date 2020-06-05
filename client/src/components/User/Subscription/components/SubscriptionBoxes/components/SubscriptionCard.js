@@ -13,10 +13,6 @@ import PropTypes from "prop-types";
 import subscriptionCardStyles from "../../../../../../styles/User/Subscription/components/SubscriptionBoxes/components/subscriptionCardStyles";
 
 class SubscriptionCard extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const classes = this.props.classes;
 
