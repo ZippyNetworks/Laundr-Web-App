@@ -98,6 +98,26 @@ class SubscriptionStatus extends Component {
     }
   };
 
+  handleManageSub = async () => {
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+
+    let customerID = data.stripe.customerID;
+
+    await axios
+      .post(baseURL + "/stripe/createSelfPortal", { customerID })
+      .then((res) => {
+        if (res.data.success) {
+          window.open(res.data.message, "_self");
+        } else {
+          alert("Error with creating self-service portal. Please contact us.");
+        }
+      })
+      .catch((error) => {
+        alert("Error: " + error);
+      });
+  };
+
   render() {
     const classes = this.props.classes;
 
@@ -185,7 +205,11 @@ class SubscriptionStatus extends Component {
                   {this.state.end}
                 </Typography>
               </div>
-              <Button variant="contained" className={classes.gradientButton}>
+              <Button
+                variant="contained"
+                className={classes.gradientButton}
+                onClick={this.handleManageSub}
+              >
                 Manage
               </Button>
             </CardContent>

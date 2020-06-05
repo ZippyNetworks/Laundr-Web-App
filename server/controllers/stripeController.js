@@ -1,3 +1,4 @@
+const baseURL = require("../config/baseURL");
 const User = require("../models/User");
 
 // Set your secret key. Remember to switch to your live secret key in production!
@@ -271,6 +272,27 @@ const updateSubscriptionLbs = async (req, res) => {
     });
 };
 
+const createSelfPortal = async (req, res) => {
+  await stripe.billingPortal.sessions
+    .create({
+      customer: req.body.customerID,
+      return_url: baseURL + "/userSubscription",
+    })
+    .then((session, err) => {
+      if (err || !session) {
+        return res.json({
+          success: false,
+          message: "Error with creating self-service portal: " + err,
+        });
+      } else {
+        return res.json({
+          success: true,
+          message: session.url,
+        });
+      }
+    });
+};
+
 module.exports = {
   createCheckoutSession,
   createSetupIntent,
@@ -280,4 +302,5 @@ module.exports = {
   fetchUser,
   updateSubscriptionLbs,
   chargeCustomer,
+  createSelfPortal,
 };
