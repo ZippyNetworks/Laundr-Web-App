@@ -17,6 +17,9 @@ import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 //todo: add loading bar to interactions - especially entering weight so button not clicked multiple times
 //todo: refactor calls to stripe? try catch instead of async? like in charge?
 //todo: make sure everything is async awaited
+//todo: change size of subscription card since its larger than iphone 5s width
+//todo: change spacing and stuff for right/left side: see order status and new order's layout/root? understand how devias's acc pg works.
+//todo: center update payment info, when click, dropdown confirm/cancel and show cardElement
 
 class Subscription extends Component {
   constructor(props) {

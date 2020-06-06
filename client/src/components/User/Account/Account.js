@@ -5,10 +5,38 @@ import jwtDecode from "jwt-decode";
 import baseURL from "../../../baseURL";
 import axios from "axios";
 import AccountInfo from "./components/AccountInfo";
+import PaymentInfo from "./components/PaymentInfo";
 import accountStyles from "../../../styles/User/Account/accountStyles";
 import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 
 class Account extends Component {
+  constructor(props) {
+    super(props);
+
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+
+    this.state = { userEmail: data.email };
+  }
+
+  componentDidMount = async () => {
+    let userEmail = this.state.userEmail;
+
+    await axios
+      .post(baseURL + "/user/updateToken", { userEmail })
+      .then((res) => {
+        if (res.data.success) {
+          const token = res.data.token;
+          localStorage.setItem("token", token);
+        } else {
+          alert("Error with updating token");
+        }
+      })
+      .catch((error) => {
+        alert("Error: " + error);
+      });
+  };
+
   render() {
     const classes = this.props.classes;
 
@@ -56,7 +84,12 @@ class Account extends Component {
           justify="center"
           alignItems="center" /*main page column*/
         >
-          <AccountInfo />
+          <Grid item>
+            <AccountInfo />
+          </Grid>
+          <Grid item>
+            <PaymentInfo />
+          </Grid>
         </Grid>
       </React.Fragment>
     );

@@ -1,15 +1,113 @@
 import React, { Component } from "react";
-import { withStyles, Grid, Typography } from "@material-ui/core";
+import {
+  withStyles,
+  Grid,
+  Card,
+  CardContent,
+  Divider,
+  CardActions,
+  Button,
+  TextField,
+  CardHeader,
+} from "@material-ui/core";
 import PropTypes from "prop-types";
+import jwtDecode from "jwt-decode";
 import accountInfoStyles from "../../../../styles/User/Account/components/accountInfoStyles";
 
 class AccountInfo extends Component {
+  constructor(props) {
+    super(props);
+
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+
+    this.state = { user: data };
+  }
   render() {
     const classes = this.props.classes;
 
     return (
       <React.Fragment>
-        <h1>account info</h1>
+        <Card className={classes.root}>
+          <CardHeader
+            title="Profile"
+            titleTypographyProps={{ variant: "h5" }}
+            className={classes.centerTitle}
+          />
+          <Divider />
+          <CardContent>
+            <Grid //main column
+              container
+              spacing={2}
+              justify="center"
+            >
+              <Grid item xs={6} sm={6}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="First Name"
+                  size="small"
+                  value={this.state.user.fname}
+                />
+              </Grid>
+              <Grid item xs={6} sm={6}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Last Name"
+                  size="small"
+                  value={this.state.user.lname}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Email Address"
+                  size="small"
+                  value={this.state.user.email}
+                />
+              </Grid>
+              <Grid item xs={6} sm={6}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Phone Number"
+                  size="small"
+                  value={this.state.user.phone}
+                />
+              </Grid>
+            </Grid>
+          </CardContent>
+          <Divider />
+          <CardActions>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+            >
+              <Grid item>
+                <Button
+                  size="small"
+                  variant="contained"
+                  className={classes.gradientButton}
+                >
+                  Update Password
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  size="small"
+                  variant="contained"
+                  className={classes.gradientButton}
+                >
+                  Update Profile
+                </Button>
+              </Grid>
+            </Grid>
+          </CardActions>
+        </Card>
       </React.Fragment>
     );
   }
