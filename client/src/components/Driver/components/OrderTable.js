@@ -441,26 +441,36 @@ class OrderTable extends Component {
   };
 
   handleWeightEntered = async () => {
-    let success = await this.props.handleChargeCustomer(
-      this.state.currentOrder
-    );
+    if (this.props.handleWeightMinimum()) {
+      let charged = await this.props.handleChargeCustomer(
+        this.state.currentOrder
+      );
 
-    if (success.status) {
-      console.log("CHARGED");
-    } else {
-      console.log("DIDNT CHARGE: " + success.message);
+      if (!charged.status) {
+        this.renderChargeErrorMsg(charged.message);
+      } else {
+        let weightChanged = await this.props.handleWeightEntered(
+          this.state.currentOrder
+        );
+
+        if (weightChanged) {
+          this.renderWeightSuccessMsg();
+        } else {
+          this.renderWeightErrorMsg();
+        }
+      }
     }
-    // if (this.props.handleWeightMinimum()) {
+  };
 
-    //   let success = await this.props.handleWeightEntered(
-    //     this.state.currentOrder
-    //   );
-    //   if (success) {
-    //     this.renderWeightSuccessMsg();
-    //   } else {
-    //     this.renderWeightErrorMsg();
-    //   }
-    // }
+  renderChargeErrorMsg = (message) => {
+    this.setState({ dialog: false }, () => {
+      this.setState({
+        openSnackbar: true,
+        snackbarMessage:
+          "Error with charging customer: " + message + ". Please contact us.",
+        snackbarSuccess: false,
+      });
+    });
   };
 
   render() {

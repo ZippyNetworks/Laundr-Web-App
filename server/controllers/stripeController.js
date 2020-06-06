@@ -144,7 +144,7 @@ const setRegPaymentID = async (req, res) => {
 };
 
 const chargeCustomer = async (req, res, next) => {
-  console.log(1);
+  console.log(3);
   let user = res.locals.user;
   let subscription = user.subscription;
 
@@ -215,9 +215,11 @@ const chargeCustomer = async (req, res, next) => {
 };
 
 const fetchUser = async (req, res, next) => {
+  console.log(1);
   await User.findOne({ email: req.body.userEmail })
     .then((user) => {
       if (user) {
+        console.log(2);
         //use res.locals for middleware add-on properties!
         res.locals.user = user;
         //user found, move on to next middleware
@@ -238,13 +240,13 @@ const fetchUser = async (req, res, next) => {
 };
 
 const updateSubscriptionLbs = async (req, res) => {
-  let chargeLbs = req.body.weight - req.user.subscription.lbsLeft;
+  let chargeLbs = req.body.weight - res.locals.user.subscription.lbsLeft;
   let updatedLbs;
 
   if (chargeLbs > 0) {
     updatedLbs = 0;
   } else {
-    updatedLbs = req.user.subscription.lbsLeft - req.body.weight;
+    updatedLbs = res.locals.user.subscription.lbsLeft - req.body.weight;
   }
 
   await User.findOneAndUpdate(
