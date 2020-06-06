@@ -18,10 +18,6 @@ const stripeKEY =
 const stripePromise = loadStripe(stripeKEY);
 
 class PaymentTest extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleCheckout = async (type) => {
     // When the customer clicks on the button, redirect them to Checkout.
     // Call your backend to create the Checkout session.

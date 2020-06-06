@@ -138,7 +138,7 @@ class CardInfo extends Component {
   };
 
   handleChargeCard = async () => {
-    const { stripe } = this.props;
+    //const { stripe } = this.props;
     let token = localStorage.getItem("token");
     const data = jwtDecode(token);
     let customerID = data.stripe.customerID;
