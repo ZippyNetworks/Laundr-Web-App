@@ -470,6 +470,9 @@ class OrderTable extends Component {
           "Error with charging customer: " + message + ". Please contact us.",
         snackbarSuccess: false,
       });
+
+      //clear weight text field
+      this.props.handleWeightChange("");
     });
   };
 

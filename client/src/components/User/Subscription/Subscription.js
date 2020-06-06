@@ -14,6 +14,9 @@ import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 //todo: if any other page needs an updated token, do that
 //todo: add bottom border section to every page?
 //todo: after purchasing, the sub object might not get updated by the webhook in time for the redirect to be updated pg?
+//todo: add loading bar to interactions - especially entering weight so button not clicked multiple times
+//todo: refactor calls to stripe? try catch instead of async? like in charge?
+//todo: make sure everything is async awaited
 
 class Subscription extends Component {
   constructor(props) {

@@ -100,12 +100,12 @@ const setRegPaymentID = async (req, res) => {
       "stripe.regPaymentID": req.body.regPaymentID,
     }
   )
-    .then((user) => {
+    .then(async (user) => {
       let oldRegPaymentID = user.stripe.regPaymentID;
       let oldDeleted = true;
 
       if (oldRegPaymentID != "N/A") {
-        stripe.paymentMethods
+        await stripe.paymentMethods
           .detach(oldRegPaymentID)
           .then((paymentMethod, err) => {
             if (err || !paymentMethod) {
@@ -184,6 +184,7 @@ const chargeCustomer = async (req, res, next) => {
       }
     } catch (err) {
       // Error code will be authentication_required if authentication is needed
+      console.log("Error is: ", err);
       console.log("Error code is: ", err.code);
 
       // if (err.code === "authentication_required") {
