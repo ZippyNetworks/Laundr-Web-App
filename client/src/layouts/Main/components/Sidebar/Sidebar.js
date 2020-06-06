@@ -31,7 +31,7 @@ const userPages = [
   },
   {
     title: "Account",
-    href: "/placeholder",
+    href: "/userAccount",
     icon: <AccountBoxIcon />,
   },
   {

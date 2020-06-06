@@ -8,6 +8,7 @@ import {
   CardHeader,
   Divider,
   CardContent,
+  CardActions,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 import axios from "axios";
@@ -53,11 +54,19 @@ class SubscriptionStatus extends Component {
   };
 
   renderPeriodStart = () => {
-    return moment(this.props.subscription.periodStart).format("MM/DD");
+    if (this.props.subscription.periodStart === "N/A") {
+      return "N/A";
+    } else {
+      return moment(this.props.subscription.periodStart).format("MM/DD");
+    }
   };
 
   renderPeriodEnd = () => {
-    return moment(this.props.subscription.periodEnd).format("MM/DD");
+    if (this.props.subscription.periodEnd === "N/A") {
+      return "N/A";
+    } else {
+      return moment(this.props.subscription.periodEnd).format("MM/DD");
+    }
   };
 
   handleManageSub = async () => {
@@ -167,10 +176,13 @@ class SubscriptionStatus extends Component {
                   />{" "}
                   Period End
                 </Typography>
-                <Typography variant="body1" color="textSecondary" gutterBottom>
+                <Typography variant="body1" color="textSecondary">
                   {this.renderPeriodEnd()}
                 </Typography>
               </div>
+            </CardContent>
+            <Divider />
+            <CardActions style={{ justifyContent: "center" }}>
               <Button
                 variant="contained"
                 className={classes.gradientButton}
@@ -178,7 +190,7 @@ class SubscriptionStatus extends Component {
               >
                 Manage
               </Button>
-            </CardContent>
+            </CardActions>
           </Card>
         </Grid>
       </React.Fragment>

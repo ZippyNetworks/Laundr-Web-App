@@ -8,6 +8,7 @@ import WasherAssignedDashboard from "./components/Washer/AssignedDashboard/Assig
 import UserDashboard from "./components/User/Dashboard/Dashboard";
 import PaymentTest from "./components/User/Subscription/components/PaymentTest";
 import UserSubscription from "./components/User/Subscription/Subscription";
+import UserAccount from "./components/User/Account/Account";
 import theme from "./theme";
 import { ThemeProvider } from "@material-ui/styles";
 import { Main as MainLayout } from "./layouts";
@@ -53,6 +54,12 @@ export default class App extends Component {
                 exact
                 layout={MainLayout}
                 path="/userSubscription"
+              />
+              <RouteWithLayout
+                component={UserAccount}
+                exact
+                layout={MainLayout}
+                path="/userAccount"
               />
               <RouteWithLayout
                 component={PaymentTest}

@@ -81,7 +81,7 @@ class SubscriptionCard extends Component {
               {this.props.text}
             </Typography>
           </CardContent>
-          <Divider variant="fullWidth" />
+          <Divider />
           <CardActions style={{ justifyContent: "center" }}>
             <Button
               size="small"

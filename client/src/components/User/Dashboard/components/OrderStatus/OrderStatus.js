@@ -13,6 +13,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  CardActions,
 } from "@material-ui/core";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
@@ -139,9 +140,12 @@ class OrderStatus extends Component {
                       <Typography variant="body1" color="textSecondary">
                         {this.props.order.orderInfo.weight} lbs
                       </Typography>
-                      <Typography variant="h5" gutterBottom>
+                      <Typography variant="h5">
                         Price: {this.props.order.orderInfo.cost}
                       </Typography>
+                    </CardContent>
+                    <Divider />
+                    <CardActions style={{ justifyContent: "center" }}>
                       <Button
                         variant="contained"
                         className={classes.gradient}
@@ -151,7 +155,7 @@ class OrderStatus extends Component {
                       >
                         Cancel
                       </Button>
-                    </CardContent>
+                    </CardActions>
                   </Card>
                 </Grid>
               </Grid>
