@@ -21,6 +21,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import PropTypes from "prop-types";
 import paymentInfoStyles from "../../../../styles/User/Account/components/paymentInfoStyles";
 
+//todo: maybe use the red/green for other confirms/cancels
+
 const stripeKEY =
   process.env.STRIPE_PUBLISHABLE_KEY ||
   require("../../../../config").stripe.publishableKEY;
@@ -61,56 +63,40 @@ class PaymentInfo extends Component {
   renderPaymentButtons = (classes) => {
     if (!this.state.updatePayment) {
       return (
-        <Fade
-          in={!this.state.updatePayment}
-          style={{
-            display: this.state.updatePayment ? "none" : "block",
-            transitionDelay: !this.state.updatePayment ? "500ms" : "0ms",
-          }}
-        >
+        <Grid item>
+          <Button
+            size="small"
+            variant="contained"
+            className={classes.gradientButton}
+            onClick={this.handleShowField}
+          >
+            Update
+          </Button>
+        </Grid>
+      );
+    } else {
+      return (
+        <React.Fragment>
           <Grid item>
             <Button
               size="small"
               variant="contained"
-              className={classes.gradientButton}
+              className={classes.gradientButtonRed}
               onClick={this.handleShowField}
             >
-              Update
+              Cancel
             </Button>
           </Grid>
-        </Fade>
-      );
-    } else {
-      return (
-        <Fade
-          in={this.state.updatePayment}
-          style={{
-            display: !this.state.updatePayment ? "none" : "block",
-            transitionDelay: this.state.updatePayment ? "500ms" : "0ms",
-          }}
-        >
-          <React.Fragment>
-            <Grid item>
-              <Button
-                size="small"
-                variant="contained"
-                className={classes.gradientButtonRed}
-                onClick={this.handleShowField}
-              >
-                Cancel
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                size="small"
-                variant="contained"
-                className={classes.gradientButtonGreen}
-              >
-                Confirm
-              </Button>
-            </Grid>
-          </React.Fragment>
-        </Fade>
+          <Grid item>
+            <Button
+              size="small"
+              variant="contained"
+              className={classes.gradientButtonGreen}
+            >
+              Confirm
+            </Button>
+          </Grid>
+        </React.Fragment>
       );
     }
   };
