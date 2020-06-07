@@ -140,13 +140,20 @@ class PaymentInfo extends Component {
       return;
     }
 
+    //create a setup intent
     let secret = await this.handleSetupIntent();
 
+    //grab name
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+    let name = `${data.fname} ${data.lname}`;
+
+    //confirm card setup with the secret
     const result = await stripe.confirmCardSetup(secret, {
       payment_method: {
         card: elements.getElement(CardElement),
         billing_details: {
-          name: "placeholder",
+          name: name,
         },
       },
     });
@@ -187,7 +194,7 @@ class PaymentInfo extends Component {
                 alert("Error: " + error);
               });
           } else {
-            alert("Error with updating card.");
+            alert("Error with updating card");
           }
         })
         .catch((error) => {

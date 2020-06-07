@@ -298,7 +298,6 @@ const createSelfPortal = async (req, res) => {
 
 module.exports = {
   createSetupIntent,
-  //real:
   setRegPaymentID,
   detachOldPaymentID,
   getCardDetails,
