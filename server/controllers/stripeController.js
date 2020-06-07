@@ -41,65 +41,64 @@ const createCheckoutSession = async (req, res) => {
       break;
   }
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    line_items: [
-      {
-        price: planAPI_ID,
-        quantity: 1,
-      },
-    ],
-    mode: "subscription",
-    success_url: baseURL + "/userSubscription", //after they successfully checked out
-    cancel_url: baseURL + "/userSubscription", //usually the page they were at before. if they click to go back
-    customer: req.body.customerID,
-  });
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: planAPI_ID,
+          quantity: 1,
+        },
+      ],
+      mode: "subscription",
+      success_url: baseURL + "/userSubscription", //after they successfully checked out
+      cancel_url: baseURL + "/userSubscription", //usually the page they were at before. if they click to go back
+      customer: req.body.customerID,
+    });
 
-  if (session) {
-    res.json({ success: true, message: session.id });
-  } else {
-    res.json({ success: false, message: "Unable to create checkout session" });
+    return res.json({ success: true, message: session.id });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: "Error with creating Checkout session: " + error,
+    });
   }
 };
 
 const createSetupIntent = async (req, res) => {
-  const intent = await stripe.setupIntents.create({
-    customer: req.body.customerID,
-  });
+  try {
+    const intent = await stripe.setupIntents.create({
+      customer: req.body.customerID,
+    });
 
-  if (intent) {
-    res.json({ success: true, message: intent.client_secret });
-  } else {
-    res.json({ success: false, message: "Unable to create SetupIntent" });
+    return res.json({ success: true, message: intent.client_secret });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: "Error with creating card setup intent: " + error,
+    });
   }
 };
 
 const getCardDetails = async (req, res) => {
   try {
-    await stripe.paymentMethods
-      .retrieve(req.body.paymentID)
-      .then((paymentMethod) => {
-        if (!paymentMethod.customer) {
-          return res.json({
-            success: false,
-            message: "Payment method not attached to any customer",
-          });
-        } else {
-          return res.json({
-            success: true,
-            message: paymentMethod,
-          });
-        }
-      });
+    const paymentMethod = await stripe.paymentMethods.retrieve(
+      req.body.paymentID
+    );
+
+    return res.json({
+      success: true,
+      message: paymentMethod,
+    });
   } catch (error) {
     return res.json({
       success: false,
-      message: error,
+      message: "Error with grabbing card details: " + error,
     });
   }
 };
 
-const setRegPaymentID = async (req, res) => {
+const setRegPaymentID = async (req, res, next) => {
   await User.findOneAndUpdate(
     { email: req.body.userEmail },
     {
@@ -107,38 +106,14 @@ const setRegPaymentID = async (req, res) => {
     }
   )
     .then(async (user) => {
-      let oldRegPaymentID = user.stripe.regPaymentID;
-      let oldDeleted = true;
-
-      if (oldRegPaymentID != "N/A") {
-        await stripe.paymentMethods
-          .detach(oldRegPaymentID)
-          .then((paymentMethod, err) => {
-            if (err || !paymentMethod) {
-              oldDeleted = false;
-            }
-          });
-      }
-
-      //todo: send these error messages to user
-      if (user && oldDeleted) {
-        return res.json({
-          success: true,
-          message:
-            "Regular payment ID successfully attached to user and old ID, if any, was detached in Stripe",
-        });
-      } else if (!user) {
+      if (!user) {
         return res.json({
           success: false,
-          message:
-            "Error with attaching default payment ID to user. Please try again. If the issue persists, contact us.",
+          message: "User could not be found",
         });
       } else {
-        return res.json({
-          success: false,
-          message:
-            "Error with detaching old payment method in Stripe. Please try again. If the issue persists, contact us.",
-        });
+        res.locals.user = user;
+        next();
       }
     })
     .catch((error) => {
@@ -147,6 +122,28 @@ const setRegPaymentID = async (req, res) => {
         message: error,
       });
     });
+};
+
+const detachOldPaymentID = async (req, res) => {
+  let user = res.locals.user;
+
+  let oldRegPaymentID = user.stripe.regPaymentID;
+
+  if (oldRegPaymentID != "N/A") {
+    try {
+      const paymentMethod = await stripe.paymentMethods.detach(oldRegPaymentID);
+
+      return res.json({
+        success: true,
+        message: "Old payment method successfully detached in Stripe",
+      });
+    } catch (error) {
+      return res.json({
+        success: false,
+        message: "Error with detaching old payment method in Stripe: " + error,
+      });
+    }
+  }
 };
 
 const chargeCustomer = async (req, res, next) => {
@@ -188,10 +185,10 @@ const chargeCustomer = async (req, res, next) => {
           message: "Non-subscriber charged successfully",
         });
       }
-    } catch (err) {
+    } catch (error) {
       // Error code will be authentication_required if authentication is needed
-      console.log("Error is: ", err);
-      console.log("Error code is: ", err.code);
+      console.log("Error is: ", error);
+      console.log("Error code is: ", error.code);
 
       // if (err.code === "authentication_required") {
       //   // const paymentIntentRetrieved = await stripe.paymentIntents.retrieve(
@@ -212,7 +209,7 @@ const chargeCustomer = async (req, res, next) => {
 
       return res.json({
         success: false,
-        message: err.code,
+        message: error.code,
       });
     }
   } else {
@@ -222,7 +219,6 @@ const chargeCustomer = async (req, res, next) => {
 };
 
 const fetchUser = async (req, res, next) => {
-  console.log(1);
   await User.findOne({ email: req.body.userEmail })
     .then((user) => {
       if (user) {
@@ -282,30 +278,29 @@ const updateSubscriptionLbs = async (req, res) => {
 };
 
 const createSelfPortal = async (req, res) => {
-  await stripe.billingPortal.sessions
-    .create({
+  try {
+    const session = await stripe.billingPortal.sessions.create({
       customer: req.body.customerID,
       return_url: baseURL + "/userSubscription",
-    })
-    .then((session, err) => {
-      if (err || !session) {
-        return res.json({
-          success: false,
-          message: "Error with creating self-service portal: " + err,
-        });
-      } else {
-        return res.json({
-          success: true,
-          message: session.url,
-        });
-      }
     });
+
+    return res.json({
+      success: true,
+      message: session.url,
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error,
+    });
+  }
 };
 
 module.exports = {
   createSetupIntent,
-  setRegPaymentID,
   //real:
+  setRegPaymentID,
+  detachOldPaymentID,
   getCardDetails,
   fetchUser,
   updateSubscriptionLbs,

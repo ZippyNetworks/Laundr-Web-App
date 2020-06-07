@@ -7,6 +7,7 @@ const {
     createSelfPortal,
     getCardDetails,
     setRegPaymentID,
+    detachOldPaymentID,
   } = require("../controllers/stripeController"),
   express = require("express"),
   router = express.Router();
@@ -22,7 +23,7 @@ router.post(
   updateSubscriptionLbs
 );
 router.post("/getCardDetails", getCardDetails);
-router.post("/setRegPaymentID", setRegPaymentID);
+router.post("/setRegPaymentID", setRegPaymentID, detachOldPaymentID);
 router.post("/createSelfPortal", createSelfPortal);
 
 module.exports = router;

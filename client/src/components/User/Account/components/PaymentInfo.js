@@ -25,6 +25,8 @@ import baseURL from "../../../../baseURL";
 import paymentInfoStyles from "../../../../styles/User/Account/components/paymentInfoStyles";
 
 //todo: maybe use the red/green for other confirms/cancels
+//todo: rerender after stored card
+//todo: in .catch errors in server, specify also what went wrong!
 
 const stripeKEY =
   process.env.STRIPE_PUBLISHABLE_KEY ||
@@ -71,12 +73,13 @@ class PaymentInfo extends Component {
   }
 
   componentDidMount = async () => {
+    //load payment info, if any. if there's an error, it will stay default
     let token = localStorage.getItem("token");
     const data = jwtDecode(token);
 
     let paymentID = data.stripe.regPaymentID;
 
-    if (paymentID != "N/A") {
+    if (paymentID !== "N/A") {
       await axios
         .post(baseURL + "/stripe/getCardDetails", { paymentID })
         .then((res) => {
@@ -103,6 +106,94 @@ class PaymentInfo extends Component {
 
   handleShowField = () => {
     this.setState({ updatePayment: !this.state.updatePayment });
+  };
+
+  handleSetupIntent = async (type) => {
+    let secret;
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+
+    let customerID = data.stripe.customerID;
+
+    await axios
+      .post(baseURL + "/stripe/createSetupIntent", { customerID })
+      .then((res) => {
+        if (res.data.success) {
+          secret = res.data.message;
+        } else {
+          alert("Error with creating SetupIntent");
+        }
+      })
+      .catch((error) => {
+        alert("Error: " + error);
+      });
+
+    return secret;
+  };
+
+  handleCardSetup = async () => {
+    const { stripe, elements } = this.props;
+
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return;
+    }
+
+    let secret = await this.handleSetupIntent();
+
+    const result = await stripe.confirmCardSetup(secret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+        billing_details: {
+          name: "placeholder",
+        },
+      },
+    });
+
+    if (result.error) {
+      // Display result.error.message in your UI.
+      alert("Error: " + result.error.message);
+    } else {
+      // The setup has succeeded. Display a success message and send
+      // result.setupIntent.payment_method to your server to save the
+      // card to a Customer
+      alert("Card successfully updated!");
+
+      let token = localStorage.getItem("token");
+      const data = jwtDecode(token);
+
+      let userEmail = data.email;
+
+      let regPaymentID = result.setupIntent.payment_method;
+
+      await axios
+        .post(baseURL + "/stripe/setRegPaymentID", { userEmail, regPaymentID })
+        .then(async (res) => {
+          if (res.data.success) {
+            //card successfully attached to user in database
+            await axios
+              .post(baseURL + "/user/updateToken", { userEmail })
+              .then((res) => {
+                if (res.data.success) {
+                  //token updated
+                  const token = res.data.token;
+                  localStorage.setItem("token", token);
+                } else {
+                  alert("Error with updating token");
+                }
+              })
+              .catch((error) => {
+                alert("Error: " + error);
+              });
+          } else {
+            alert("Error with updating card.");
+          }
+        })
+        .catch((error) => {
+          alert("Error: " + error);
+        });
+    }
   };
 
   renderPaymentButtons = (classes) => {
@@ -137,6 +228,7 @@ class PaymentInfo extends Component {
               size="small"
               variant="contained"
               className={classes.gradientButtonGreen}
+              onClick={this.handleCardSetup}
             >
               Confirm
             </Button>
