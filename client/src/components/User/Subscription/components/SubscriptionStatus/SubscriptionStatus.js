@@ -184,6 +184,7 @@ class SubscriptionStatus extends Component {
             <Divider />
             <CardActions style={{ justifyContent: "center" }}>
               <Button
+                size="small"
                 variant="contained"
                 className={classes.gradientButton}
                 onClick={this.handleManageSub}

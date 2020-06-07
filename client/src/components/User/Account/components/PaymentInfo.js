@@ -10,6 +10,7 @@ import {
   TextField,
   CardHeader,
   Fade,
+  Collapse,
 } from "@material-ui/core";
 import {
   Elements,
@@ -18,7 +19,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import PropTypes from "prop-types";
-import paymentInfoStyles from "../../../../styles/User/Account/components/accountInfoStyles";
+import paymentInfoStyles from "../../../../styles/User/Account/components/paymentInfoStyles";
 
 const stripeKEY =
   process.env.STRIPE_PUBLISHABLE_KEY ||
@@ -54,7 +55,64 @@ class PaymentInfo extends Component {
   }
 
   handleShowField = () => {
-    this.setState({ updatePayment: true });
+    this.setState({ updatePayment: !this.state.updatePayment });
+  };
+
+  renderPaymentButtons = (classes) => {
+    if (!this.state.updatePayment) {
+      return (
+        <Fade
+          in={!this.state.updatePayment}
+          style={{
+            display: this.state.updatePayment ? "none" : "block",
+            transitionDelay: !this.state.updatePayment ? "500ms" : "0ms",
+          }}
+        >
+          <Grid item>
+            <Button
+              size="small"
+              variant="contained"
+              className={classes.gradientButton}
+              onClick={this.handleShowField}
+            >
+              Update
+            </Button>
+          </Grid>
+        </Fade>
+      );
+    } else {
+      return (
+        <Fade
+          in={this.state.updatePayment}
+          style={{
+            display: !this.state.updatePayment ? "none" : "block",
+            transitionDelay: this.state.updatePayment ? "500ms" : "0ms",
+          }}
+        >
+          <React.Fragment>
+            <Grid item>
+              <Button
+                size="small"
+                variant="contained"
+                className={classes.gradientButtonRed}
+                onClick={this.handleShowField}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                size="small"
+                variant="contained"
+                className={classes.gradientButtonGreen}
+              >
+                Confirm
+              </Button>
+            </Grid>
+          </React.Fragment>
+        </Fade>
+      );
+    }
   };
 
   render() {
@@ -117,36 +175,42 @@ class PaymentInfo extends Component {
             <Grid
               container
               direction="row"
-              justify="space-between"
+              justify="center"
               alignItems="center"
+              spacing={2}
             >
-              <div style={{ width: 300 }}>
-                <Fade
-                  in={this.state.updatePayment}
-                  style={{
-                    display: !this.state.updatePayment ? "none" : "block",
-                    transitionDelay: this.state.updatePayment ? "500ms" : "0ms",
-                  }}
-                >
-                  <Grid item>
-                    <div style={{ width: 300 }}>
-                      <CardElement options={CARD_ELEMENT_OPTIONS} />
-                    </div>
-                  </Grid>
-                </Fade>
-              </div>
-              <Grid item>
-                <Button
-                  size="small"
-                  variant="contained"
-                  className={classes.gradientButton}
-                  onClick={this.handleShowField}
-                >
-                  Update
-                </Button>
-              </Grid>
+              {this.renderPaymentButtons(classes)}
             </Grid>
           </CardActions>
+          <Collapse in={this.state.updatePayment} timeout="auto" unmountOnExit>
+            <CardContent>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                spacing={2}
+              >
+                <div style={{ width: "100%" }}>
+                  <Fade
+                    in={this.state.updatePayment}
+                    style={{
+                      display: !this.state.updatePayment ? "none" : "block",
+                      transitionDelay: this.state.updatePayment
+                        ? "500ms"
+                        : "0ms",
+                    }}
+                  >
+                    <Grid item>
+                      <div style={{ width: "100%" }}>
+                        <CardElement options={CARD_ELEMENT_OPTIONS} />
+                      </div>
+                    </Grid>
+                  </Fade>
+                </div>
+              </Grid>
+            </CardContent>
+          </Collapse>
         </Card>
       </React.Fragment>
     );

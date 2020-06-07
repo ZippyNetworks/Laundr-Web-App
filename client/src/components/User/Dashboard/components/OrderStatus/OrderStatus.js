@@ -147,6 +147,7 @@ class OrderStatus extends Component {
                     <Divider />
                     <CardActions style={{ justifyContent: "center" }}>
                       <Button
+                        size="small"
                         variant="contained"
                         className={classes.gradient}
                         onClick={() => {
