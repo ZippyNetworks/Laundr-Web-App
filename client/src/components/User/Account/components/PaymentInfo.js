@@ -19,6 +19,9 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import PropTypes from "prop-types";
+import axios from "axios";
+import jwtDecode from "jwt-decode";
+import baseURL from "../../../../baseURL";
 import paymentInfoStyles from "../../../../styles/User/Account/components/paymentInfoStyles";
 
 //todo: maybe use the red/green for other confirms/cancels
@@ -53,8 +56,50 @@ class PaymentInfo extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { updatePayment: false };
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+    let stripe = data.stripe;
+
+    let defaultCard = {
+      brand: "N/A",
+      expMonth: "N/A",
+      expYear: "N/A",
+      lastFour: "N/A",
+    };
+
+    this.state = { updatePayment: false, stripe: stripe, card: defaultCard };
   }
+
+  componentDidMount = async () => {
+    let token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+
+    let paymentID = data.stripe.regPaymentID;
+
+    if (paymentID != "N/A") {
+      await axios
+        .post(baseURL + "/stripe/getCardDetails", { paymentID })
+        .then((res) => {
+          if (res.data.success) {
+            let card = res.data.message.card;
+
+            let cardInfo = {
+              brand: card.brand.toUpperCase(),
+              expMonth: card.exp_month,
+              expYear: card.exp_year,
+              lastFour: card.last4,
+            };
+
+            this.setState({
+              card: cardInfo,
+            });
+          }
+        })
+        .catch((error) => {
+          alert("Error: " + error);
+        });
+    }
+  };
 
   handleShowField = () => {
     this.setState({ updatePayment: !this.state.updatePayment });
@@ -124,7 +169,7 @@ class PaymentInfo extends Component {
                   variant="outlined"
                   label="Brand"
                   size="small"
-                  value="Test"
+                  value={this.state.card.brand}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -136,7 +181,7 @@ class PaymentInfo extends Component {
                   variant="outlined"
                   label="Expiration"
                   size="small"
-                  value="9/99"
+                  value={`${this.state.card.expMonth}/${this.state.card.expYear}`}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -148,7 +193,7 @@ class PaymentInfo extends Component {
                   variant="outlined"
                   label="Last 4 #"
                   size="small"
-                  value="1234"
+                  value={this.state.card.lastFour}
                   InputProps={{
                     readOnly: true,
                   }}

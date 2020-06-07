@@ -20,6 +20,7 @@ import sectionBorder from "../../../images/UserDashboard/sectionBorder.png";
 //todo: change size of subscription card since its larger than iphone 5s width
 //todo: change spacing and stuff for right/left side: see order status and new order's layout/root? understand how devias's acc pg works.
 //todo: center update payment info, when click, dropdown confirm/cancel and show cardElement
+//todo: use try catch like in getpaymentinfo
 
 class Subscription extends Component {
   constructor(props) {

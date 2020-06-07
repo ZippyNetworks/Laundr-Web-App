@@ -74,23 +74,29 @@ const createSetupIntent = async (req, res) => {
   }
 };
 
-//dont let req get through if its "N/A"
 const getCardDetails = async (req, res) => {
-  await stripe.paymentMethods
-    .retrieve(req.body.paymentID)
-    .then((paymentMethod, err) => {
-      if (err || !paymentMethod) {
-        return res.json({
-          success: false,
-          message: "Error with fetching payment method: " + err,
-        });
-      } else {
-        return res.json({
-          success: true,
-          message: paymentMethod,
-        });
-      }
+  try {
+    await stripe.paymentMethods
+      .retrieve(req.body.paymentID)
+      .then((paymentMethod) => {
+        if (!paymentMethod.customer) {
+          return res.json({
+            success: false,
+            message: "Payment method not attached to any customer",
+          });
+        } else {
+          return res.json({
+            success: true,
+            message: paymentMethod,
+          });
+        }
+      });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error,
     });
+  }
 };
 
 const setRegPaymentID = async (req, res) => {
@@ -298,9 +304,9 @@ const createSelfPortal = async (req, res) => {
 
 module.exports = {
   createSetupIntent,
-  getCardDetails,
   setRegPaymentID,
   //real:
+  getCardDetails,
   fetchUser,
   updateSubscriptionLbs,
   chargeCustomer,

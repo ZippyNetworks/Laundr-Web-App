@@ -14,7 +14,7 @@ export default (theme) => ({
   },
   gradientButtonGreen: {
     backgroundImage:
-      "linear-gradient( 136deg, rgb(0, 204, 0) 15%, rgb(0, 102, 0) 50%, rgb(0, 204, 0) 100%)",
+      "linear-gradient( 136deg, rgb(0, 204, 0) 15%, rgb(0, 130, 0) 50%, rgb(0, 204, 0) 100%)",
     color: "white",
   },
   centerTitle: {
