@@ -25,7 +25,7 @@ import baseURL from "../../../../baseURL";
 import paymentInfoStyles from "../../../../styles/User/Account/components/paymentInfoStyles";
 
 //todo: maybe use the red/green for other confirms/cancels
-//todo: rerender after stored card
+//todo: rerender after stored card (updating child state does not rerender parent)
 //todo: in .catch errors in server, specify also what went wrong!
 
 const stripeKEY =
