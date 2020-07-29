@@ -29,6 +29,7 @@ import baseURL from "../baseURL";
 //todo: big thing is to verify token on each page and redirect if necessary
 //todo: login with phone # since thats what they verify?
 //todo: this is written very badly lol. will make much better.
+//todo: add cssbaseline to layout, dont need on every pg
 
 function Copyright() {
   return (

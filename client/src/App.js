@@ -15,6 +15,7 @@ import { Main as MainLayout } from "./layouts";
 import RouteWithLayout from "./layouts/RouteWithLayout";
 
 //todo: make page not found
+//todo: extract themes to the themeprovider?
 
 export default class App extends Component {
   render() {

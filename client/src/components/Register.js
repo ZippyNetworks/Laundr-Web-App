@@ -41,6 +41,7 @@ import baseURL from "../baseURL";
 //todo: give error msg when wrong phone number entered (you get an error code from twilio controller) and disable verification dialog popup
 //todo: disable orlando probably
 //todo: this is written very badly lol. will make much better.
+//todo: whitespace detection for fields
 
 //in backend, caught errors = return error.code and success false. in frontend, if success is false, print error: message from the response which should be said code
 //in frontend, caught errors = use error itself and alert error: error
