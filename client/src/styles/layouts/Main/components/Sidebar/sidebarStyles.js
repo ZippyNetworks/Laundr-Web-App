@@ -1,4 +1,4 @@
-export default (theme) => ({
+const sidebarStyles = (theme) => ({
   drawer: {
     width: 240,
     [theme.breakpoints.up("lg")]: {
@@ -20,3 +20,5 @@ export default (theme) => ({
     marginBottom: theme.spacing(2),
   },
 });
+
+export default sidebarStyles;

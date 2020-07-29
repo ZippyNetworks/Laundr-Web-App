@@ -11,7 +11,6 @@ import MUIPlacesAutocomplete from "mui-places-autocomplete";
 import GoogleMapReact from "google-map-react";
 import PropTypes from "prop-types";
 import addressStyles from "../../../../../../styles/User/Dashboard/components/NewOrder/components/addressStyles";
-import MarkerIcon from "../../../../../../images/NewOrder/Marker.png";
 
 const apiKEY =
   process.env.GOOGLE_MAPS_API_KEY ||
@@ -26,7 +25,11 @@ const Marker = () => (
         position: "absolute",
       }}
     >
-      <img alt="Marker" style={{ height: "100%" }} src={MarkerIcon} />
+      <img
+        alt="Marker"
+        style={{ height: "100%" }}
+        src="/images/NewOrder/Marker.png"
+      />
     </Icon>
   </div>
 );

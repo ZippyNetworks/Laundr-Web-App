@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import Logo from "../images/LogRegLogo.png";
 import {
   Button,
   CssBaseline,
@@ -17,11 +16,13 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
+import { withRouter } from "next/router";
+import compose from "recompose/compose";
 import PropTypes from "prop-types";
 import jwtDecode from "jwt-decode";
-import loginStyles from "../styles/loginStyles";
+import loginStyles from "../src/styles/loginStyles";
 import axios from "axios";
-import baseURL from "../baseURL";
+import baseURL from "../src/baseURL";
 
 //todo: forgot password functionality
 //todo: change button colors to match logo/stuff
@@ -109,7 +110,10 @@ class Login extends Component {
       .then((res) => {
         if (res.data.success) {
           const token = res.data.token;
-          localStorage.setItem("token", token); //use stuff here. check token in constructor.
+
+          if (typeof localStorage !== "undefined") {
+            localStorage.setItem("token", token);
+          } //use stuff here. check token in constructor.
           //axios.defaults.headers.common["token"] = token;
           const data = jwtDecode(token);
           this.setState({
@@ -164,7 +168,7 @@ class Login extends Component {
             label="Email Address"
             autoComplete="email"
             error
-            helperText="*Please enter a valid email."
+            helperText="*Please enter a validLogin email."
             onChange={(event) => {
               this.handleEmailChange(event.target.value);
             }}
@@ -261,13 +265,13 @@ class Login extends Component {
     } else if (this.state.isAdmin) {
       return <Redirect push to="/placeholder" />;
     } else {
-      return <Redirect push to="/userDashboard" />;
+      this.props.router.push("/user/dashboard");
     }
   };
 
   render() {
     if (this.state.validLogin) {
-      return this.handleLoginRedirect();
+      this.handleLoginRedirect();
     }
 
     const classes = this.props.classes;
@@ -278,7 +282,7 @@ class Login extends Component {
         <div className={classes.paper}>
           <img
             alt="Company Logo"
-            src={Logo}
+            src="/images/LogRegLogo.png"
             style={{
               width: 400,
               height: 160,
@@ -343,4 +347,6 @@ Login.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(loginStyles)(Login);
+export default compose(withRouter, withStyles(loginStyles))(Login);
+
+// export default withRouter(withStyles(loginStyles)(Login));

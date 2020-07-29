@@ -26,14 +26,6 @@ import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import PropTypes from "prop-types";
 import reviewStyles from "../../../../../../styles/User/Dashboard/components/NewOrder/components/reviewStyles";
-import ScentedSelectedCircle from "../../../../../../images/NewOrder/ScentedSelectedCircle.png";
-import ScentedUnselectedCircle from "../../../../../../images/NewOrder/ScentedUnselectedCircle.png";
-import DelicatesSelectedCircle from "../../../../../../images/NewOrder/DelicatesSelectedCircle.png";
-import DelicatesUnselectedCircle from "../../../../../../images/NewOrder/DelicatesUnselectedCircle.png";
-import SeparateSelectedCircle from "../../../../../../images/NewOrder/SeparateSelectedCircle.png";
-import SeparateUnselectedCircle from "../../../../../../images/NewOrder/SeparateUnselectedCircle.png";
-import TowelsSelectedCircle from "../../../../../../images/NewOrder/TowelsSelectedCircle.png";
-import TowelsUnselectedCircle from "../../../../../../images/NewOrder/TowelsUnselectedCircle.png";
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -208,8 +200,8 @@ class Review extends React.Component {
                           <Avatar
                             src={
                               this.props.scented
-                                ? ScentedSelectedCircle
-                                : ScentedUnselectedCircle
+                                ? "/images/NewOrder/ScentedSelectedCircle.png"
+                                : "/images/NewOrder/ScentedUnselectedCircle.png"
                             }
                             imgProps={{}}
                           />
@@ -232,8 +224,8 @@ class Review extends React.Component {
                           <Avatar
                             src={
                               this.props.delicates
-                                ? DelicatesSelectedCircle
-                                : DelicatesUnselectedCircle
+                                ? "/images/NewOrder/DelicatesSelectedCircle.png"
+                                : "/images/NewOrder/DelicatesUnselectedCircle.png"
                             }
                           />
                         </ListItemAvatar>
@@ -255,8 +247,8 @@ class Review extends React.Component {
                           <Avatar
                             src={
                               this.props.separate
-                                ? SeparateSelectedCircle
-                                : SeparateUnselectedCircle
+                                ? "/images/NewOrder/SeparateSelectedCircle.png"
+                                : "/images/NewOrder/SeparateUnselectedCircle.png"
                             }
                           />
                         </ListItemAvatar>
@@ -278,8 +270,8 @@ class Review extends React.Component {
                           <Avatar
                             src={
                               this.props.towelsSheets
-                                ? TowelsSelectedCircle
-                                : TowelsUnselectedCircle
+                                ? "/images/NewOrder/TowelsSelectedCircle.png"
+                                : "/images/NewOrder/TowelsUnselectedCircle.png"
                             }
                           />
                         </ListItemAvatar>

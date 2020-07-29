@@ -1,4 +1,4 @@
-export default (theme) => ({
+const dashboardStyles = (theme) => ({
   welcomeCard: {
     background: "#21d0e5",
   },
@@ -43,3 +43,5 @@ export default (theme) => ({
     paddingTop: 10,
   },
 });
+
+export default dashboardStyles;

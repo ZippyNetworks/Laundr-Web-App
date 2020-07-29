@@ -3,14 +3,6 @@ import { Grid, Typography, TextField, withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
 import preferencesStyles from "../../../../../../../styles/User/Dashboard/components/NewOrder/components/Preferences/preferencesStyles";
 import PreferenceCard from "./components/PreferenceCard";
-import ScentedUnselected from "../../../../../../../images/NewOrder/ScentedUnselected.png";
-import ScentedSelected from "../../../../../../../images/NewOrder/ScentedSelected.png";
-import DelicatesUnselected from "../../../../../../../images/NewOrder/DelicatesUnselected.png";
-import DelicatesSelected from "../../../../../../../images/NewOrder/DelicatesSelected.png";
-import SeparateUnselected from "../../../../../../../images/NewOrder/SeparateUnselected.png";
-import SeparateSelected from "../../../../../../../images/NewOrder/SeparateSelected.png";
-import TowelsUnselected from "../../../../../../../images/NewOrder/TowelsUnselected.png";
-import TowelsSelected from "../../../../../../../images/NewOrder/TowelsSelected.png";
 
 class Preferences extends Component {
   constructor(props) {
@@ -47,8 +39,8 @@ class Preferences extends Component {
             <PreferenceCard
               title="Scented"
               info="Unscented detergent is hypoallergenic."
-              unselectedImage={ScentedUnselected}
-              selectedImage={ScentedSelected}
+              unselectedImage="/images/NewOrder/ScentedUnselected.png"
+              selectedImage="/images/NewOrder/ScentedSelected.png"
               updateSelected={this.props.handleScentedChange}
             />
           </Grid>
@@ -56,8 +48,8 @@ class Preferences extends Component {
             <PreferenceCard
               title="Delicates"
               info="Delicate clothing is washed in a mesh bag and dried on low heat."
-              unselectedImage={DelicatesUnselected}
-              selectedImage={DelicatesSelected}
+              unselectedImage="/images/NewOrder/DelicatesUnselected.png"
+              selectedImage="/images/NewOrder/DelicatesSelected.png"
               updateSelected={this.props.handleDelicatesChange}
             />
           </Grid>
@@ -65,8 +57,8 @@ class Preferences extends Component {
             <PreferenceCard
               title="Separate"
               info="Separated clothing is divided into whites and colors."
-              unselectedImage={SeparateUnselected}
-              selectedImage={SeparateSelected}
+              unselectedImage="/images/NewOrder/SeparateUnselected.png"
+              selectedImage="/images/NewOrder/SeparateSelected.png"
               updateSelected={this.props.handleSeparateChange}
             />
           </Grid>
@@ -74,8 +66,8 @@ class Preferences extends Component {
             <PreferenceCard
               title="Towels and Sheets"
               info="Towels and sheets are washed separately and dried on high heat."
-              unselectedImage={TowelsUnselected}
-              selectedImage={TowelsSelected}
+              unselectedImage="/images/NewOrder/TowelsUnselected.png"
+              selectedImage="/images/NewOrder/TowelsSelected.png"
               updateSelected={this.props.handleTowelsSheetsChange}
             />
           </Grid>
