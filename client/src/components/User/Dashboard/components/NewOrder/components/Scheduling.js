@@ -16,13 +16,18 @@ const timeTheme = createMuiTheme({
 });
 
 class Scheduling extends Component {
-  constructor(props) {
-    super(props);
+  state = { openTime: false };
 
-    this.state = { openTime: false };
-  }
   render() {
-    const classes = this.props.classes;
+    const {
+      classes,
+      todaySelected,
+      today,
+      tomorrowSelected,
+      tomorrow,
+      rawTime,
+      handleChange,
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -37,28 +42,32 @@ class Scheduling extends Component {
         >
           <Grid item xs={12} sm={6}>
             <Button
-              disabled={this.props.todaySelected}
-              onClick={this.props.handleTodayChange}
+              disabled={todaySelected}
+              onClick={() => {
+                handleChange("today");
+              }}
               variant="contained"
               className={classes.gradient}
               fullWidth
               size="large"
               startIcon={<CalendarTodayIcon />}
             >
-              Today: {this.props.today}
+              Today: {today}
             </Button>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Button
-              disabled={this.props.tomorrowSelected}
-              onClick={this.props.handleTomorrowChange}
+              disabled={tomorrowSelected}
+              onClick={() => {
+                handleChange("tomorrow");
+              }}
               variant="contained"
               className={classes.gradient}
               fullWidth
               size="large"
               startIcon={<CalendarTodayIcon />}
             >
-              Tomorrow: {this.props.tomorrow}
+              Tomorrow: {tomorrow}
             </Button>
           </Grid>
         </Grid>
@@ -75,10 +84,10 @@ class Scheduling extends Component {
                   label="Click to select a time"
                   multiline
                   onChange={(value) => {
-                    this.props.handleTimeChange(value);
+                    handleChange("time", value);
                   }}
                   helperText="*Must be at least 1 hour in advance"
-                  value={this.props.rawTime}
+                  value={rawTime}
                   DialogProps={{
                     container: document.getElementById("newOrderContainer"),
                     disableEnforceFocus: true,

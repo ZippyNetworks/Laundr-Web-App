@@ -430,7 +430,7 @@ class NewOrder extends Component {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={this.handleErrorClose} color="primary">
+                    <Button onClick={this.toggleErrorMessage} color="primary">
                       Okay
                     </Button>
                   </DialogActions>
@@ -473,14 +473,11 @@ class NewOrder extends Component {
                         <Scheduling
                           today={this.today}
                           tomorrow={this.tomorrow}
-                          update={this.handleScheduling}
                           todaySelected={this.state.todaySelected}
                           tomorrowSelected={this.state.tomorrowSelected}
                           formattedTime={this.state.formattedTime}
                           rawTime={this.state.rawTime}
-                          handleTodayChange={this.handleTodayChange}
-                          handleTomorrowChange={this.handleTomorrowChange}
-                          handleTimeChange={this.handleTimeChange}
+                          handleChange={this.handleChange}
                         />
                       </div>
                     </Fade>
@@ -501,13 +498,7 @@ class NewOrder extends Component {
                           separate={this.state.separate}
                           towelsSheets={this.state.towelsSheets}
                           washerPreferences={this.state.washerPreferences}
-                          handleScentedChange={this.handleScentedChange}
-                          handleDelicatesChange={this.handleDelicatesChange}
-                          handleSeparateChange={this.handleSeparateChange}
-                          handleTowelsSheetsChange={
-                            this.handleTowelsSheetsChange
-                          }
-                          handleWasherPrefsChange={this.handleWasherPrefsChange}
+                          handleChange={this.handleChange}
                         />
                       </div>
                     </Fade>
@@ -522,7 +513,7 @@ class NewOrder extends Component {
                       }}
                     >
                       <div>
-                        {/* <Address
+                        <Address
                           center={this.state.center}
                           zoom={this.state.zoom}
                           address={this.state.address}
@@ -531,12 +522,8 @@ class NewOrder extends Component {
                           renderMarker={this.state.renderMarker}
                           addressPreferences={this.state.addressPreferences}
                           handleAddressSelect={this.handleAddressSelect}
-                          handleAddressChange={this.handleAddressChange}
-                          handleAddressPrefsChange={
-                            this.handleAddressPrefsChange
-                          }
-                          handleMapChange={this.handleMapChange}
-                        /> */}
+                          handleChange={this.handleChange}
+                        />
                       </div>
                     </Fade>
                     <Fade

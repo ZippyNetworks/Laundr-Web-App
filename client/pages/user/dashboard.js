@@ -16,8 +16,10 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //refactor priorities:
 //-individual components (use helpers and loading component)
 //-implement update token helper
-//-imports (use index.js) from root
-//-server
+//-fix places autocomplete on address
+//-imports (use index.js) from root for images, styles, deep components, etc.
+//-styles as named exports
+//-server stuff
 
 //todo: implement status 8 feature for order status when order is delivered
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile
@@ -46,11 +48,7 @@ class Dashboard extends Component {
   };
 
   componentDidMount = () => {
-    const currentUser = getCurrentUser();
-
-    this.setState({ userFname: currentUser.fname }, async () => {
-      await this.fetchOrderInfo();
-    });
+    this.fetchOrderInfo();
   };
 
   fetchOrderInfo = async () => {

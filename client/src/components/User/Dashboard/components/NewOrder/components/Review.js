@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import {
   withStyles,
   TextField,
@@ -41,12 +41,8 @@ const LightTooltip = withStyles((theme) => ({
   },
 }))(Tooltip);
 
-class Review extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { openAddressPrefs: false, openWasherPrefs: false };
-  }
+class Review extends Component {
+  state = { openAddressPrefs: false, openWasherPrefs: false };
 
   handleAddressPrefsClose = () => {
     this.setState({
@@ -81,7 +77,18 @@ class Review extends React.Component {
   };
 
   render() {
-    const classes = this.props.classes;
+    const {
+      classes,
+      address,
+      addressPreferences,
+      pickupDate,
+      pickupTime,
+      washerPreferences,
+      scented,
+      delicates,
+      separate,
+      towelsSheets,
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -114,7 +121,7 @@ class Review extends React.Component {
                       Address
                     </Typography>
                     <Typography color="textSecondary" gutterBottom>
-                      {this.props.address}
+                      {address}
                     </Typography>
                     <Grid
                       container
@@ -124,9 +131,9 @@ class Review extends React.Component {
                     >
                       <LightTooltip
                         title={
-                          this.evaluateWhitespace(this.props.addressPreferences)
+                          this.evaluateWhitespace(addressPreferences)
                             ? "N/A"
-                            : this.props.addressPreferences
+                            : addressPreferences
                         }
                         open={this.state.openAddressPrefs}
                         placement="left"
@@ -158,9 +165,7 @@ class Review extends React.Component {
                       />{" "}
                       Pickup Date
                     </Typography>
-                    <Typography color="textSecondary">
-                      {this.props.pickupDate}
-                    </Typography>
+                    <Typography color="textSecondary">{pickupDate}</Typography>
                     <Typography>
                       <QueryBuilderIcon
                         fontSize="small"
@@ -168,9 +173,7 @@ class Review extends React.Component {
                       />{" "}
                       Pickup Time
                     </Typography>
-                    <Typography color="textSecondary">
-                      {this.props.pickupTime}
-                    </Typography>
+                    <Typography color="textSecondary">{pickupTime}</Typography>
                   </CardContent>
                 </Card>
               </Grid>
@@ -199,7 +202,7 @@ class Review extends React.Component {
                         <ListItemAvatar>
                           <Avatar
                             src={
-                              this.props.scented
+                              scented
                                 ? "/images/NewOrder/ScentedSelectedCircle.png"
                                 : "/images/NewOrder/ScentedUnselectedCircle.png"
                             }
@@ -208,7 +211,7 @@ class Review extends React.Component {
                         </ListItemAvatar>
                         <ListItemText primary="Scented" />
                         <ListItemSecondaryAction>
-                          {this.props.scented ? (
+                          {scented ? (
                             <CheckCircleOutlineIcon
                               style={{ fill: "green" }}
                               edge="end"
@@ -223,7 +226,7 @@ class Review extends React.Component {
                         <ListItemAvatar>
                           <Avatar
                             src={
-                              this.props.delicates
+                              delicates
                                 ? "/images/NewOrder/DelicatesSelectedCircle.png"
                                 : "/images/NewOrder/DelicatesUnselectedCircle.png"
                             }
@@ -231,7 +234,7 @@ class Review extends React.Component {
                         </ListItemAvatar>
                         <ListItemText primary="Delicates" />
                         <ListItemSecondaryAction>
-                          {this.props.delicates ? (
+                          {delicates ? (
                             <CheckCircleOutlineIcon
                               style={{ fill: "green" }}
                               edge="end"
@@ -246,7 +249,7 @@ class Review extends React.Component {
                         <ListItemAvatar>
                           <Avatar
                             src={
-                              this.props.separate
+                              separate
                                 ? "/images/NewOrder/SeparateSelectedCircle.png"
                                 : "/images/NewOrder/SeparateUnselectedCircle.png"
                             }
@@ -254,7 +257,7 @@ class Review extends React.Component {
                         </ListItemAvatar>
                         <ListItemText primary="Separate" />
                         <ListItemSecondaryAction>
-                          {this.props.separate ? (
+                          {separate ? (
                             <CheckCircleOutlineIcon
                               style={{ fill: "green" }}
                               edge="end"
@@ -269,7 +272,7 @@ class Review extends React.Component {
                         <ListItemAvatar>
                           <Avatar
                             src={
-                              this.props.towelsSheets
+                              towelsSheets
                                 ? "/images/NewOrder/TowelsSelectedCircle.png"
                                 : "/images/NewOrder/TowelsUnselectedCircle.png"
                             }
@@ -277,7 +280,7 @@ class Review extends React.Component {
                         </ListItemAvatar>
                         <ListItemText primary="Towels and Sheets" />
                         <ListItemSecondaryAction>
-                          {this.props.towelsSheets ? (
+                          {towelsSheets ? (
                             <CheckCircleOutlineIcon
                               style={{ fill: "green" }}
                               edge="end"
@@ -296,9 +299,9 @@ class Review extends React.Component {
                     >
                       <LightTooltip
                         title={
-                          this.evaluateWhitespace(this.props.washerPreferences)
+                          this.evaluateWhitespace(washerPreferences)
                             ? "N/A"
-                            : this.props.washerPreferences
+                            : washerPreferences
                         }
                         open={this.state.openWasherPrefs}
                         placement="right"
