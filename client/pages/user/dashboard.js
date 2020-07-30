@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Grid, withStyles, Paper, Typography } from "@material-ui/core";
 import { Layout } from "../../src/layouts";
 import { getCurrentUser } from "../../src/helpers/session";
+import { showDefaultError } from "../../src/helpers/errors";
 import { Loading } from "../../src/utility";
 import PropTypes from "prop-types";
 import axios from "axios";
@@ -12,40 +13,36 @@ import AutoRotatingCarousel from "../../src/components/User/Dashboard/components
 import Slide from "../../src/components/User/Dashboard/components/Carousel/Slide";
 import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 
-//todo: add loading backdrop, other dashboards (order related) already have it
+//refactor priorities:
+//-individual components (use helpers and loading component)
+//-implement update token helper
+//-imports (use index.js) from root
+//-server
+
 //todo: implement status 8 feature for order status when order is delivered
-//todo: test button gradients, normal vs login one
-//todo: change time picker in scheduling so no scrollbar on desktop view
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile
 //todo: !!!configure rest of pages for mobile, for login and register use vw vh
 //todo: fix white line appearing when small mobile
-//todo: post vs put? ehh...see hhh.docx for conventions, maybe apply it to controllers
 //todo: implement admin stuff...later
-//todo: can also use "hidden" component to achieve the single progress icon
 //todo: research efficient querying, maybe better to sort in the query rather than grab all orders?
 //todo: maybe move logout button since if on mobile hitting sidebar button is close
 //todo: add isUser? maybe when im less lazy
-//todo: maybe refactor loading to load EVERYTHING first, atm for dashboards its just for the order fetching
 //todo: maybe remove help slide and on help pg just have call, chat, dm, ticket?
 //todo: add color scheme to gradients
-//todo: reorganize user folder, have a folder for each page on left
-//todo: make all errors show up on dialog, .catch errors show in alert. every error should have a "please contact us". maybe a please try again
 //todo: stripe self-serve portal handles all the payment info stuff??
 //todo: maybe just store their payment id, check if it exists every time a on-demand charge is made, use the id to modify method. sub is separate card?
 //todo: !!!cannot edit card #, so if user updates payment method then delete the old one and add the new one, also updating the user property id
 //todo: 10lb minimum on orders - so if you send one sock you get charged 10 lbs. (add to new order notes)
 //todo: sort out customer email thing (different: login vs stripe - can be changed with checkout session)
-//todo: webhook for cancelled subs
 //todo: move moment to higher level package.json
-//todo: change all catch errors to include a msg about the error itself?
 //todo: add button styling to ALL dialogs
 
 class Dashboard extends Component {
   state = {
+    loading: true,
     orderComponent: null,
     orderComponentName: "",
     userFname: "",
-    loading: true,
   };
 
   componentDidMount = () => {
@@ -69,7 +66,7 @@ class Dashboard extends Component {
         let componentName;
 
         if (response.data.message === "N/A") {
-          component = null;
+          component = <NewOrder />;
           componentName = "New Order";
         } else {
           component = <OrderStatus order={res.data.message} />;
@@ -84,13 +81,11 @@ class Dashboard extends Component {
         });
       } else {
         //todo: this will be the error message from the server. like in eat me
-        alert("Error with fetching orders, please contact us.");
+        showDefaultError("fetching orders", 1);
       }
     } catch (error) {
       console.log("Error with fetching order info: ", error);
-      alert(
-        "Error with fetching order info. Please try again later. Error code: 1"
-      );
+      showDefaultError("fetching order info", 2);
     }
   };
 

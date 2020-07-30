@@ -16,16 +16,7 @@ export const getCurrentUser = () => {
       return null;
     }
   } else {
-    // const defaultUser = {
-    //   email: "N/A",
-    //   fName: "N/A",
-    //   lName: "N/A",
-    //   city: "Gainesville",
-    //   phone: "N/A",
-    //   isWasher: false,
-    //   isDriver: false,
-    //   isAdmin: false,
-    // };
+    //todo: will change when switch to cookies
     alert(
       "Error with retrieving current user. Please make sure localStorage is enabled, relog, and try again."
     );
