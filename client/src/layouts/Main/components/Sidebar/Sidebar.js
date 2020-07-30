@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { Divider, Drawer, withStyles } from "@material-ui/core";
+import { Profile, SidebarNav /*UpgradePlan*/ } from "./components";
+import { getCurrentUser } from "../../../../helpers/session";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Divider, Drawer, withStyles } from "@material-ui/core";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import HistoryIcon from "@material-ui/icons/History";
@@ -9,7 +11,6 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import LocalLaundryServiceIcon from "@material-ui/icons/LocalLaundryService";
-import { Profile, SidebarNav /*UpgradePlan*/ } from "./components";
 import jwtDecode from "jwt-decode";
 import sidebarStyles from "../../../../styles/layouts/Main/components/Sidebar/sidebarStyles";
 
@@ -86,13 +87,12 @@ class Sidebar extends Component {
   constructor(props) {
     super(props);
 
-    let token = localStorage.getItem("token");
-    const data = jwtDecode(token);
+    let currentUser = getCurrentUser();
 
     this.state = {
-      isWasher: data.isWasher,
-      isDriver: data.isDriver,
-      isAdmin: data.isAdmin,
+      isWasher: currentUser.isWasher,
+      isDriver: currentUser.isDriver,
+      isAdmin: currentUser.isAdmin,
     };
   }
 

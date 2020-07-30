@@ -1,7 +1,8 @@
 import React, { Component } from "react";
+import { Avatar, Typography, withStyles } from "@material-ui/core";
+import { getCurrentUser } from "../../../../../../helpers/session";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Avatar, Typography, withStyles } from "@material-ui/core";
 import jwtDecode from "jwt-decode";
 import PersonIcon from "@material-ui/icons/Person";
 import LocalLaundryServiceIcon from "@material-ui/icons/LocalLaundryService";
@@ -13,15 +14,14 @@ class Profile extends Component {
   constructor(props) {
     super(props);
 
-    let token = localStorage.getItem("token");
-    const data = jwtDecode(token);
+    let currentUser = getCurrentUser();
 
     this.state = {
-      userFname: data.fname,
-      userLname: data.lname,
-      isWasher: data.isWasher,
-      isDriver: data.isDriver,
-      isAdmin: data.isAdmin,
+      userFname: currentUser.fname,
+      userLname: currentUser.lname,
+      isWasher: currentUser.isWasher,
+      isDriver: currentUser.isDriver,
+      isAdmin: currentUser.isAdmin,
     };
   }
 

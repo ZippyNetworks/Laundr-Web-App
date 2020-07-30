@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Grid, withStyles, Paper, Typography } from "@material-ui/core";
+import { Layout } from "../../src/layouts";
+import { getCurrentUser } from "../../src/helpers/session";
+import { Loading } from "../../src/utility";
 import PropTypes from "prop-types";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
 import baseURL from "../../src/baseURL";
-import { Layout } from "../../src/layouts";
 import NewOrder from "../../src/components/User/Dashboard/components/NewOrder/NewOrder";
 import OrderStatus from "../../src/components/User/Dashboard/components/OrderStatus/OrderStatus";
 import AutoRotatingCarousel from "../../src/components/User/Dashboard/components/Carousel/AutoRotatingCarousel";
@@ -40,73 +41,71 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //todo: add button styling to ALL dialogs
 
 class Dashboard extends Component {
-  constructor(props) {
-    super(props);
-
-    let data;
-
-    if (typeof localStorage !== "undefined") {
-      let token = localStorage.getItem("token");
-      data = jwtDecode(token);
-    }
-
-    this.state = {
-      orderComponent: null,
-      orderComponentName: "",
-      userFname: data.fname,
-    };
-  }
-
-  componentDidMount = () => {
-    this.renderOrderInfo();
+  state = {
+    orderComponent: null,
+    orderComponentName: "",
+    userFname: "",
+    loading: true,
   };
 
-  renderOrderInfo = async () => {
-    let data;
+  componentDidMount = () => {
+    const currentUser = getCurrentUser();
 
-    if (typeof localStorage !== "undefined") {
-      let token = localStorage.getItem("token");
-      data = jwtDecode(token);
-    }
-
-    let userEmail = data.email;
-
-    let component = null;
-    let componentName = "";
-
-    await axios
-      .post(baseURL + "/order/getCurrentOrder", { userEmail })
-      .then((res) => {
-        if (res.data.success) {
-          if (res.data.message === "N/A") {
-            component = <NewOrder />;
-            componentName = "New Order";
-          } else {
-            component = <OrderStatus order={res.data.message} />;
-            componentName = "Order Status";
-          }
-        } else {
-          alert("Error with fetching orders, please contact us.");
-        }
-      })
-      .catch((error) => {
-        alert("Error: " + error);
-      });
-
-    this.setState({
-      orderComponent: component,
-      orderComponentName: componentName,
+    this.setState({ userFname: currentUser.fname }, async () => {
+      await this.fetchOrderInfo();
     });
   };
 
+  fetchOrderInfo = async () => {
+    try {
+      const currentUser = getCurrentUser();
+
+      const response = await axios.post(`${baseURL}/order/getCurrentOrder`, {
+        userEmail: currentUser.email,
+      });
+
+      if (response.data.success) {
+        let component;
+        let componentName;
+
+        if (response.data.message === "N/A") {
+          component = null;
+          componentName = "New Order";
+        } else {
+          component = <OrderStatus order={res.data.message} />;
+          componentName = "Order Status";
+        }
+
+        this.setState({
+          orderComponent: component,
+          orderComponentName: componentName,
+          userFname: currentUser.fname,
+          loading: false,
+        });
+      } else {
+        //todo: this will be the error message from the server. like in eat me
+        alert("Error with fetching orders, please contact us.");
+      }
+    } catch (error) {
+      console.log("Error with fetching order info: ", error);
+      alert(
+        "Error with fetching order info. Please try again later. Error code: 1"
+      );
+    }
+  };
+
   render() {
+    if (this.state.loading) {
+      return <Loading />;
+    }
+
     const classes = this.props.classes;
 
     return (
       <Layout>
         <Grid
           container
-          spacing={2}
+          spacing={0}
           direction="column"
           justify="center"
           alignItems="center" /*main page column*/
@@ -117,13 +116,21 @@ class Dashboard extends Component {
         >
           <Grid item>
             <Paper elevation={3} className={classes.welcomeCard}>
-              <Typography variant="h3" className={classes.welcomeText}>
+              <Typography
+                variant="h3"
+                className={classes.welcomeText}
+                gutterBottom
+              >
                 {`Welcome, ${this.state.userFname}`}
               </Typography>
             </Paper>
           </Grid>
           <Grid item>
-            <Typography variant="h1" className={classes.orderComponentName}>
+            <Typography
+              variant="h1"
+              className={classes.orderComponentName}
+              gutterBottom
+            >
               {this.state.orderComponentName}
             </Typography>
             {/* <CardHeader
@@ -135,20 +142,20 @@ class Dashboard extends Component {
         </Grid>
         <Grid
           container
-          spacing={2}
+          spacing={0}
           direction="column"
           justify="center"
           alignItems="center" /*main page column*/
         >
           <img
             src="/images/UserDashboard/sectionBorder.png"
-            style={{ width: "100%", height: "100%", paddingTop: 8 }}
+            style={{ width: "100%", height: "100%" }}
             alt="Section border"
           />
         </Grid>
         <Grid
           container
-          spacing={2}
+          spacing={0}
           direction="column"
           justify="center"
           alignItems="center" /*main page column*/
@@ -157,7 +164,7 @@ class Dashboard extends Component {
         </Grid>
         <Grid
           container
-          spacing={2}
+          spacing={0}
           direction="column"
           justify="center"
           alignItems="center" /*main page column*/
@@ -174,18 +181,14 @@ class Dashboard extends Component {
         </Grid>
         <Grid
           container
-          spacing={2}
+          spacing={0}
           direction="column"
           justify="center"
           alignItems="center" /*main page column*/
           style={{ backgroundColor: "#21d0e5" }}
         >
           <Grid item>
-            <Typography
-              variant="h1"
-              className={classes.carouselTitle}
-              style={{ marginBottom: -25 }}
-            >
+            <Typography variant="h1" className={classes.carouselTitle}>
               Check these out!
             </Typography>
           </Grid>
@@ -262,14 +265,14 @@ class Dashboard extends Component {
         </Grid>
         <Grid
           container
-          spacing={2}
+          spacing={0}
           direction="column"
           justify="center"
           alignItems="center" /*main page column*/
         >
           <img
             src="/images/UserDashboard/sectionBorder.png"
-            style={{ width: "100%", height: "100%", paddingTop: 8 }}
+            style={{ width: "100%", height: "100%" }}
             alt="Section border"
           />
         </Grid>
