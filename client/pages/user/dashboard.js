@@ -43,13 +43,12 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    let token;
+    let data;
 
     if (typeof localStorage !== "undefined") {
-      token = localStorage.getItem("token");
+      let token = localStorage.getItem("token");
+      data = jwtDecode(token);
     }
-
-    const data = jwtDecode(token);
 
     this.state = {
       orderComponent: null,
