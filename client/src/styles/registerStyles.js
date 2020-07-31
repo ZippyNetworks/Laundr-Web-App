@@ -1,4 +1,4 @@
-export default (theme) => ({
+const registerStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
@@ -33,3 +33,5 @@ export default (theme) => ({
     fontSize: "small",
   },
 });
+
+export default registerStyles;

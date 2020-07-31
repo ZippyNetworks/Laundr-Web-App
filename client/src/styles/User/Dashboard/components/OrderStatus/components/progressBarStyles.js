@@ -1,4 +1,4 @@
-export default (theme) => ({
+const progressBarStyles = (theme) => ({
   root: {
     width: "100%",
     [theme.breakpoints.down(650)]: {
@@ -25,3 +25,5 @@ export default (theme) => ({
     marginTop: 5,
   },
 });
+
+export default progressBarStyles;

@@ -164,7 +164,7 @@ class Login extends Component {
             label="Email Address"
             autoComplete="email"
             error
-            helperText="*Please enter a validLogin email."
+            helperText="*Please enter a valid email."
             onChange={(event) => {
               this.handleEmailChange(event.target.value);
             }}

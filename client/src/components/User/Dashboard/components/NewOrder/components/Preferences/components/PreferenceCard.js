@@ -38,28 +38,27 @@ class PreferenceCard extends Component {
   }
 
   handleSelect = () => {
+    const { unselectedImage, selectedImage, handleInputChange } = this.props;
+
     if (this.state.selected) {
       this.setState(
         {
           selected: false,
-          currentImage: this.props.unselectedImage,
+          currentImage: unselectedImage,
         },
         () => {
-          this.props.updateSelected(this.state.selected);
+          handleInputChange(this.state.selected);
         }
       );
     } else {
-      this.setState(
-        { selected: true, currentImage: this.props.selectedImage },
-        () => {
-          this.props.updateSelected(this.state.selected);
-        }
-      );
+      this.setState({ selected: true, currentImage: selectedImage }, () => {
+        handleInputChange(this.state.selected);
+      });
     }
   };
 
   render() {
-    let classes = this.props.classes;
+    const { classes, title, info } = this.props;
 
     return (
       <Card className={classes.root}>
@@ -73,17 +72,13 @@ class PreferenceCard extends Component {
           }
           title={
             <Typography gutterBottom variant="h6" component="h2">
-              {this.props.title}
+              {title}
             </Typography>
           }
         />
         <CardMedia className={classes.media} image={this.state.currentImage} />
         <CardActions disableSpacing style={{ justifyContent: "center" }}>
-          <LightTooltip
-            title={this.props.info}
-            TransitionComponent={Fade}
-            arrow
-          >
+          <LightTooltip title={info} TransitionComponent={Fade} arrow>
             <InfoIcon
               color="primary"
               style={{

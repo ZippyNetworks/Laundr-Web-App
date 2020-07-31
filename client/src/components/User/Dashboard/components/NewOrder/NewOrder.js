@@ -11,6 +11,9 @@ import {
   DialogTitle,
   CardContent,
 } from "@material-ui/core";
+import { Loading } from "../../../../../utility/";
+import { getCurrentUser } from "../../../../../helpers/session";
+import { showDefaultError } from "../../../../../helpers/errors";
 import PropTypes from "prop-types";
 import Geocode from "react-geocode";
 import jwtDecode from "jwt-decode";
@@ -32,9 +35,567 @@ const apiKEY =
 
 //todo: add functionality for orlando users, check which city user is from
 
+//refactor priorities:
+//fix handlers in components (the change methods), fix address
+
 const steps = ["Scheduling", "Preferences", "Address", "Pricing", "Review"];
 
 class NewOrder extends Component {
+  constructor() {
+    super();
+
+    this.now = moment();
+    this.today = this.now.format("MM/DD/YYYY");
+    this.tomorrow = this.now.add(1, "days").format("MM/DD/YYYY");
+    this.nowFormattedTime = moment(this.now, "HH:mm:ss").format("LT");
+
+    this.state = {
+      loading: true,
+      activeStep: 0,
+      error: false,
+      errorMessage: "",
+      date: "N/A", //scheduling
+      todaySelected: false,
+      tomorrowSelected: false,
+      formattedTime: this.nowFormattedTime,
+      rawTime: new Date(),
+      scented: false, //preferences
+      delicates: false,
+      separate: false,
+      towelsSheets: false,
+      washerPreferences: "",
+      center: {
+        //address
+        lat: 29.6516, //default view is gainesville
+        lng: -82.3248,
+      },
+      zoom: 12,
+      address: "",
+      markerLat: 0,
+      markerLong: 0,
+      renderMarker: false,
+      addressPreferences: "",
+      orderID: -1, //done screen
+    };
+  }
+
+  componentDidMount = () => {
+    this.setState({ loading: false });
+  };
+
+  handleNext = async () => {
+    //also handle validation in here!
+    let canNext = true;
+
+    switch (this.state.activeStep) {
+      case 0:
+        canNext = this.handleTimeCheck();
+        break;
+
+      case 1:
+        console.log("scented: " + this.state.scented);
+        console.log("delicates: " + this.state.delicates);
+        console.log("separate: " + this.state.separate);
+        console.log("towels and sheets: " + this.state.towelsSheets);
+        console.log("washer preferences: " + this.state.washerPreferences);
+        console.log("====================================");
+        break;
+
+      case 2:
+        console.log("address: " + this.state.address);
+        console.log("driver instructions: " + this.state.addressPreferences);
+        console.log("====================================");
+        let addressCords = { lat: -1, lng: -1 };
+
+        //coordinates of entered address
+        await Geocode.fromAddress(this.state.address).then(
+          (response) => {
+            const { lat, lng } = response.results[0].geometry.location;
+            addressCords.lat = lat;
+            addressCords.lng = lng;
+          },
+          (error) => {
+            //todo: handle
+          }
+        );
+
+        //determine distance in m from center of range based on city, hardcode gnv for now
+        const distance = geolib.getPreciseDistance(
+          { latitude: addressCords.lat, longitude: addressCords.lng },
+          { latitude: 29.6499, longitude: -82.3486 }
+        );
+
+        console.log("lat: " + addressCords.lat);
+        console.log("lng: " + addressCords.lng);
+
+        if (this.state.address === "") {
+          this.setState({
+            error: true,
+            errorMessage: "Please enter an address.",
+          });
+          canNext = false;
+        } else if (distance > 16094) {
+          this.setState({
+            error: true,
+            errorMessage:
+              "The address entered is not valid or is not within our service range. Please try again.",
+          });
+          console.log("distance: " + distance);
+          console.log("====================================");
+          canNext = false;
+        }
+        break;
+
+      case 3:
+        break;
+
+      case 4:
+        //check time again in case they waited and then came back to continue their order
+        canNext = this.handleTimeCheck();
+
+        let orderPlaced;
+
+        if (canNext) {
+          orderPlaced = await this.handlePlaceOrder();
+        } else {
+          return;
+        }
+
+        if (!orderPlaced) {
+          this.setState({
+            error: true,
+            errorMessage:
+              "There was an error with placing your order. Please try again later. If this problem continues, contact us.  Error code: 3",
+          });
+          canNext = false;
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    if (canNext) {
+      console.log("moved on to next");
+      this.setState({ activeStep: this.state.activeStep + 1 });
+    }
+  };
+
+  handleBack = () => {
+    this.setState({ activeStep: this.state.activeStep - 1 });
+  };
+
+  handleTimeCheck = () => {
+    console.log("scheduled time:" + this.state.formattedTime);
+
+    let canNext = true;
+    //time checks, military time format: check if logged in user is gainesville or etc, hardcode gnv for now
+    const scheduledTime = moment(this.state.rawTime, "HH:mm:ss"); //note: converting Date() to moment obj
+    const lowerBound = moment("10:00:00", "HH:mm:ss");
+    const upperBound = moment("19:00:00", "HH:mm:ss").add(1, "minutes"); //so accepts 7 PM as a time
+
+    console.log("scheduled time raw:" + scheduledTime);
+
+    //universal 1 hour from now check
+    const hourFromNow = moment(moment(), "HH:mm:ss").add(1, "hours");
+
+    if (!this.state.todaySelected && !this.state.tomorrowSelected) {
+      //if no date selected
+      this.setState({
+        error: true,
+        errorMessage: "Please select a pickup date.",
+      });
+      canNext = false;
+    } else if (
+      this.state.todaySelected &&
+      hourFromNow.isAfter(moment("19:00:00", "HH:mm:ss"))
+    ) {
+      //if selected today and its after 7 PM
+      this.setState({
+        error: true,
+        errorMessage:
+          "Sorry! We are closed after 7 PM. Please select a different day.",
+      });
+      canNext = false;
+    } else if (!scheduledTime.isBetween(lowerBound, upperBound)) {
+      //if pickup time isnt between 10 am and 7 pm
+      this.setState({
+        error: true,
+        errorMessage: "The pickup time must be between 10 AM and 7 PM.",
+      });
+      canNext = false;
+    } else if (
+      hourFromNow.isBetween(lowerBound, upperBound) &&
+      scheduledTime.isBefore(hourFromNow) &&
+      this.state.todaySelected
+    ) {
+      //if 1 hr in advance is between 10 and 7 AND pickup time is before that AND the date selected is today
+      this.setState({
+        error: true,
+        errorMessage: "The pickup time must be at least 1 hour in advance.",
+      });
+      canNext = false;
+    }
+
+    return canNext;
+  };
+
+  handlePlaceOrder = async () => {
+    // axios.defaults.headers.common["token"] = token;
+
+    try {
+      const currentUser = getCurrentUser();
+
+      const response = await axios.post(baseURL + "/order/placeOrder", {
+        email: currentUser.email,
+        fname: currentUser.fname,
+        lname: currentUser.lname,
+        phone: currentUser.phone,
+        coupon: "placeholder",
+        scented: this.state.scented,
+        delicates: this.state.delicates,
+        separate: this.state.separate,
+        towelsSheets: this.state.towelsSheets,
+        washerPrefs: this.evaluateWhitespace(this.state.washerPreferences),
+        address: this.state.address,
+        addressPrefs: this.evaluateWhitespace(this.state.addressPreferences),
+        pickupDate: this.state.date,
+        pickupTime: this.state.formattedTime,
+        cost: 99.99,
+        created: new Date(),
+      });
+
+      if (response.data.success) {
+        this.setState({ orderID: res.data.orderID }, () => {
+          return true;
+        });
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log("Error with placing order: ", error);
+      showDefaultError("placing order", 4);
+      return false;
+    }
+  };
+
+  handleDone = () => {
+    alert("moved past confirmation screen");
+  };
+
+  handleInputChange = (property, value) => {
+    switch (property) {
+      case "today":
+        this.setState({
+          todaySelected: true,
+          tomorrowSelected: false,
+          date: this.today,
+        });
+        break;
+
+      case "tomorrow":
+        this.setState({
+          todaySelected: false,
+          tomorrowSelected: true,
+          date: this.tomorrow,
+        });
+        break;
+
+      case "time":
+        const formattedTime = moment(value, "HH:mm:ss").format("LT");
+        this.setState({ rawTime: value, formattedTime });
+        break;
+
+      case "scented":
+        this.setState({ [property]: value });
+        break;
+
+      case "delicates":
+        this.setState({ [property]: value });
+        break;
+
+      case "separate":
+        this.setState({ [property]: value });
+        break;
+
+      case "towelsSheets":
+        this.setState({ [property]: value });
+        break;
+
+      case "washerPreferences":
+        const washerLimit = 200;
+
+        if (value.length > washerLimit) {
+          value = value.slice(0, washerLimit);
+        }
+
+        this.setState({ [property]: value });
+        break;
+
+      case "address":
+        this.setState({ [property]: value });
+        break;
+
+      case "addressPreferences":
+        const addressLimit = 200;
+
+        if (value.length > addressLimit) {
+          value = value.slice(0, addressLimit);
+        }
+
+        this.setState({ [property]: value });
+        break;
+
+      case "map":
+        this.setState({
+          center: value.center,
+          zoom: value.zoom,
+        });
+        break;
+    }
+  };
+
+  handleAddressSelect = async (suggestion) => {
+    this.setState({ address: suggestion.description });
+
+    Geocode.setApiKey(apiKEY);
+    await Geocode.fromAddress(suggestion.description).then(
+      (res) => {
+        const { lat, lng } = res.results[0].geometry.location;
+        this.setState({
+          center: {
+            lat: lat,
+            lng: lng,
+          },
+          zoom: 16,
+          markerLat: lat,
+          markerLong: lng,
+          renderMarker: true,
+        });
+      },
+      (error) => {
+        console.log("Error with selecting address: ", error);
+        showDefaultError("selecting address", 5);
+      }
+    );
+  };
+
+  //todo add to the button
+  toggleErrorMessage = () => {
+    this.setState({ error: !this.state.error });
+  };
+
+  evaluateWhitespace = (text) => {
+    if (!text.replace(/\s/g, "").length) {
+      return "N/A";
+    }
+
+    return text;
+  };
+
+  render() {
+    if (this.state.loading) {
+      return <Loading />;
+    }
+
+    const classes = this.props.classes;
+
+    return (
+      <React.Fragment>
+        <div className={classes.layout}>
+          <div className={classes.root}>
+            <CardContent id="newOrderContainer">
+              <ProgressBar step={this.state.activeStep} />
+              <React.Fragment>
+                <Dialog
+                  disableEnforceFocus
+                  disableAutoFocus
+                  disableRestoreFocus
+                  open={this.state.error}
+                  onClose={this.handleErrorClose}
+                  container={() => document.getElementById("newOrderContainer")}
+                  aria-labelledby="form-dialog-title"
+                  style={{ position: "absolute", zIndex: 1 }}
+                  BackdropProps={{
+                    style: {
+                      position: "absolute",
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                >
+                  <DialogTitle id="form-dialog-title">Alert</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      {this.state.errorMessage}
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={this.toggleErrorMessage} color="primary">
+                      Okay
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                {this.state.activeStep === steps.length ? (
+                  <React.Fragment>
+                    <Typography variant="h5" gutterBottom>
+                      Thank you for your order!
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      Your order number is #{this.state.orderID}. You can track
+                      your order through your dashboard. Thanks for choosing
+                      Laundr!
+                    </Typography>
+                    <div className={classes.buttons}>
+                      {this.state.activeStep === steps.length && (
+                        <Button
+                          color="primary"
+                          onClick={this.handleDone}
+                          className={classes.button}
+                        >
+                          Okay
+                        </Button>
+                      )}
+                    </div>
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    <Fade
+                      in={this.state.activeStep === 0}
+                      style={{
+                        display: !(this.state.activeStep === 0)
+                          ? "none"
+                          : "block",
+                        transitionDelay:
+                          this.state.activeStep === 0 ? "500ms" : "0ms",
+                      }}
+                    >
+                      <div>
+                        <Scheduling
+                          today={this.today}
+                          tomorrow={this.tomorrow}
+                          todaySelected={this.state.todaySelected}
+                          tomorrowSelected={this.state.tomorrowSelected}
+                          formattedTime={this.state.formattedTime}
+                          rawTime={this.state.rawTime}
+                          handleInputChange={this.handleInputChange}
+                        />
+                      </div>
+                    </Fade>
+                    <Fade
+                      in={this.state.activeStep === 1}
+                      style={{
+                        display: !(this.state.activeStep === 1)
+                          ? "none"
+                          : "block",
+                        transitionDelay:
+                          this.state.activeStep === 1 ? "500ms" : "0ms",
+                      }}
+                    >
+                      <div>
+                        <Preferences
+                          scented={this.state.scented}
+                          delicates={this.state.delicates}
+                          separate={this.state.separate}
+                          towelsSheets={this.state.towelsSheets}
+                          washerPreferences={this.state.washerPreferences}
+                          handleInputChange={this.handleInputChange}
+                        />
+                      </div>
+                    </Fade>
+                    <Fade
+                      in={this.state.activeStep === 2}
+                      style={{
+                        display: !(this.state.activeStep === 2)
+                          ? "none"
+                          : "block",
+                        transitionDelay:
+                          this.state.activeStep === 2 ? "500ms" : "0ms",
+                      }}
+                    >
+                      <div>
+                        <Address
+                          center={this.state.center}
+                          zoom={this.state.zoom}
+                          address={this.state.address}
+                          markerLat={this.state.markerLat}
+                          markerLong={this.state.markerLong}
+                          renderMarker={this.state.renderMarker}
+                          addressPreferences={this.state.addressPreferences}
+                          handleAddressSelect={this.handleAddressSelect}
+                          handleInputChange={this.handleInputChange}
+                        />
+                      </div>
+                    </Fade>
+                    <Fade
+                      in={this.state.activeStep === 3}
+                      style={{
+                        display: !(this.state.activeStep === 3)
+                          ? "none"
+                          : "block",
+                        transitionDelay:
+                          this.state.activeStep === 3 ? "500ms" : "0ms",
+                      }}
+                    >
+                      <div>
+                        <Pricing />
+                      </div>
+                    </Fade>
+                    <Fade
+                      in={this.state.activeStep === 4}
+                      style={{
+                        display: !(this.state.activeStep === 4)
+                          ? "none"
+                          : "block",
+                        transitionDelay:
+                          this.state.activeStep === 4 ? "500ms" : "0ms",
+                      }}
+                    >
+                      <div>
+                        <Review
+                          address={this.state.address}
+                          addressPreferences={this.state.addressPreferences}
+                          scented={this.state.scented}
+                          delicates={this.state.delicates}
+                          separate={this.state.separate}
+                          towelsSheets={this.state.towelsSheets}
+                          washerPreferences={this.state.washerPreferences}
+                          pickupDate={this.state.date}
+                          pickupTime={this.state.formattedTime}
+                        />
+                      </div>
+                    </Fade>
+                    <div className={classes.buttons}>
+                      {this.state.activeStep !== 0 && (
+                        <Button
+                          variant="contained"
+                          onClick={this.handleBack}
+                          className={classes.button}
+                        >
+                          Back
+                        </Button>
+                      )}
+                      <Button
+                        variant="contained"
+                        onClick={this.handleNext}
+                        className={classes.button}
+                      >
+                        {this.state.activeStep === steps.length - 1
+                          ? "Place order"
+                          : "Next"}
+                      </Button>
+                    </div>
+                  </React.Fragment>
+                )}
+              </React.Fragment>
+            </CardContent>
+          </div>
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+
+class NewOrderOld extends Component {
   constructor(props) {
     super(props);
 

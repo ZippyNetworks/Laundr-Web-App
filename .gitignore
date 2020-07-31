@@ -26,6 +26,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Next.js
+/client/.next
+
 # IDE ignores
 *.sublime*
 

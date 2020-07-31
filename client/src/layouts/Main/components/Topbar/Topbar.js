@@ -14,7 +14,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
 import InputIcon from "@material-ui/icons/Input";
 import topbarStyles from "../../../../styles/layouts/Main/components/Topbar/topbarStyles";
-import LaundrLogo from "../../../../images/Topbar/LaundrLogo.png";
 
 class Topbar extends Component {
   constructor(props) {
@@ -46,7 +45,7 @@ class Topbar extends Component {
               marginLeft: -10,
             }}
             alt="Company Logo"
-            src={LaundrLogo}
+            src="/images/Topbar/LaundrLogo.png"
           />
           <div className={classes.flexGrow} />
           <IconButton color="inherit">

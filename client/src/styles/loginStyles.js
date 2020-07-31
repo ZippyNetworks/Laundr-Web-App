@@ -1,4 +1,4 @@
-export default (theme) => ({
+const loginStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
@@ -24,3 +24,5 @@ export default (theme) => ({
     display: "flex",
   },
 });
+
+export default loginStyles;

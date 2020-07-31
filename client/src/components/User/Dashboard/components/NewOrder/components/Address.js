@@ -7,11 +7,11 @@ import {
   Icon,
   Box,
 } from "@material-ui/core";
+import { Loading } from "../../../../../../utility";
 import MUIPlacesAutocomplete from "mui-places-autocomplete";
 import GoogleMapReact from "google-map-react";
 import PropTypes from "prop-types";
 import addressStyles from "../../../../../../styles/User/Dashboard/components/NewOrder/components/addressStyles";
-import MarkerIcon from "../../../../../../images/NewOrder/Marker.png";
 
 const apiKEY =
   process.env.GOOGLE_MAPS_API_KEY ||
@@ -26,23 +26,27 @@ const Marker = () => (
         position: "absolute",
       }}
     >
-      <img alt="Marker" style={{ height: "100%" }} src={MarkerIcon} />
+      <img
+        alt="Marker"
+        style={{ height: "100%" }}
+        src="/images/NewOrder/Marker.png"
+      />
     </Icon>
   </div>
 );
 
 class Address extends Component {
-  constructor(props) {
-    super(props);
+  state = { loading: true, charCount: 0 };
 
-    this.state = {
-      charCount: 0,
-    };
-  }
+  componentDidMount = () => {
+    this.setState({ loading: false });
+  };
 
   renderMarker = () => {
-    if (this.props.renderMarker) {
-      return <Marker lat={this.props.markerLat} lng={this.props.markerLong} />;
+    const { renderMarker, marketLat, markerLong } = this.props;
+
+    if (renderMarker) {
+      return <Marker lat={marketLat} lng={markerLong} />;
     }
   };
 
@@ -60,7 +64,20 @@ class Address extends Component {
   };
 
   render() {
-    const classes = this.props.classes;
+    //todo: maybe not needed for these smaller components
+    if (this.state.loading) {
+      return <Loading />;
+    }
+
+    const {
+      classes,
+      center,
+      zoom,
+      handleInputChange,
+      handleAddressSelect,
+      addressPreferences,
+      address,
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -78,9 +95,11 @@ class Address extends Component {
               bootstrapURLKeys={{
                 key: apiKEY,
               }}
-              center={this.props.center}
-              zoom={this.props.zoom}
-              onChange={this.props.handleMapChange}
+              center={center}
+              zoom={zoom}
+              onChange={(properties) => {
+                handleInputChange("map", properties);
+              }}
             >
               {this.renderMarker()}
             </GoogleMapReact>
@@ -89,9 +108,9 @@ class Address extends Component {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <div style={{ position: "relative" }}>
-              <MUIPlacesAutocomplete
+              {/* <MUIPlacesAutocomplete
                 onSuggestionSelected={(suggestion) =>
-                  this.props.handleAddressSelect(suggestion)
+                  handleAddressSelect(suggestion)
                 }
                 renderTarget={() => (
                   <React.Fragment>
@@ -112,9 +131,10 @@ class Address extends Component {
                           multiline
                           variant="outlined"
                           helperText={`${this.state.charCount}/200`}
-                          value={this.props.addressPreferences}
+                          value={addressPreferences}
                           onChange={(event) => {
-                            this.props.handleAddressPrefsChange(
+                            handleInputChange(
+                              "addressPreferences",
                               event.target.value
                             );
                             this.handleCharCount(event.target.value);
@@ -128,11 +148,11 @@ class Address extends Component {
                   fullWidth: true,
                   variant: "outlined",
                   label: "Search for an address",
-                  value: this.props.address,
+                  value: address,
                   onChange: (event) =>
-                    this.props.handleAddressChange(event.target.value),
+                    handleInputChange("address", event.target.value),
                 }}
-              />
+              /> */}
             </div>
           </Grid>
         </Grid>

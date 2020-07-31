@@ -1,4 +1,4 @@
-export default (theme) => ({
+const profileStyles = (theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -19,3 +19,5 @@ export default (theme) => ({
     height: 40,
   },
 });
+
+export default profileStyles;

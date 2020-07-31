@@ -3,23 +3,11 @@ import { Grid, Typography, TextField, withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
 import preferencesStyles from "../../../../../../../styles/User/Dashboard/components/NewOrder/components/Preferences/preferencesStyles";
 import PreferenceCard from "./components/PreferenceCard";
-import ScentedUnselected from "../../../../../../../images/NewOrder/ScentedUnselected.png";
-import ScentedSelected from "../../../../../../../images/NewOrder/ScentedSelected.png";
-import DelicatesUnselected from "../../../../../../../images/NewOrder/DelicatesUnselected.png";
-import DelicatesSelected from "../../../../../../../images/NewOrder/DelicatesSelected.png";
-import SeparateUnselected from "../../../../../../../images/NewOrder/SeparateUnselected.png";
-import SeparateSelected from "../../../../../../../images/NewOrder/SeparateSelected.png";
-import TowelsUnselected from "../../../../../../../images/NewOrder/TowelsUnselected.png";
-import TowelsSelected from "../../../../../../../images/NewOrder/TowelsSelected.png";
 
 class Preferences extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      charCount: 0,
-    };
-  }
+  state = {
+    charCount: 0,
+  };
 
   handleCharCount = (text) => {
     let limit = 200;
@@ -35,7 +23,7 @@ class Preferences extends Component {
   };
 
   render() {
-    const classes = this.props.classes;
+    const { classes, washerPreferences, handleInputChange } = this.props;
 
     return (
       <React.Fragment>
@@ -47,36 +35,44 @@ class Preferences extends Component {
             <PreferenceCard
               title="Scented"
               info="Unscented detergent is hypoallergenic."
-              unselectedImage={ScentedUnselected}
-              selectedImage={ScentedSelected}
-              updateSelected={this.props.handleScentedChange}
+              unselectedImage="/images/NewOrder/ScentedUnselected.png"
+              selectedImage="/images/NewOrder/ScentedSelected.png"
+              handleInputChange={(selected) => {
+                handleInputChange("scented", selected);
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <PreferenceCard
               title="Delicates"
               info="Delicate clothing is washed in a mesh bag and dried on low heat."
-              unselectedImage={DelicatesUnselected}
-              selectedImage={DelicatesSelected}
-              updateSelected={this.props.handleDelicatesChange}
+              unselectedImage="/images/NewOrder/DelicatesUnselected.png"
+              selectedImage="/images/NewOrder/DelicatesSelected.png"
+              handleInputChange={(selected) => {
+                handleInputChange("delicates", selected);
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <PreferenceCard
               title="Separate"
               info="Separated clothing is divided into whites and colors."
-              unselectedImage={SeparateUnselected}
-              selectedImage={SeparateSelected}
-              updateSelected={this.props.handleSeparateChange}
+              unselectedImage="/images/NewOrder/SeparateUnselected.png"
+              selectedImage="/images/NewOrder/SeparateSelected.png"
+              handleInputChange={(selected) => {
+                handleInputChange("separate", selected);
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <PreferenceCard
               title="Towels and Sheets"
               info="Towels and sheets are washed separately and dried on high heat."
-              unselectedImage={TowelsUnselected}
-              selectedImage={TowelsSelected}
-              updateSelected={this.props.handleTowelsSheetsChange}
+              unselectedImage="/images/NewOrder/TowelsUnselected.png"
+              selectedImage="/images/NewOrder/TowelsSelected.png"
+              handleInputChange={(selected) => {
+                handleInputChange("towelsSheets", selected);
+              }}
             />
           </Grid>
         </Grid>
@@ -96,9 +92,9 @@ class Preferences extends Component {
               multiline
               helperText={`${this.state.charCount}/200`}
               variant="outlined"
-              value={this.props.washerPreferences}
+              value={washerPreferences}
               onChange={(event) => {
-                this.props.handleWasherPrefsChange(event.target.value);
+                handleInputChange("washerPreferences", event.target.value);
                 this.handleCharCount(event.target.value);
               }}
             />
