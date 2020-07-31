@@ -110,11 +110,11 @@ class Login extends Component {
     const inputs = [
       {
         name: "email",
-        whitespaceMsg: "Please enter a valid email.",
+        whitespaceMsg: "*Please enter a valid email.",
       },
       {
         name: "password",
-        whitespaceMsg: "Please enter a password.",
+        whitespaceMsg: "*Please enter a password.",
       },
     ];
 
@@ -140,7 +140,7 @@ class Login extends Component {
       if (input.name === "email") {
         if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) === false) {
           this.setState({
-            [input.name + "ErrorMsg"]: "Please enter a valid email.",
+            [input.name + "ErrorMsg"]: "*Please enter a valid email.",
             [input.name + "Error"]: true,
           });
           valid = false;

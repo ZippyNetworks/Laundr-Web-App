@@ -22,7 +22,7 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //-fix places autocomplete on address
 //-imports (use index.js) from root for images, styles, deep components, etc.
 //-styles as named exports
-//-server stuff
+//-server stuff: error messages (need to update frontend to consume them), middleware, remove chained promises, put/post/get
 
 //todo: implement status 8 feature for order status when order is delivered
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile
