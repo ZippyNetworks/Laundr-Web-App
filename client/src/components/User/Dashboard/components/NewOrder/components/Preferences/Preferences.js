@@ -23,7 +23,7 @@ class Preferences extends Component {
   };
 
   render() {
-    const { classes, washerPreferences, handleChange } = this.props;
+    const { classes, washerPreferences, handleInputChange } = this.props;
 
     return (
       <React.Fragment>
@@ -37,8 +37,8 @@ class Preferences extends Component {
               info="Unscented detergent is hypoallergenic."
               unselectedImage="/images/NewOrder/ScentedUnselected.png"
               selectedImage="/images/NewOrder/ScentedSelected.png"
-              handleChange={(selected) => {
-                handleChange("scented", selected);
+              handleInputChange={(selected) => {
+                handleInputChange("scented", selected);
               }}
             />
           </Grid>
@@ -48,8 +48,8 @@ class Preferences extends Component {
               info="Delicate clothing is washed in a mesh bag and dried on low heat."
               unselectedImage="/images/NewOrder/DelicatesUnselected.png"
               selectedImage="/images/NewOrder/DelicatesSelected.png"
-              handleChange={(selected) => {
-                handleChange("delicates", selected);
+              handleInputChange={(selected) => {
+                handleInputChange("delicates", selected);
               }}
             />
           </Grid>
@@ -59,8 +59,8 @@ class Preferences extends Component {
               info="Separated clothing is divided into whites and colors."
               unselectedImage="/images/NewOrder/SeparateUnselected.png"
               selectedImage="/images/NewOrder/SeparateSelected.png"
-              handleChange={(selected) => {
-                handleChange("separate", selected);
+              handleInputChange={(selected) => {
+                handleInputChange("separate", selected);
               }}
             />
           </Grid>
@@ -70,8 +70,8 @@ class Preferences extends Component {
               info="Towels and sheets are washed separately and dried on high heat."
               unselectedImage="/images/NewOrder/TowelsUnselected.png"
               selectedImage="/images/NewOrder/TowelsSelected.png"
-              handleChange={(selected) => {
-                handleChange("towelsSheets", selected);
+              handleInputChange={(selected) => {
+                handleInputChange("towelsSheets", selected);
               }}
             />
           </Grid>
@@ -94,7 +94,7 @@ class Preferences extends Component {
               variant="outlined"
               value={washerPreferences}
               onChange={(event) => {
-                handleChange("washerPreferences", event.target.value);
+                handleInputChange("washerPreferences", event.target.value);
                 this.handleCharCount(event.target.value);
               }}
             />

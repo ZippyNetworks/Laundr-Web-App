@@ -63,6 +63,8 @@ function Copyright() {
   );
 }
 
+class RegisterRefactor extends Component {}
+
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -653,6 +655,7 @@ class Register extends Component {
                   variant="outlined"
                   label="Referral Code"
                   helperText="*Optional"
+                  fullWidth
                   value={this.state.referral}
                   onChange={(event) => {
                     this.handleReferralChange(event.target.value);

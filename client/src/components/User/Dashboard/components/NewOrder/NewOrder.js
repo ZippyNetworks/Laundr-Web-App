@@ -283,7 +283,7 @@ class NewOrder extends Component {
     alert("moved past confirmation screen");
   };
 
-  handleChange = (property, value) => {
+  handleInputChange = (property, value) => {
     switch (property) {
       case "today":
         this.setState({
@@ -477,7 +477,7 @@ class NewOrder extends Component {
                           tomorrowSelected={this.state.tomorrowSelected}
                           formattedTime={this.state.formattedTime}
                           rawTime={this.state.rawTime}
-                          handleChange={this.handleChange}
+                          handleInputChange={this.handleInputChange}
                         />
                       </div>
                     </Fade>
@@ -498,7 +498,7 @@ class NewOrder extends Component {
                           separate={this.state.separate}
                           towelsSheets={this.state.towelsSheets}
                           washerPreferences={this.state.washerPreferences}
-                          handleChange={this.handleChange}
+                          handleInputChange={this.handleInputChange}
                         />
                       </div>
                     </Fade>
@@ -522,7 +522,7 @@ class NewOrder extends Component {
                           renderMarker={this.state.renderMarker}
                           addressPreferences={this.state.addressPreferences}
                           handleAddressSelect={this.handleAddressSelect}
-                          handleChange={this.handleChange}
+                          handleInputChange={this.handleInputChange}
                         />
                       </div>
                     </Fade>

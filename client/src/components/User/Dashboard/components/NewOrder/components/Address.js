@@ -73,7 +73,7 @@ class Address extends Component {
       classes,
       center,
       zoom,
-      handleChange,
+      handleInputChange,
       handleAddressSelect,
       addressPreferences,
       address,
@@ -98,7 +98,7 @@ class Address extends Component {
               center={center}
               zoom={zoom}
               onChange={(properties) => {
-                handleChange("map", properties);
+                handleInputChange("map", properties);
               }}
             >
               {this.renderMarker()}
@@ -133,7 +133,7 @@ class Address extends Component {
                           helperText={`${this.state.charCount}/200`}
                           value={addressPreferences}
                           onChange={(event) => {
-                            handleChange(
+                            handleInputChange(
                               "addressPreferences",
                               event.target.value
                             );
@@ -150,7 +150,7 @@ class Address extends Component {
                   label: "Search for an address",
                   value: address,
                   onChange: (event) =>
-                    handleChange("address", event.target.value),
+                    handleInputChange("address", event.target.value),
                 }}
               /> */}
             </div>

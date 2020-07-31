@@ -14,6 +14,9 @@ import Slide from "../../src/components/User/Dashboard/components/Carousel/Slide
 import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 
 //refactor priorities:
+//-add loading...only to components that need to fetch data from the user? for example login doesnt have it and uses localstorage, but not while rendering i guess? whereas dashboard needs it to prevent localstorage error.
+//^^ figure out, also use getstaticprops for fetching something like orders?
+
 //-individual components (use helpers and loading component)
 //-implement update token helper
 //-fix places autocomplete on address

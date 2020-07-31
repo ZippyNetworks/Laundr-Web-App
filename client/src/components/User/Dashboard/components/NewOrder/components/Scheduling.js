@@ -26,7 +26,7 @@ class Scheduling extends Component {
       tomorrowSelected,
       tomorrow,
       rawTime,
-      handleChange,
+      handleInputChange,
     } = this.props;
 
     return (
@@ -44,7 +44,7 @@ class Scheduling extends Component {
             <Button
               disabled={todaySelected}
               onClick={() => {
-                handleChange("today");
+                handleInputChange("today");
               }}
               variant="contained"
               className={classes.gradient}
@@ -59,7 +59,7 @@ class Scheduling extends Component {
             <Button
               disabled={tomorrowSelected}
               onClick={() => {
-                handleChange("tomorrow");
+                handleInputChange("tomorrow");
               }}
               variant="contained"
               className={classes.gradient}
@@ -84,7 +84,7 @@ class Scheduling extends Component {
                   label="Click to select a time"
                   multiline
                   onChange={(value) => {
-                    handleChange("time", value);
+                    handleInputChange("time", value);
                   }}
                   helperText="*Must be at least 1 hour in advance"
                   value={rawTime}

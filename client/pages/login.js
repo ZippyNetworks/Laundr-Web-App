@@ -17,6 +17,7 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 import { withRouter } from "next/router";
+import { showDefaultError } from "../src/helpers/errors";
 import compose from "recompose/compose";
 import PropTypes from "prop-types";
 import jwtDecode from "jwt-decode";
@@ -51,226 +52,128 @@ function Copyright() {
 }
 
 class Login extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loginError: false,
-      emailError: false,
-      passwordError: false,
-      email: "",
-      password: "",
-      invalidLogin: false,
-      validLogin: false,
-      isWasher: false,
-      isDriver: false,
-      isAdmin: false,
-    };
-  }
-
-  // componentDidMount = () => {
-  //   //for simulating a logout, must relog every time during development
-  //   localStorage.clear();
-  // };
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-
-    let canLogin = true;
-
-    //console.log("email: " + this.state.email);
-    //console.log("password: " + this.state.password);
-
-    if (
-      this.state.email === "" ||
-      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(this.state.email) ===
-        false
-    ) {
-      this.setState({ emailError: true });
-      canLogin = false;
-    } else {
-      this.setState({ emailError: false });
-    }
-
-    if (this.state.password === "") {
-      this.setState({ passwordError: true });
-      canLogin = false;
-    } else {
-      this.setState({ passwordError: false });
-    }
-
-    if (canLogin) {
-      this.handleLogin(this.state.email.toLowerCase(), this.state.password);
-    }
+  state = {
+    email: "",
+    password: "",
+    emailError: false,
+    passwordError: false,
+    showErrorDialog: false,
+    emailErrorMsg: "",
+    passwordErrorMsg: "",
+    loggedIn: false,
+    isWasher: false,
+    isDriver: false,
+    isAdmin: false,
   };
 
-  handleLogin = async (email, password) => {
-    await axios
-      .post(baseURL + "/user/login", { email, password })
-      .then((res) => {
-        if (res.data.success) {
-          const token = res.data.token;
+  handleInputChange = (property, value) => {
+    this.setState({ [property]: value });
+  };
 
-          if (typeof localStorage !== "undefined") {
-            localStorage.setItem("token", token);
-          } //use stuff here. check token in constructor.
-          //axios.defaults.headers.common["token"] = token;
+  handleLogin = async (event) => {
+    event.preventDefault();
+
+    if (this.handleInputValidation()) {
+      try {
+        const response = await axios.post(baseURL + "/user/login", {
+          email: this.state.email,
+          password: this.state.password,
+        });
+
+        if (response.data.success) {
+          const token = response.data.token;
+
+          localStorage.setItem("token", token);
+
           const data = jwtDecode(token);
+
           this.setState({
-            validLogin: true,
+            loggedIn: true,
             isWasher: data.isWasher,
             isDriver: data.isDriver,
             isAdmin: data.isAdmin,
           });
         } else {
-          this.setState({ invalidLogin: true });
+          //todo: will include a message from the server when error messages are refactored there
+          this.setState({ showErrorDialog: true });
         }
-      })
-      .catch((error) => {
-        alert("Error: " + error);
-      });
-  };
-
-  handleEmailChange = (email) => {
-    this.setState({ email: email });
-  };
-
-  handlePasswordChange = (password) => {
-    this.setState({ password: password });
-  };
-
-  renderEmailError = () => {
-    if (this.state.loginError) {
-      return (
-        <React.Fragment>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label="Email Address"
-            autoComplete="email"
-            error
-            helperText="*Email or password is incorrect. Please try again."
-            onChange={(event) => {
-              this.handleEmailChange(event.target.value);
-            }}
-            value={this.state.email}
-          />
-        </React.Fragment>
-      );
-    } else if (this.state.emailError) {
-      return (
-        <React.Fragment>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label="Email Address"
-            autoComplete="email"
-            error
-            helperText="*Please enter a validLogin email."
-            onChange={(event) => {
-              this.handleEmailChange(event.target.value);
-            }}
-            value={this.state.email}
-          />
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label="Email Address"
-            autoComplete="email"
-            onChange={(event) => {
-              this.handleEmailChange(event.target.value);
-            }}
-            value={this.state.email}
-          />
-        </React.Fragment>
-      );
+      } catch (error) {
+        console.log("Error with logging in: ", error);
+        showDefaultError("logging in", 6);
+      }
     }
   };
 
-  renderPasswordError = () => {
-    if (this.state.loginError) {
-      return (
-        <React.Fragment>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            error
-            onChange={(event) => {
-              this.handlePasswordChange(event.target.value);
-            }}
-            value={this.state.password}
-          />
-        </React.Fragment>
-      );
-    } else if (this.state.passwordError) {
-      return (
-        <React.Fragment>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            error
-            helperText="*Please enter a password."
-            onChange={(event) => {
-              this.handlePasswordChange(event.target.value);
-            }}
-            value={this.state.password}
-          />
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            onChange={(event) => {
-              this.handlePasswordChange(event.target.value);
-            }}
-            value={this.state.password}
-          />
-        </React.Fragment>
-      );
-    }
-  };
+  handleInputValidation = () => {
+    let valid = true;
 
-  handleInvalidClose = () => {
-    this.setState({ invalidLogin: false });
+    const inputs = [
+      {
+        name: "email",
+        whitespaceMsg: "Please enter a valid email.",
+      },
+      {
+        name: "password",
+        whitespaceMsg: "Please enter a password.",
+      },
+    ];
+
+    for (let input of inputs) {
+      const value = this.state[input.name];
+
+      //whitespace checks
+      if (!value.replace(/\s/g, "").length) {
+        this.setState({
+          [input.name + "ErrorMsg"]: input.whitespaceMsg,
+          [input.name + "Error"]: true,
+        });
+        valid = false;
+        continue;
+      } else {
+        this.setState({
+          [input.name + "ErrorMsg"]: "",
+          [input.name + "Error"]: false,
+        });
+      }
+
+      //input-specific checks
+      if (input.name === "email") {
+        if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) === false) {
+          this.setState({
+            [input.name + "ErrorMsg"]: "Please enter a valid email.",
+            [input.name + "Error"]: true,
+          });
+          valid = false;
+        } else {
+          this.setState({
+            [input.name + "ErrorMsg"]: "",
+            [input.name + "Error"]: false,
+          });
+        }
+      }
+    }
+
+    return valid;
   };
 
   handleLoginRedirect = () => {
     if (this.state.isWasher) {
-      return <Redirect push to="/washerAssigned" />;
+      // return <Redirect push to="/washerAssigned" />;
     } else if (this.state.isDriver) {
-      return <Redirect push to="/driverAvailable" />;
+      // return <Redirect push to="/driverAvailable" />;
     } else if (this.state.isAdmin) {
-      return <Redirect push to="/placeholder" />;
+      // return <Redirect push to="/placeholder" />;
     } else {
       this.props.router.push("/user/dashboard");
     }
   };
 
+  toggleDialog = () => {
+    this.setState({ showErrorDialog: !this.state.showErrorDialog });
+  };
+
   render() {
-    if (this.state.validLogin) {
+    if (this.state.loggedIn) {
       this.handleLoginRedirect();
     }
 
@@ -292,8 +195,8 @@ class Login extends Component {
             Sign in
           </Typography>
           <Dialog
-            open={this.state.invalidLogin}
-            onClose={this.handleInvalidClose}
+            open={this.state.showErrorDialog}
+            onClose={this.toggleDialog}
             aria-labelledby="form-dialog-title"
           >
             <DialogTitle id="form-dialog-title">Alert</DialogTitle>
@@ -303,21 +206,46 @@ class Login extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={this.handleInvalidClose} color="primary">
+              <Button onClick={this.toggleDialog} color="primary">
                 Okay
               </Button>
             </DialogActions>
           </Dialog>
-          <form className={classes.form} onSubmit={this.handleSubmit}>
-            {this.renderEmailError()}
-            {this.renderPasswordError()}
+          <form className={classes.form} onSubmit={this.handleLogin}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label="Email Address"
+              autoComplete="email"
+              error={this.state.emailError}
+              helperText={this.state.emailErrorMsg}
+              onChange={(event) => {
+                this.handleInputChange("email", event.target.value);
+              }}
+              value={this.state.email}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label="Password"
+              type="password"
+              autoComplete="current-password"
+              error={this.state.passwordError}
+              helperText={this.state.passwordErrorMsg}
+              onChange={(event) => {
+                this.handleInputChange("password", event.target.value);
+              }}
+              value={this.state.password}
+            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={this.handleSubmit}
+              onClick={this.handleLogin}
             >
               Sign In
             </Button>

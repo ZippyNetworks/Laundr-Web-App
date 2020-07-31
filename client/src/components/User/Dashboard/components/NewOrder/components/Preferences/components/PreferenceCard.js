@@ -38,7 +38,7 @@ class PreferenceCard extends Component {
   }
 
   handleSelect = () => {
-    const { unselectedImage, selectedImage, handleChange } = this.props;
+    const { unselectedImage, selectedImage, handleInputChange } = this.props;
 
     if (this.state.selected) {
       this.setState(
@@ -47,12 +47,12 @@ class PreferenceCard extends Component {
           currentImage: unselectedImage,
         },
         () => {
-          handleChange(this.state.selected);
+          handleInputChange(this.state.selected);
         }
       );
     } else {
       this.setState({ selected: true, currentImage: selectedImage }, () => {
-        handleChange(this.state.selected);
+        handleInputChange(this.state.selected);
       });
     }
   };
