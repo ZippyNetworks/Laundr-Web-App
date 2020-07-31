@@ -41,6 +41,7 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //todo: sort out customer email thing (different: login vs stripe - can be changed with checkout session)
 //todo: move moment to higher level package.json
 //todo: add button styling to ALL dialogs
+//todo: add progress circle to buttons for submission actions
 
 class Dashboard extends Component {
   state = {
