@@ -32,22 +32,18 @@ import orderStatusStyles from "../../../../../styles/User/Dashboard/components/O
 //8: fulfilled (user confirmed theyve seen the status on it)
 
 class OrderStatus extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { dialog: false };
-  }
+  state = { showCancelDialog: false };
 
   handleOrderCancel = () => {
     alert("Cancel clicked");
   };
 
-  handleDialogClose = () => {
-    this.setState({ dialog: false });
+  toggleCancelDialog = () => {
+    this.setState({ showCancelDialog: !this.state.showCancelDialog });
   };
 
   render() {
-    const classes = this.props.classes;
+    const { classes, order } = this.props.classes;
 
     return (
       <React.Fragment>
@@ -57,8 +53,8 @@ class OrderStatus extends Component {
               disableEnforceFocus
               disableAutoFocus
               disableRestoreFocus
-              open={this.state.dialog}
-              onClose={this.handleDialogClose}
+              open={this.state.showCancelDialog}
+              onClose={this.toggleCancelDialog}
               container={() => document.getElementById("orderStatusContainer")}
               style={{ position: "absolute", zIndex: 1 }}
               BackdropProps={{
@@ -75,7 +71,7 @@ class OrderStatus extends Component {
                 </Typography>
               </DialogContent>
               <DialogActions>
-                <Button onClick={this.handleDialogClose} color="primary">
+                <Button onClick={this.toggleCancelDialog} color="primary">
                   Cancel
                 </Button>
                 <Button onClick={this.handleOrderCancel} color="primary">
@@ -84,7 +80,7 @@ class OrderStatus extends Component {
               </DialogActions>
             </Dialog>
             <CardContent id="orderStatusContainer">
-              <ProgressBar status={this.props.order.orderInfo.status} />
+              <ProgressBar status={order.orderInfo.status} />
               <Grid
                 container
                 direction="row"
@@ -94,7 +90,7 @@ class OrderStatus extends Component {
                 <Grid item>
                   <Card className={classes.infoCard}>
                     <CardHeader
-                      title={`Order ID: #${this.props.order.orderInfo.orderID}`}
+                      title={`Order ID: #${order.orderInfo.orderID}`}
                       titleTypographyProps={{ variant: "h5" }}
                     />
                     <Divider />
@@ -107,7 +103,7 @@ class OrderStatus extends Component {
                         Address
                       </Typography>
                       <Typography variant="body1" color="textSecondary">
-                        {this.props.order.orderInfo.address}
+                        {order.orderInfo.address}
                       </Typography>
                       <Typography variant="body1" style={{ fontWeight: 500 }}>
                         <QueryBuilderIcon
@@ -117,7 +113,7 @@ class OrderStatus extends Component {
                         Pickup Time
                       </Typography>
                       <Typography variant="body1" color="textSecondary">
-                        {this.props.order.pickupInfo.time}
+                        {order.pickupInfo.time}
                       </Typography>
                       <Typography variant="body1" style={{ fontWeight: 500 }}>
                         <QueryBuilderIcon
@@ -127,7 +123,7 @@ class OrderStatus extends Component {
                         Dropoff Time
                       </Typography>
                       <Typography variant="body1" color="textSecondary">
-                        {this.props.order.dropoffInfo.time}
+                        {order.dropoffInfo.time}
                         "functionality later"
                       </Typography>
                       <Typography variant="body1" style={{ fontWeight: 500 }}>
@@ -138,10 +134,10 @@ class OrderStatus extends Component {
                         Weight
                       </Typography>
                       <Typography variant="body1" color="textSecondary">
-                        {this.props.order.orderInfo.weight} lbs
+                        {order.orderInfo.weight} lbs
                       </Typography>
                       <Typography variant="h5">
-                        Price: {this.props.order.orderInfo.cost}
+                        Price: {order.orderInfo.cost}
                       </Typography>
                     </CardContent>
                     <Divider />
@@ -150,9 +146,7 @@ class OrderStatus extends Component {
                         size="small"
                         variant="contained"
                         className={classes.gradient}
-                        onClick={() => {
-                          this.setState({ dialog: true });
-                        }}
+                        onClick={this.toggleCancelDialog}
                       >
                         Cancel
                       </Button>

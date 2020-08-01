@@ -124,14 +124,14 @@ class ProgressBar extends Component {
   };
 
   render() {
-    const classes = this.props.classes;
+    const { classes, status } = this.props;
 
     return (
       <React.Fragment>
         <div className={classes.root}>
           <Stepper
             alternativeLabel
-            activeStep={this.renderStep(this.props.status)}
+            activeStep={this.renderStep(status)}
             connector={<ColorlibConnector />}
           >
             {steps.map((label) => (
@@ -151,14 +151,11 @@ class ProgressBar extends Component {
             alignItems="center"
           >
             <Grid item>
-              <ColorlibStepIcon
-                active
-                icon={this.renderStep(this.props.status) + 1}
-              />
+              <ColorlibStepIcon active icon={this.renderStep(status) + 1} />
             </Grid>
             <Grid item>
               <Typography variant="h4" className={classes.secondaryStepText}>
-                {steps[this.renderStep(this.props.status)]}
+                {steps[this.renderStep(status)]}
               </Typography>
             </Grid>
           </Grid>
