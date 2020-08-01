@@ -1,4 +1,4 @@
-export default (theme) => ({
+const subscriptionCardStyles = (theme) => ({
   root: {
     width: 332,
   },
@@ -11,3 +11,5 @@ export default (theme) => ({
     color: "white",
   },
 });
+
+export default subscriptionCardStyles;

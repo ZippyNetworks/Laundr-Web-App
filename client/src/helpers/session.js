@@ -1,5 +1,7 @@
+import { showDefaultError } from "./errors";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import baseURL from "../baseURL";
 
 export const getCurrentUser = () => {
   if (typeof localStorage !== "undefined") {
@@ -17,11 +19,28 @@ export const getCurrentUser = () => {
     }
   } else {
     //todo: will change when switch to cookies
-    alert(
+    console.log(
       "Error with retrieving current user. Please make sure localStorage is enabled, relog, and try again."
     );
     return null;
   }
 };
 
-export const updateToken = () => {};
+export const updateToken = async (userEmail) => {
+  try {
+    const response = await axios.post(baseURL + "/user/updateToken", {
+      userEmail,
+    });
+
+    if (response.data.success) {
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+    } else {
+      //will change based on server error msg
+      showDefaultError("updating token", 100);
+    }
+  } catch (error) {
+    console.log("Error with updating token: ", error);
+    showDefaultError("updating token", 99);
+  }
+};

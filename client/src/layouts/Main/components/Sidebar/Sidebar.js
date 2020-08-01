@@ -84,17 +84,21 @@ const washerPages = [
 ];
 
 class Sidebar extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    isWasher: false,
+    isDriver: false,
+    isAdmin: false,
+  };
 
-    let currentUser = getCurrentUser();
+  componentDidMount = () => {
+    const currentUser = getCurrentUser();
 
-    this.state = {
+    this.setState({
       isWasher: currentUser.isWasher,
       isDriver: currentUser.isDriver,
       isAdmin: currentUser.isAdmin,
-    };
-  }
+    });
+  };
 
   handlePagesConfig = () => {
     if (this.state.isWasher) {
@@ -109,10 +113,7 @@ class Sidebar extends Component {
   };
 
   render() {
-    const { open, variant, onClose, className, ...rest } = this.props;
-    const classes = this.props.classes;
-
-    let pages = this.handlePagesConfig();
+    const { classes, open, variant, onClose, className, ...rest } = this.props;
 
     return (
       <Drawer
@@ -125,7 +126,10 @@ class Sidebar extends Component {
         <div {...rest} className={clsx(classes.root, className)}>
           <Profile />
           <Divider className={classes.divider} />
-          <SidebarNav className={classes.nav} pages={pages} />
+          <SidebarNav
+            className={classes.nav}
+            pages={this.handlePagesConfig()}
+          />
           {/* <UpgradePlan /> */}
         </div>
       </Drawer>

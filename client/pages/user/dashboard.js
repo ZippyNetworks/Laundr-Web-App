@@ -24,6 +24,7 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //-imports (use index.js) from root for images, styles, deep components, etc.
 //-styles as named exports
 //-server stuff: error messages (need to update frontend to consume them), middleware, remove chained promises, put/post/get
+//fix MUI grid spacing causing negative margin (horizontal scrollbar)
 
 //todo: implement status 8 feature for order status when order is delivered
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile

@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { Grid } from "@material-ui/core";
 import SubscriptionCard from "./components/SubscriptionCard";
-import Standard from "../../../../../images/Subscription/Standard.png";
-import Plus from "../../../../../images/Subscription/Plus.png";
-import Family from "../../../../../images/Subscription/Family.png";
-import Student from "../../../../../images/Subscription/Student.png";
 
 class SubscriptionBoxes extends Component {
   render() {
@@ -13,7 +9,7 @@ class SubscriptionBoxes extends Component {
         <Grid item>
           <SubscriptionCard
             planName="Standard"
-            image={Standard}
+            image="/images/Subscription/Standard.png"
             priceText="$15/week"
             text="48 lbs/month"
           />
@@ -21,7 +17,7 @@ class SubscriptionBoxes extends Component {
         <Grid item>
           <SubscriptionCard
             planName="Plus"
-            image={Plus}
+            image="/images/Subscription/Plus.png"
             priceText="$20/week"
             text="66 lbs/month"
           />
@@ -29,7 +25,7 @@ class SubscriptionBoxes extends Component {
         <Grid item>
           <SubscriptionCard
             planName="Family"
-            image={Family}
+            image="/images/Subscription/Family.png"
             priceText="$25/week"
             text="84 lbs/month"
           />
@@ -37,7 +33,7 @@ class SubscriptionBoxes extends Component {
         <Grid item>
           <SubscriptionCard
             planName="Student"
-            image={Student}
+            image="/images/Subscription/Student.png"
             priceText="$10/week"
             text="40 lbs/month"
           />

@@ -11,21 +11,27 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import profileStyles from "../../../../../../styles/layouts/Main/components/Sidebar/components/profileStyles";
 
 class Profile extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    userFname: "N/A",
+    userLname: "N/A",
+    isWasher: false,
+    isDriver: false,
+    isAdmin: false,
+  };
 
-    let currentUser = getCurrentUser();
+  componentDidMount = () => {
+    const currentUser = getCurrentUser();
 
-    this.state = {
+    this.setState({
       userFname: currentUser.fname,
       userLname: currentUser.lname,
       isWasher: currentUser.isWasher,
       isDriver: currentUser.isDriver,
       isAdmin: currentUser.isAdmin,
-    };
-  }
+    });
+  };
 
-  handleBio = () => {
+  renderBio = () => {
     if (this.state.isWasher) {
       return "Washer";
     } else if (this.state.isDriver) {
@@ -50,10 +56,7 @@ class Profile extends Component {
   };
 
   render() {
-    const { className, ...rest } = this.props;
-    const classes = this.props.classes;
-
-    let bio = this.handleBio();
+    const { classes, className, ...rest } = this.props;
 
     return (
       <div {...rest} className={clsx(classes.root, className)}>
@@ -63,7 +66,7 @@ class Profile extends Component {
         <Typography className={classes.name} variant="h4">
           {this.state.userFname} {this.state.userLname}
         </Typography>
-        <Typography variant="body2">{bio}</Typography>
+        <Typography variant="body2">{this.renderBio()}</Typography>
       </div>
     );
   }

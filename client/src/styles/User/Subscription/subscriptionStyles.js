@@ -1,4 +1,4 @@
-export default (theme) => ({
+const subscriptionStyles = (theme) => ({
   welcomeText: {
     color: "white",
     textAlign: "center",
@@ -13,3 +13,5 @@ export default (theme) => ({
     textAlign: "center",
   },
 });
+
+export default subscriptionStyles;

@@ -1,4 +1,4 @@
-export default (theme) => ({
+const subscriptionStatusStyles = (theme) => ({
   infoCard: {
     width: 300,
     textAlign: "center",
@@ -17,3 +17,5 @@ export default (theme) => ({
     alignItems: "center",
   },
 });
+
+export default subscriptionStatusStyles;

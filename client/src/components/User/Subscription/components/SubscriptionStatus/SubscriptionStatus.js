@@ -18,7 +18,6 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import jwtDecode from "jwt-decode";
 import baseURL from "../../../../../baseURL";
 import subscriptionStatusStyles from "../../../../../styles/User/Subscription/components/SubscriptionStatus/subscriptionStatusStyles";
-import BoxPicture from "../../../../../images/Subscription/Box.png";
 
 const moment = require("moment");
 
@@ -138,7 +137,7 @@ class SubscriptionStatus extends Component {
                 >
                   <img
                     style={{ height: 133, width: 214 }}
-                    src={BoxPicture}
+                    src="/images/Subscription/Box.png"
                     alt="Box"
                   />
                 </div>
