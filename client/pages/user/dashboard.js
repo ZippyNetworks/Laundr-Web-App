@@ -14,6 +14,7 @@ import Slide from "../../src/components/User/Dashboard/components/Carousel/Slide
 import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 
 //refactor priorities:
+//!!!map multiple routes to single component
 //-add loading...only to components that need to fetch data from the user? for example login doesnt have it and uses localstorage, but not while rendering i guess? whereas dashboard needs it to prevent localstorage error.
 //^^ figure out, also use getstaticprops for fetching something like orders?
 
@@ -92,6 +93,7 @@ class Dashboard extends Component {
   };
 
   render() {
+    //todo: will be revised, unless there is a version of loading that's fullscreen
     if (this.state.loading) {
       return <Loading />;
     }
@@ -100,6 +102,7 @@ class Dashboard extends Component {
 
     return (
       <Layout>
+        <Loading />
         <Grid
           container
           spacing={0}
