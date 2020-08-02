@@ -26,6 +26,7 @@ import subscriptionStyles from "../../src/styles/User/Subscription/subscriptionS
 //todo: make gettoken function, or decode token you know
 
 class Subscription extends Component {
+  //todo: adopt ordercomponent thing from dashboard as well so it doesnt flash sub boxes before switching
   state = {
     subscription: {
       plan: "",

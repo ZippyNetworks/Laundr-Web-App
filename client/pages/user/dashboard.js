@@ -55,8 +55,8 @@ class Dashboard extends Component {
     userFname: "",
   };
 
-  componentDidMount = () => {
-    this.fetchOrderInfo();
+  componentDidMount = async () => {
+    await this.fetchOrderInfo();
   };
 
   fetchOrderInfo = async () => {
@@ -96,16 +96,11 @@ class Dashboard extends Component {
   };
 
   render() {
-    //todo: will be revised, unless there is a version of loading that's fullscreen
-    if (this.state.loading) {
-      return <Loading />;
-    }
-
-    const classes = this.props.classes;
+    const { classes } = this.props;
 
     return (
       <Layout>
-        <Loading />
+        {this.state.loading && <Loading />}
         <Grid
           container
           spacing={0}

@@ -1,4 +1,4 @@
-export default (theme) => ({
+const paymentInfoStyles = (theme) => ({
   root: {
     maxWidth: 400,
   },
@@ -21,3 +21,5 @@ export default (theme) => ({
     textAlign: "center",
   },
 });
+
+export default paymentInfoStyles;

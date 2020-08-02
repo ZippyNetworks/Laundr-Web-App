@@ -7,7 +7,6 @@ import {
   Icon,
   Box,
 } from "@material-ui/core";
-import { Loading } from "../../../../../../utility";
 import MUIPlacesAutocomplete from "mui-places-autocomplete";
 import GoogleMapReact from "google-map-react";
 import PropTypes from "prop-types";
@@ -36,11 +35,7 @@ const Marker = () => (
 );
 
 class Address extends Component {
-  state = { loading: true, charCount: 0 };
-
-  componentDidMount = () => {
-    this.setState({ loading: false });
-  };
+  state = { charCount: 0 };
 
   renderMarker = () => {
     const { renderMarker, marketLat, markerLong } = this.props;
@@ -64,11 +59,6 @@ class Address extends Component {
   };
 
   render() {
-    //todo: maybe not needed for these smaller components
-    if (this.state.loading) {
-      return <Loading />;
-    }
-
     const {
       classes,
       center,

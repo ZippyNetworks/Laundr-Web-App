@@ -18,6 +18,8 @@ import {
   ElementsConsumer,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { getCurrentUser, updateToken } from "../../../../helpers/session";
+import { showDefaultError, showConsoleError } from "../../../../helpers/errors";
 import PropTypes from "prop-types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -55,78 +57,69 @@ const CARD_ELEMENT_OPTIONS = {
 };
 
 class PaymentInfo extends Component {
-  constructor(props) {
-    super(props);
-
-    let token = localStorage.getItem("token");
-    const data = jwtDecode(token);
-    let stripe = data.stripe;
-
-    let defaultCard = {
+  state = {
+    showPaymentUpdate: false,
+    card: {
       brand: "N/A",
       expMonth: "N/A",
       expYear: "N/A",
       lastFour: "N/A",
-    };
-
-    this.state = { updatePayment: false, stripe: stripe, card: defaultCard };
-  }
+    },
+  };
 
   componentDidMount = async () => {
-    //load payment info, if any. if there's an error, it will stay default
-    let token = localStorage.getItem("token");
-    const data = jwtDecode(token);
+    const { regPaymentID } = this.props.user.stripe;
 
-    let paymentID = data.stripe.regPaymentID;
-
-    if (paymentID !== "N/A") {
-      await axios
-        .post(baseURL + "/stripe/getCardDetails", { paymentID })
-        .then((res) => {
-          if (res.data.success) {
-            let card = res.data.message.card;
-
-            let cardInfo = {
-              brand: card.brand.toUpperCase(),
-              expMonth: card.exp_month,
-              expYear: card.exp_year,
-              lastFour: card.last4,
-            };
-
-            this.setState({
-              card: cardInfo,
-            });
-          }
-        })
-        .catch((error) => {
-          alert("Error: " + error);
+    if (regPaymentID !== "N/A") {
+      try {
+        const response = await axios.post(baseURL + "/stripe/getCardDetails", {
+          paymentID: regPaymentID,
         });
+
+        if (response.data.success) {
+          let card = response.data.message.card;
+
+          let cardInfo = {
+            brand: card.brand.toUpperCase(),
+            expMonth: card.exp_month,
+            expYear: card.exp_year,
+            lastFour: card.last4,
+          };
+
+          this.setState({
+            card: cardInfo,
+          });
+        }
+      } catch (error) {
+        showConsoleError("getting card details", error);
+        showDefaultError("getting card details", 99);
+      }
     }
   };
 
-  handleShowField = () => {
-    this.setState({ updatePayment: !this.state.updatePayment });
+  toggleShowPaymentUpdate = () => {
+    this.setState({ showPaymentUpdate: !this.state.showPaymentUpdate });
   };
 
   handleSetupIntent = async (type) => {
-    let secret;
-    let token = localStorage.getItem("token");
-    const data = jwtDecode(token);
+    let secret = "";
 
-    let customerID = data.stripe.customerID;
+    try {
+      const currentUser = getCurrentUser();
 
-    await axios
-      .post(baseURL + "/stripe/createSetupIntent", { customerID })
-      .then((res) => {
-        if (res.data.success) {
-          secret = res.data.message;
-        } else {
-          alert("Error with creating SetupIntent");
-        }
-      })
-      .catch((error) => {
-        alert("Error: " + error);
+      const response = await axios.post(baseURL + "/stripe/createSetupIntent", {
+        customerID: currentUser.stripe.customerID,
       });
+
+      if (response.data.success) {
+        secret = res.data.message;
+      } else {
+        showDefaultError("creating setup intent", 99);
+      }
+    } catch (error) {
+      showConsoleError("creating setup intent", error);
+      showDefaultError("creating setup intent", 99);
+    }
 
     return secret;
   };
@@ -141,12 +134,9 @@ class PaymentInfo extends Component {
     }
 
     //create a setup intent
-    let secret = await this.handleSetupIntent();
-
-    //grab name
-    let token = localStorage.getItem("token");
-    const data = jwtDecode(token);
-    let name = `${data.fname} ${data.lname}`;
+    const secret = await this.handleSetupIntent();
+    const currentUser = getCurrentUser();
+    const name = `${currentUser.fname} ${currentUser.lname}`;
 
     //confirm card setup with the secret
     const result = await stripe.confirmCardSetup(secret, {
@@ -165,53 +155,34 @@ class PaymentInfo extends Component {
       // The setup has succeeded. Display a success message and send
       // result.setupIntent.payment_method to your server to save the
       // card to a Customer
-      alert("Card successfully updated!");
-
-      let token = localStorage.getItem("token");
-      const data = jwtDecode(token);
-
-      let userEmail = data.email;
-
-      let regPaymentID = result.setupIntent.payment_method;
-
-      await axios
-        .post(baseURL + "/stripe/setRegPaymentID", { userEmail, regPaymentID })
-        .then(async (res) => {
-          if (res.data.success) {
-            //card successfully attached to user in database
-            await axios
-              .post(baseURL + "/user/updateToken", { userEmail })
-              .then((res) => {
-                if (res.data.success) {
-                  //token updated
-                  const token = res.data.token;
-                  localStorage.setItem("token", token);
-                } else {
-                  alert("Error with updating token");
-                }
-              })
-              .catch((error) => {
-                alert("Error: " + error);
-              });
-          } else {
-            alert("Error with updating card");
-          }
-        })
-        .catch((error) => {
-          alert("Error: " + error);
+      try {
+        const response = await axios.post(baseURL + "/stripe/setRegPaymentID", {
+          userEmail: currentUser.email,
+          regPaymentID: result.setupIntent.payment_method,
         });
+
+        if (response.data.success) {
+          await updateToken(currentuser.email);
+          alert("Card successfully updated!");
+        } else {
+          showDefaultError("updating card", 99);
+        }
+      } catch (error) {
+        showConsoleError("updating card", error);
+        showDefaultError("updating card", 99);
+      }
     }
   };
 
   renderPaymentButtons = (classes) => {
-    if (!this.state.updatePayment) {
+    if (!this.state.showPaymentUpdate) {
       return (
         <Grid item>
           <Button
             size="small"
             variant="contained"
             className={classes.gradientButton}
-            onClick={this.handleShowField}
+            onClick={this.toggleShowPaymentUpdate}
           >
             Update
           </Button>
@@ -225,7 +196,7 @@ class PaymentInfo extends Component {
               size="small"
               variant="contained"
               className={classes.gradientButtonRed}
-              onClick={this.handleShowField}
+              onClick={this.toggleShowPaymentUpdate}
             >
               Cancel
             </Button>
@@ -246,7 +217,7 @@ class PaymentInfo extends Component {
   };
 
   render() {
-    const classes = this.props.classes;
+    const { classes } = this.props;
 
     return (
       <React.Fragment>
@@ -312,7 +283,11 @@ class PaymentInfo extends Component {
               {this.renderPaymentButtons(classes)}
             </Grid>
           </CardActions>
-          <Collapse in={this.state.updatePayment} timeout="auto" unmountOnExit>
+          <Collapse
+            in={this.state.showPaymentUpdate}
+            timeout="auto"
+            unmountOnExit
+          >
             <CardContent>
               <Grid
                 container
@@ -323,10 +298,10 @@ class PaymentInfo extends Component {
               >
                 <div style={{ width: "100%" }}>
                   <Fade
-                    in={this.state.updatePayment}
+                    in={this.state.showPaymentUpdate}
                     style={{
-                      display: !this.state.updatePayment ? "none" : "block",
-                      transitionDelay: this.state.updatePayment
+                      display: !this.state.showPaymentUpdate ? "none" : "block",
+                      transitionDelay: this.state.showPaymentUpdate
                         ? "500ms"
                         : "0ms",
                     }}
@@ -352,13 +327,18 @@ InjectedPaymentInfo.propTypes = {
 };
 
 function InjectedPaymentInfo(props) {
-  const classes = props.classes;
+  const { classes, user } = props;
 
   return (
     <Elements stripe={stripePromise}>
       <ElementsConsumer>
         {({ stripe, elements }) => (
-          <PaymentInfo stripe={stripe} elements={elements} classes={classes} />
+          <PaymentInfo
+            stripe={stripe}
+            elements={elements}
+            classes={classes}
+            user={user}
+          />
         )}
       </ElementsConsumer>
     </Elements>

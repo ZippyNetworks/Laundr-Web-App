@@ -1,4 +1,4 @@
-export default (theme) => ({
+const accountInfoStyles = (theme) => ({
   root: {
     maxWidth: 400,
   },
@@ -11,3 +11,5 @@ export default (theme) => ({
     textAlign: "center",
   },
 });
+
+export default accountInfoStyles;

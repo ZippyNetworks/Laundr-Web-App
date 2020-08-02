@@ -1,4 +1,4 @@
-export default (theme) => ({
+const accountStyles = (theme) => ({
   welcomeText: {
     color: "white",
     textAlign: "center",
@@ -13,3 +13,5 @@ export default (theme) => ({
     textAlign: "center",
   },
 });
+
+export default accountStyles;

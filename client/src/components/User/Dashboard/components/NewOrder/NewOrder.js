@@ -11,7 +11,6 @@ import {
   DialogTitle,
   CardContent,
 } from "@material-ui/core";
-import { Loading } from "../../../../../utility/";
 import { getCurrentUser } from "../../../../../helpers/session";
 import { showDefaultError } from "../../../../../helpers/errors";
 import PropTypes from "prop-types";
@@ -78,10 +77,6 @@ class NewOrder extends Component {
       orderID: -1, //done screen
     };
   }
-
-  componentDidMount = () => {
-    this.setState({ loading: false });
-  };
 
   handleNext = async () => {
     //also handle validation in here!
@@ -394,10 +389,6 @@ class NewOrder extends Component {
   };
 
   render() {
-    if (this.state.loading) {
-      return <Loading />;
-    }
-
     const classes = this.props.classes;
 
     return (

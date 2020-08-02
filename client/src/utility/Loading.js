@@ -24,7 +24,7 @@ const Loading = () => {
 
   return (
     <Dialog
-      open={false}
+      open={true}
       // onClose={this.toggleDialog}
       PaperProps={{
         style: {

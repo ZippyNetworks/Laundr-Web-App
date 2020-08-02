@@ -15,16 +15,8 @@ import jwtDecode from "jwt-decode";
 import accountInfoStyles from "../../../../styles/User/Account/components/accountInfoStyles";
 
 class AccountInfo extends Component {
-  constructor(props) {
-    super(props);
-
-    let token = localStorage.getItem("token");
-    const data = jwtDecode(token);
-
-    this.state = { user: data };
-  }
   render() {
-    const classes = this.props.classes;
+    const { classes, user } = this.props;
 
     return (
       <React.Fragment>
@@ -47,7 +39,7 @@ class AccountInfo extends Component {
                   variant="outlined"
                   label="First Name"
                   size="small"
-                  value={this.state.user.fname}
+                  value={user.fname}
                 />
               </Grid>
               <Grid item xs={6} sm={6}>
@@ -56,7 +48,7 @@ class AccountInfo extends Component {
                   variant="outlined"
                   label="Last Name"
                   size="small"
-                  value={this.state.user.lname}
+                  value={user.lname}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
@@ -65,7 +57,7 @@ class AccountInfo extends Component {
                   variant="outlined"
                   label="Email Address"
                   size="small"
-                  value={this.state.user.email}
+                  value={user.email}
                 />
               </Grid>
               <Grid item xs={6} sm={6}>
@@ -74,7 +66,7 @@ class AccountInfo extends Component {
                   variant="outlined"
                   label="Phone Number"
                   size="small"
-                  value={this.state.user.phone}
+                  value={user.phone}
                 />
               </Grid>
             </Grid>
