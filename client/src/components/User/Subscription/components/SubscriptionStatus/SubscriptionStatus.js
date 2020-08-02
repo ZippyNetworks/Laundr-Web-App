@@ -10,6 +10,11 @@ import {
   CardContent,
   CardActions,
 } from "@material-ui/core";
+import { getCurrentUser, updateToken } from "../../../../../helpers/session";
+import {
+  showDefaultError,
+  showConsoleError,
+} from "../../../../../helpers/errors";
 import PropTypes from "prop-types";
 import axios from "axios";
 import ReactScoreIndicator from "react-score-indicator";
@@ -48,55 +53,46 @@ class SubscriptionStatus extends Component {
         return 84;
 
       default:
-        return;
+        return 0;
     }
   };
 
-  renderPeriodStart = () => {
-    if (this.props.subscription.periodStart === "N/A") {
+  renderPeriod = (date) => {
+    if (date === "N/A") {
       return "N/A";
     } else {
-      return moment(this.props.subscription.periodStart).format("MM/DD");
-    }
-  };
-
-  renderPeriodEnd = () => {
-    if (this.props.subscription.periodEnd === "N/A") {
-      return "N/A";
-    } else {
-      return moment(this.props.subscription.periodEnd).format("MM/DD");
+      return moment(date).format("MM/DD");
     }
   };
 
   handleManageSub = async () => {
-    let token = localStorage.getItem("token");
-    const data = jwtDecode(token);
+    try {
+      const currentUser = getCurrentUser();
 
-    let customerID = data.stripe.customerID;
-
-    await axios
-      .post(baseURL + "/stripe/createSelfPortal", { customerID })
-      .then((res) => {
-        if (res.data.success) {
-          window.open(res.data.message, "_self");
-        } else {
-          alert("Error with creating self-service portal. Please contact us.");
-        }
-      })
-      .catch((error) => {
-        alert("Error: " + error);
+      const response = await axios.post(baseURL + "/stripe/createSelfPortal", {
+        customerID: currentUser.stripe.customerID,
       });
+
+      if (response.data.success) {
+        window.open(response.data.message, "_self");
+      } else {
+        showDefaultError("creating self-service portal", 99);
+      }
+    } catch (error) {
+      showConsoleError("creating self-service portal", error);
+      showDefaultError("creating self-service portal", 99);
+    }
   };
 
   render() {
-    const classes = this.props.classes;
+    const { classes, subscription } = this.props;
 
     return (
       <React.Fragment>
         <Grid item>
           <div className={classes.infoCard}>
             <CardHeader
-              title={`Current Plan: ${this.props.subscription.plan}`}
+              title={`Current Plan: ${subscription.plan}`}
               titleTypographyProps={{ variant: "h3" }}
             />
             <CardContent
@@ -106,7 +102,7 @@ class SubscriptionStatus extends Component {
               }}
             >
               <ReactScoreIndicator
-                value={this.props.subscription.lbsLeft}
+                value={subscription.lbsLeft}
                 maxValue={this.renderMaxLbs()}
                 width={290}
                 lineGap={1}
@@ -166,7 +162,7 @@ class SubscriptionStatus extends Component {
                   Period Start
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
-                  {this.renderPeriodStart()}
+                  {this.renderPeriod(subscription.periodStart)}
                 </Typography>
                 <Typography variant="body1" style={{ fontWeight: 500 }}>
                   <HighlightOffIcon
@@ -176,7 +172,7 @@ class SubscriptionStatus extends Component {
                   Period End
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
-                  {this.renderPeriodEnd()}
+                  {this.renderPeriod(subscription.periodEnd)}
                 </Typography>
               </div>
             </CardContent>

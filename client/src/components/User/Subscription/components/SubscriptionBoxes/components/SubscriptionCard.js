@@ -10,6 +10,11 @@ import {
   Divider,
 } from "@material-ui/core";
 import { loadStripe } from "@stripe/stripe-js";
+import { getCurrentUser, updateToken } from "../../../../../../helpers/session";
+import {
+  showDefaultError,
+  showConsoleError,
+} from "../../../../../../helpers/errors";
 import PropTypes from "prop-types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -28,57 +33,54 @@ class SubscriptionCard extends Component {
   handlePurchase = async () => {
     // When the customer clicks on the button, redirect them to Checkout.
     // Call your backend to create the Checkout session.
-    let token = localStorage.getItem("token");
-    const data = jwtDecode(token);
-    let customerID = data.stripe.customerID;
+    try {
+      const currentUser = getCurrentUser();
 
-    let type = this.props.planName;
+      const response = await axios.post(
+        baseURL + "/stripe/createCheckoutSession",
+        { type: this.props.planName, customerID: currentUser.stripe.customerID }
+      );
 
-    await axios
-      .post(baseURL + "/stripe/createCheckoutSession", { type, customerID })
-      .then(async (res) => {
-        if (res.data.success) {
-          let sessionId = res.data.message;
+      if (response.data.success) {
+        const sessionId = response.data.message;
 
-          const stripe = await stripePromise;
+        const stripe = await stripePromise;
 
-          // If `redirectToCheckout` fails due to a browser or network
-          // error, display the localized error message to your customer
-          // using `error.message`.
-          const { error } = await stripe.redirectToCheckout({
-            sessionId,
-          });
+        // If `redirectToCheckout` fails due to a browser or network
+        // error, display the localized error message to your customer
+        // using `error.message`.
+        const { error } = await stripe.redirectToCheckout({
+          sessionId,
+        });
 
-          if (error) {
-            alert(error.message);
-          }
-        } else {
-          alert(
-            "Error with creating checkout session. Please try again. If the issue persists, contact us."
-          );
+        if (error) {
+          showDefaultError(error.message, 99);
         }
-      })
-      .catch((error) => {
-        alert("Error: " + error);
-      });
+      } else {
+        showDefaultError("creating checkout session", 99);
+      }
+    } catch (error) {
+      showConsoleError("creating checkout session", error);
+      showDefaultError("creating checkout session", 99);
+    }
   };
 
   render() {
-    const classes = this.props.classes;
+    const { classes, planName, priceText, text, image } = this.props;
 
     return (
       <React.Fragment>
         <Card className={classes.root}>
-          <CardMedia className={classes.media} image={this.props.image} />
+          <CardMedia className={classes.media} image={image} />
           <CardContent style={{ textAlign: "center" }}>
             <Typography gutterBottom variant="h3">
-              {this.props.planName}
+              {planName}
             </Typography>
             <Typography variant="h4" color="textSecondary" gutterBottom>
-              {this.props.priceText}
+              {priceText}
             </Typography>
             <Typography variant="body1" color="textSecondary">
-              {this.props.text}
+              {text}
             </Typography>
           </CardContent>
           <Divider />
