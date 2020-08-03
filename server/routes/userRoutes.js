@@ -10,6 +10,6 @@ const {
 router.post("/register", register);
 router.post("/checkDuplicate", checkDuplicate);
 router.post("/login", login);
-router.post("/updateToken", updateToken);
+router.get("/updateToken", updateToken);
 
 module.exports = router;

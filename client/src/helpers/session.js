@@ -26,10 +26,13 @@ export const getCurrentUser = () => {
   }
 };
 
+//todo: maybe use phone
 export const updateToken = async (userEmail) => {
   try {
-    const response = await axios.post(baseURL + "/user/updateToken", {
-      userEmail,
+    const response = await axios.get(baseURL + "/user/updateToken", {
+      params: {
+        email: userEmail,
+      },
     });
 
     if (response.data.success) {

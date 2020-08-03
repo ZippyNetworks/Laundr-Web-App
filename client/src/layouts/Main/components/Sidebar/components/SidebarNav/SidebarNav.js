@@ -47,6 +47,8 @@ const useStyles = makeStyles((theme) => ({
 //   </div>
 // ));
 
+//todo: get active color to show properly
+
 const SidebarNav = (props) => {
   const { pages, className, ...rest } = props;
 
