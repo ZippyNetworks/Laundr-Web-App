@@ -43,7 +43,7 @@ class OrderStatus extends Component {
   };
 
   render() {
-    const { classes, order } = this.props.classes;
+    const { classes, order } = this.props;
 
     return (
       <React.Fragment>

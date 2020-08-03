@@ -1,4 +1,4 @@
-export default (theme) => ({
+const addressStyles = (theme) => ({
   listItem: {
     padding: theme.spacing(1, 0),
   },
@@ -9,3 +9,5 @@ export default (theme) => ({
     marginTop: theme.spacing(2),
   },
 });
+
+export default addressStyles;

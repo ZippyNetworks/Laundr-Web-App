@@ -17,27 +17,27 @@ import sidebarStyles from "../../../../styles/layouts/Main/components/Sidebar/si
 const userPages = [
   {
     title: "Dashboard",
-    href: "/userDashboard",
+    href: "/user/dashboard",
     icon: <DashboardIcon />,
   },
   {
     title: "Order History",
-    href: "/placeholder",
+    href: "/account/history",
     icon: <HistoryIcon />,
   },
   {
     title: "Subscription",
-    href: "/userSubscription",
+    href: "/user/subscription",
     icon: <LocalLaundryServiceIcon />,
   },
   {
     title: "Account",
-    href: "/userAccount",
+    href: "/account/details",
     icon: <AccountBoxIcon />,
   },
   {
     title: "Help",
-    href: "/placeholder",
+    href: "/user/help",
     icon: <HelpOutlineIcon />,
   },
 ];
@@ -45,22 +45,22 @@ const userPages = [
 const driverPages = [
   {
     title: "Available Orders",
-    href: "/driverAvailable",
+    href: "/driver/available",
     icon: <AssignmentIcon />,
   },
   {
     title: "Accepted Orders",
-    href: "/driverAccepted",
+    href: "/driver/accepted",
     icon: <AssignmentTurnedInIcon />,
   },
   {
     title: "Order History",
-    href: "/placeholder",
+    href: "/account/history",
     icon: <HistoryIcon />,
   },
   {
     title: "Account",
-    href: "/placeholder",
+    href: "/account/details",
     icon: <AccountBoxIcon />,
   },
 ];
@@ -68,17 +68,17 @@ const driverPages = [
 const washerPages = [
   {
     title: "Assigned Orders",
-    href: "/washerAssigned",
+    href: "/washer/assigned",
     icon: <AssignmentIcon />,
   },
   {
     title: "Order History",
-    href: "/placeholder",
+    href: "/account/history",
     icon: <HistoryIcon />,
   },
   {
     title: "Account",
-    href: "/placeholder",
+    href: "/account/details",
     icon: <AccountBoxIcon />,
   },
 ];

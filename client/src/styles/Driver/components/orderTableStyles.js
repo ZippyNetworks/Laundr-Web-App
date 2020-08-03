@@ -1,4 +1,4 @@
-export default (theme) => ({
+const orderTableStyles = (theme) => ({
   root: {},
   noPaddingCard: {
     padding: 0,
@@ -28,3 +28,5 @@ export default (theme) => ({
     padding: 5,
   },
 });
+
+export default orderTableStyles;

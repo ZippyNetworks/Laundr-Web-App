@@ -1,4 +1,4 @@
-export default (theme) => ({
+const newOrderStyles = (theme) => ({
   appBar: {
     position: "relative",
   },
@@ -31,3 +31,5 @@ export default (theme) => ({
     color: "white",
   },
 });
+
+export default newOrderStyles;

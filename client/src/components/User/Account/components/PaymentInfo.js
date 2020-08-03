@@ -112,7 +112,7 @@ class PaymentInfo extends Component {
       });
 
       if (response.data.success) {
-        secret = res.data.message;
+        secret = response.data.message;
       } else {
         showDefaultError("creating setup intent", 99);
       }

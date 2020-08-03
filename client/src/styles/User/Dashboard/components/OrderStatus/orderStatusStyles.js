@@ -1,4 +1,4 @@
-export default (theme) => ({
+const orderStatusStyles = (theme) => ({
   root: {
     width: "100%",
     position: "relative",
@@ -23,3 +23,5 @@ export default (theme) => ({
     color: "white",
   },
 });
+
+export default orderStatusStyles;

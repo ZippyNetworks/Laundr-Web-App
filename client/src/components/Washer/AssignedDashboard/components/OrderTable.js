@@ -26,19 +26,14 @@ import Close from "@material-ui/icons/Close";
 import orderTableStyles from "../../../../styles/Washer/AssignedDashboard/components/orderTableStyles";
 
 class OrderTable extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      dialog: false,
-      dialogText: "",
-      dialogTitle: "",
-      currentOrder: null,
-      openSnackbar: false,
-      snackbarMessage: "",
-      snackbarSuccess: true,
-    };
-  }
+  state = {
+    showActionDialog: false,
+    actionDialogTitle: "",
+    currentOrder: null,
+    // openSnackbar: false,
+    // snackbarMessage: "",
+    // snackbarSuccess: true,
+  };
 
   renderStage = (stage) => {
     if (stage === 3) {
@@ -56,18 +51,19 @@ class OrderTable extends Component {
     this.setState({ currentOrder: order }, () => {
       if (stage === 3) {
         this.setState({
-          dialog: true,
-          dialogTitle: "Confirmation",
+          showActionDialog: true,
+          actionDialogTitle: "Confirmation",
         });
       }
     });
   };
 
   renderDialogContent = () => {
-    let order = this.state.currentOrder;
+    const order = this.state.currentOrder;
 
     if (order) {
-      let status = order.orderInfo.status;
+      const status = order.orderInfo.status;
+
       if (status === 3) {
         return (
           <React.Fragment>
@@ -87,10 +83,11 @@ class OrderTable extends Component {
   };
 
   renderDialogActions = (classes) => {
-    let order = this.state.currentOrder;
+    const order = this.state.currentOrder;
 
     if (order) {
-      let status = order.orderInfo.status;
+      const status = order.orderInfo.status;
+
       if (status === 3) {
         return (
           <React.Fragment>
@@ -126,9 +123,9 @@ class OrderTable extends Component {
   };
 
   handleDialogClose = () => {
-    this.setState({ dialog: false });
+    this.setState({ showActionDialog: false });
 
-    let order = this.state.currentOrder;
+    const order = this.state.currentOrder;
 
     if (order.orderInfo.status === 1) {
       //clear weight text field
@@ -136,33 +133,19 @@ class OrderTable extends Component {
     }
   };
 
-  renderDoneMsg = () => {
-    this.setState({ dialog: false }, async () => {
-      await this.props.getOrders();
-      this.setState({
-        openSnackbar: true,
-        snackbarMessage: "Successfully confirmed completion!",
-        snackbarSuccess: true,
-      });
-    });
+  renderDoneMsg = async () => {
+    await this.props.getOrders();
   };
 
   renderErrorDoneMsg = () => {
-    this.setState({ dialog: false }, () => {
-      this.setState({
-        openSnackbar: true,
-        snackbarMessage:
-          "Error with completing this order - please contact us.",
-        snackbarSuccess: false,
-      });
-    });
+    alert("error - placeholder");
   };
 
   renderWasherPrefs = (order) => {
-    let scented = order.washerInfo.scented;
-    let delicates = order.washerInfo.delicates;
-    let separate = order.washerInfo.separate;
-    let towelsSheets = order.washerInfo.towelsSheets;
+    const scented = order.washerInfo.scented;
+    const delicates = order.washerInfo.delicates;
+    const separate = order.washerInfo.separate;
+    const towelsSheets = order.washerInfo.towelsSheets;
 
     let prefs = "";
 
@@ -192,15 +175,18 @@ class OrderTable extends Component {
   };
 
   render() {
-    const classes = this.props.classes;
+    const { classes } = this.props;
 
     return (
       <Card>
         <CardContent className={classes.noPaddingCard}>
           <PerfectScrollbar>
             <React.Fragment>
-              <Dialog open={this.state.dialog} onClose={this.handleDialogClose}>
-                <DialogTitle>{this.state.dialogTitle}</DialogTitle>
+              <Dialog
+                open={this.state.showActionDialog}
+                onClose={this.handleDialogClose}
+              >
+                <DialogTitle>{this.state.actionDialogTitle}</DialogTitle>
                 <DialogContent>{this.renderDialogContent()}</DialogContent>
                 <DialogActions>
                   {this.renderDialogActions(classes)}
@@ -300,7 +286,7 @@ class OrderTable extends Component {
             </div>
           </PerfectScrollbar>
         </CardContent>
-        <React.Fragment>
+        {/* <React.Fragment>
           <Snackbar
             anchorOrigin={{
               vertical: "bottom",
@@ -334,7 +320,7 @@ class OrderTable extends Component {
               },
             }}
           />
-        </React.Fragment>
+        </React.Fragment> */}
       </Card>
     );
   }

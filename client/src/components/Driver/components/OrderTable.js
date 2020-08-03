@@ -34,9 +34,9 @@ class OrderTable extends Component {
     showActionDialog: false,
     actionDialogTitle: "",
     currentOrder: null,
-    openSnackbar: false,
-    snackbarMessage: "",
-    snackbarSuccess: true,
+    // openSnackbar: false,
+    // snackbarMessage: "",
+    // snackbarSuccess: true,
   };
 
   renderStage = (stage) => {

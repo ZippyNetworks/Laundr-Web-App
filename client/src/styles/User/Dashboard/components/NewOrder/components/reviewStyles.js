@@ -1,4 +1,4 @@
-export default (theme) => ({
+const reviewStyles = (theme) => ({
   listItem: {
     padding: theme.spacing(1, 0),
   },
@@ -32,3 +32,5 @@ export default (theme) => ({
     },
   },
 });
+
+export default reviewStyles;

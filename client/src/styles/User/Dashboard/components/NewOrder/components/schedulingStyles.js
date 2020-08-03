@@ -1,4 +1,4 @@
-export default (theme) => ({
+const schedulingStyles = (theme) => ({
   listItem: {
     padding: theme.spacing(1, 0),
   },
@@ -14,3 +14,5 @@ export default (theme) => ({
     color: "white",
   },
 });
+
+export default schedulingStyles;

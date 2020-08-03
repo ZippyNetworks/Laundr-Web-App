@@ -5,7 +5,8 @@ import React, { forwardRef } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import { List, ListItem, Button, colors, Link } from "@material-ui/core";
+import Link from "next/link";
+import { List, ListItem, Button, colors } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -55,15 +56,17 @@ const SidebarNav = (props) => {
     <List {...rest} className={clsx(classes.root, className)}>
       {pages.map((page) => (
         <ListItem className={classes.item} disableGutters key={page.title}>
-          <Button
-            activeClassName={classes.active}
-            className={classes.button}
-            component={Link}
-            to={page.href}
-          >
-            <div className={classes.icon}>{page.icon}</div>
-            {page.title}
-          </Button>
+          <Link href={page.href}>
+            <Button
+              activeClassName={classes.active}
+              className={classes.button}
+              // component={Link}
+              to={page.href}
+            >
+              <div className={classes.icon}>{page.icon}</div>
+              {page.title}
+            </Button>
+          </Link>
         </ListItem>
       ))}
     </List>

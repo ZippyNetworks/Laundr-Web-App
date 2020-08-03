@@ -1,4 +1,4 @@
-export default (theme) => ({
+const availableDashboardStyles = (theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
@@ -16,3 +16,5 @@ export default (theme) => ({
     textAlign: "center",
   },
 });
+
+export default availableDashboardStyles;

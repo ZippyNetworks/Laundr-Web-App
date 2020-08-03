@@ -1,4 +1,4 @@
-export default (theme) => ({
+const carouselStyles = (theme) => ({
   root: {
     "& > *:focus": {
       outline: "none",
@@ -95,3 +95,5 @@ export default (theme) => ({
     },
   },
 });
+
+export default carouselStyles;

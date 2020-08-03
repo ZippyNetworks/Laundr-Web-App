@@ -1,4 +1,4 @@
-export default (theme) => ({
+const preferenceCardStyles = (theme) => ({
   root: {
     maxWidth: 345,
   },
@@ -17,3 +17,5 @@ export default (theme) => ({
     transform: "rotate(180deg)",
   },
 });
+
+export default preferenceCardStyles;

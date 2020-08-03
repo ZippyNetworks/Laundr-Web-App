@@ -20,7 +20,7 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //^^also, loading on only main pages (after logged in, before main component rendered aka sidebar and topbar are there tho)? or different loading for individual components/fullscreen (like from login)
 
 //-individual components (use helpers and loading component)
-//-change error messages to use console and default error
+//-change error messages to use console and default error/restructure frontend error messages properly
 //-implement update token helper
 //-fix places autocomplete on address
 //-imports (use index.js) from root for images, styles, deep components, etc.
@@ -75,7 +75,7 @@ class Dashboard extends Component {
           component = <NewOrder />;
           componentName = "New Order";
         } else {
-          component = <OrderStatus order={res.data.message} />;
+          component = <OrderStatus order={response.data.message} />;
           componentName = "Order Status";
         }
 
