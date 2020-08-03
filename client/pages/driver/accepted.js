@@ -105,7 +105,7 @@ class AcceptedDashboard extends Component {
     try {
       const orderID = order.orderInfo.orderID;
 
-      const response = await axios.post(baseURL + "/driver/updateOrderWeight", {
+      const response = await axios.put(baseURL + "/driver/updateOrderWeight", {
         weight: this.state.weight,
         orderID,
       });
@@ -146,10 +146,9 @@ class AcceptedDashboard extends Component {
     try {
       const orderID = order.orderInfo.orderID;
 
-      const response = await axios.post(
-        baseURL + "/driver/setWasherDelivered",
-        { orderID }
-      );
+      const response = await axios.put(baseURL + "/driver/setWasherDelivered", {
+        orderID,
+      });
 
       success = response.data.success;
     } catch (error) {
@@ -166,7 +165,7 @@ class AcceptedDashboard extends Component {
     try {
       const orderID = order.orderInfo.orderID;
 
-      const response = await axios.post(baseURL + "/driver/setUserDelivered", {
+      const response = await axios.put(baseURL + "/driver/setUserDelivered", {
         orderID,
       });
 

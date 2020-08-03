@@ -1,283 +1,181 @@
+const { showConsoleError, caughtError } = require("../helpers/errors");
 const Order = require("../models/Order");
 
 //RETURNS ONLY TERMINATE THE CURRENT FUNCTION YOU DUMMY: aka the .then, catc, etc.
 //awaiting on a promise guarantees the .then is executed right after
 
-//initial pickup
-const assignOrderPickup = async (req, res) => {
-  let order_id = "";
-
-  await Order.findOne({ "orderInfo.orderID": req.body.orderID })
-    .then(async (order) => {
-      /*console.log(
-        "this should execute first, but it's last if you don't use await! woooah"
-      );*/
-      if (order) {
-        if (order.pickupInfo.driverEmail === "N/A") {
-          order_id = order._id;
-
-          await Order.findByIdAndUpdate(
-            order_id,
-            {
-              "pickupInfo.driverEmail": req.body.driverEmail,
-              "orderInfo.status": 1,
-            },
-            { new: true }
-          )
-            .then((order) => {
-              if (order) {
-                return res.json({
-                  success: true,
-                  message: "Pickup driver assigned successfully",
-                });
-              } else {
-                return res.json({
-                  success: false,
-                  message: "Error with assigning a pickup driver",
-                });
-              }
-            })
-            .catch((error) => {
-              return res.json({
-                success: false,
-                message: error,
-              });
-            });
-        } else {
-          return res.json({
-            success: false,
-            message: "Order already has a pickup driver",
-          });
-        }
-      } else {
-        return res.json({
-          success: false,
-          message: "Order could not be found",
-        });
-      }
-    })
-    .catch((error) => {
-      return res.json({ success: false, message: error });
+const findOrder = async (req, res, next) => {
+  try {
+    const order = await Order.findOne({
+      "orderInfo.orderID": req.body.orderID,
     });
-  /*
-  console.log(
-    "this should execute last, but it's first if you don't await! woooah"
-  );*/
+
+    if (order) {
+      res.locals.order = order;
+      next();
+    } else {
+      return res.json({
+        success: false,
+        message: "Order could not be found.",
+      });
+    }
+  } catch (error) {
+    showConsoleError("finding order", error);
+    return res.json({
+      success: false,
+      message: caughtError("finding order"),
+    });
+  }
 };
 
-const updateOrderWeight = async (req, res) => {
-  let order_id = "";
+//initial pickup
+const assignOrderPickup = async (req, res) => {
+  try {
+    const order = res.locals.order;
 
-  await Order.findOne({ "orderInfo.orderID": req.body.orderID })
-    .then(async (order) => {
-      if (order) {
-        if (order.orderInfo.weight === "N/A") {
-          order_id = order._id;
+    if (order.pickupInfo.driverEmail === "N/A") {
+      order.orderInfo.status = 1;
+      order.pickupInfo.driverEmail = req.body.driverEmail;
 
-          await Order.findByIdAndUpdate(
-            order_id,
-            {
-              "orderInfo.weight": req.body.weight,
-              "orderInfo.status": 2,
-            },
-            { new: true }
-          )
-            .then((order) => {
-              if (order) {
-                return res.json({
-                  success: true,
-                  message: "Weight entered for order successfully",
-                });
-              } else {
-                return res.json({
-                  success: false,
-                  message: "Error with entering weight for order",
-                });
-              }
-            })
-            .catch((error) => {
-              return res.json({
-                success: false,
-                message: error,
-              });
-            });
-        } else {
-          return res.json({
-            success: false,
-            message: "Order already has a weight entered",
-          });
-        }
-      } else {
-        return res.json({
-          success: false,
-          message: "Order could not be found",
-        });
-      }
-    })
-    .catch((error) => {
-      return res.json({ success: false, message: error });
+      await order.save();
+
+      return res.json({
+        success: true,
+        message: "Order successfully accepted.",
+      });
+    } else {
+      return res.json({
+        success: false,
+        message: "Order already has a pickup driver.",
+      });
+    }
+  } catch (error) {
+    showConsoleError("assigning initial pickup driver", error);
+    return res.json({
+      success: false,
+      message: caughtError("assigning initial pickup driver"),
     });
+  }
+};
+
+const enterOrderWeight = async (req, res) => {
+  try {
+    const order = res.locals.order;
+
+    if (order.orderInfo.weight === "N/A") {
+      order.orderInfo.status = 2;
+      order.orderInfo.weight = req.body.weight;
+
+      await order.save();
+
+      return res.json({
+        success: true,
+        message: "Weight successfully entered.",
+      });
+    } else {
+      return res.json({
+        success: false,
+        message: "Order already has a weight entered",
+      });
+    }
+  } catch (error) {
+    showConsoleError("entering order weight", error);
+    return res.json({
+      success: false,
+      message: caughtError("entering order weight"),
+    });
+  }
 };
 
 const setWasherDelivered = async (req, res) => {
-  let order_id = "";
+  try {
+    const order = res.locals.order;
 
-  await Order.findOne({ "orderInfo.orderID": req.body.orderID })
-    .then(async (order) => {
-      if (order) {
-        if (order.orderInfo.status === 2) {
-          order_id = order._id;
+    if (order.orderInfo.status === 2) {
+      order.orderInfo.status = 3;
 
-          await Order.findByIdAndUpdate(order_id, {
-            "orderInfo.status": 3,
-          })
-            .then((order) => {
-              if (order) {
-                return res.json({
-                  success: true,
-                  message: "Order successfully marked as dropped off to washer",
-                });
-              } else {
-                return res.json({
-                  success: false,
-                  message: "Error with marking as dropped off to washer",
-                });
-              }
-            })
-            .catch((error) => {
-              return res.json({
-                success: false,
-                message: error,
-              });
-            });
-        } else {
-          return res.json({
-            success: false,
-            message: "Order does not have the correct status",
-          });
-        }
-      } else {
-        return res.json({
-          success: false,
-          message: "Order could not be found",
-        });
-      }
-    })
-    .catch((error) => {
-      return res.json({ success: false, message: error });
+      await order.save();
+
+      return res.json({
+        success: true,
+        message: "Successfully confirmed delivery to washer.",
+      });
+    } else {
+      return res.json({
+        success: false,
+        message: "Order has the incorrect status. Please contact us.",
+      });
+    }
+  } catch (error) {
+    showConsoleError("confirming washer delivery", error);
+    return res.json({
+      success: false,
+      message: caughtError("confirming washer delivery"),
     });
+  }
 };
 
 const assignOrderDropoff = async (req, res) => {
-  let order_id = "";
+  try {
+    const order = res.locals.order;
 
-  await Order.findOne({ "orderInfo.orderID": req.body.orderID })
-    .then(async (order) => {
-      if (order) {
-        if (order.dropoffInfo.driverEmail === "N/A") {
-          order_id = order._id;
+    if (order.dropoffInfo.driverEmail === "N/A") {
+      order.orderInfo.status = 5;
+      order.dropoffInfo.driverEmail = req.body.driverEmail;
 
-          await Order.findByIdAndUpdate(
-            order_id,
-            {
-              "dropoffInfo.driverEmail": req.body.driverEmail,
-              "orderInfo.status": 5,
-            },
-            { new: true }
-          )
-            .then((order) => {
-              if (order) {
-                return res.json({
-                  success: true,
-                  message: "Dropoff driver assigned successfully",
-                });
-              } else {
-                return res.json({
-                  success: false,
-                  message: "Error with assigning a dropoff driver",
-                });
-              }
-            })
-            .catch((error) => {
-              return res.json({
-                success: false,
-                message: error,
-              });
-            });
-        } else {
-          return res.json({
-            success: false,
-            message: "Order already has a dropoff driver",
-          });
-        }
-      } else {
-        return res.json({
-          success: false,
-          message: "Order could not be found",
-        });
-      }
-    })
-    .catch((error) => {
-      return res.json({ success: false, message: error });
+      await order.save();
+
+      return res.json({
+        success: true,
+        message: "Order for final dropoff successfully accepted.",
+      });
+    } else {
+      return res.json({
+        success: false,
+        message: "Order already has a dropoff driver.",
+      });
+    }
+  } catch (error) {
+    showConsoleError("assigning final dropoff driver", error);
+    return res.json({
+      success: false,
+      message: caughtError("assigning final dropoff driver"),
     });
+  }
 };
 
 const setUserDelivered = async (req, res) => {
-  let order_id = "";
+  try {
+    const order = res.locals.order;
 
-  await Order.findOne({ "orderInfo.orderID": req.body.orderID })
-    .then(async (order) => {
-      if (order) {
-        if (order.orderInfo.status === 5) {
-          order_id = order._id;
+    if (order.orderInfo.status === 5) {
+      order.orderInfo.status = 6;
 
-          await Order.findByIdAndUpdate(
-            order_id,
-            {
-              "orderInfo.status": 6,
-            },
-            { new: true }
-          )
-            .then((order) => {
-              if (order) {
-                return res.json({
-                  success: true,
-                  message: "Order successfully marked as delivered to user",
-                });
-              } else {
-                return res.json({
-                  success: false,
-                  message: "Error with marking as delivered to user",
-                });
-              }
-            })
-            .catch((error) => {
-              return res.json({
-                success: false,
-                message: error,
-              });
-            });
-        } else {
-          return res.json({
-            success: false,
-            message: "Order does not have the correct status",
-          });
-        }
-      } else {
-        return res.json({
-          success: false,
-          message: "Order could not be found",
-        });
-      }
-    })
-    .catch((error) => {
-      return res.json({ success: false, message: error });
+      await order.save();
+
+      return res.json({
+        success: true,
+        message: "Order successfully marked as delivered to user.",
+      });
+    } else {
+      return res.json({
+        success: false,
+        message: "Order has the incorrect status. Please contact us.",
+      });
+    }
+  } catch (error) {
+    showConsoleError("marking as delivered to user", error);
+    return res.json({
+      success: false,
+      message: caughtError("marking as delivered to user"),
     });
+  }
 };
 
 module.exports = {
+  findOrder,
   assignOrderPickup,
-  updateOrderWeight,
+  enterOrderWeight,
   setWasherDelivered,
   assignOrderDropoff,
   setUserDelivered,

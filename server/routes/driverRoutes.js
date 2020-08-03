@@ -1,6 +1,7 @@
 const {
+    findOrder,
     assignOrderPickup,
-    updateOrderWeight,
+    enterOrderWeight,
     setWasherDelivered,
     assignOrderDropoff,
     setUserDelivered,
@@ -8,10 +9,10 @@ const {
   express = require("express"),
   router = express.Router();
 
-router.post("/assignOrderPickup", assignOrderPickup);
-router.post("/updateOrderWeight", updateOrderWeight);
-router.post("/setWasherDelivered", setWasherDelivered);
-router.post("/assignOrderDropoff", assignOrderDropoff);
-router.post("/setUserDelivered", setUserDelivered);
+router.put("/assignOrderPickup", findOrder, assignOrderPickup);
+router.put("/updateOrderWeight", findOrder, enterOrderWeight);
+router.put("/setWasherDelivered", findOrder, setWasherDelivered);
+router.put("/assignOrderDropoff", findOrder, assignOrderDropoff);
+router.put("/setUserDelivered", findOrder, setUserDelivered);
 
 module.exports = router;

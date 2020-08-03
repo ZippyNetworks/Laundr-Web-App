@@ -67,7 +67,7 @@ class AvailableDashboard extends Component {
       const currentUser = getCurrentUser();
       const orderID = order.orderInfo.orderID;
 
-      const response = await axios.post(baseURL + "/driver/assignOrderPickup", {
+      const response = await axios.put(baseURL + "/driver/assignOrderPickup", {
         driverEmail: currentUser.email,
         orderID,
       });
@@ -88,13 +88,10 @@ class AvailableDashboard extends Component {
       const currentUser = getCurrentUser();
       const orderID = order.orderInfo.orderID;
 
-      const response = await axios.post(
-        baseURL + "/driver/assignOrderDropoff",
-        {
-          driverEmail: currentUser.email,
-          orderID,
-        }
-      );
+      const response = await axios.put(baseURL + "/driver/assignOrderDropoff", {
+        driverEmail: currentUser.email,
+        orderID,
+      });
 
       success = response.data.success;
     } catch (error) {
