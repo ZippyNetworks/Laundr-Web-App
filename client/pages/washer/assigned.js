@@ -65,7 +65,7 @@ class AssignedDashboard extends Component {
     try {
       const orderID = order.orderInfo.orderID;
 
-      const response = await axios.post(baseURL + "/washer/setWasherDone", {
+      const response = await axios.put(baseURL + "/washer/setWasherDone", {
         orderID,
       });
 

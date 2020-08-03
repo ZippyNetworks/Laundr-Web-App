@@ -1,7 +1,7 @@
-const { setWasherDone } = require("../controllers/washerController"),
+const { findOrder, setWasherDone } = require("../controllers/washerController"),
   express = require("express"),
   router = express.Router();
 
-router.post("/setWasherDone", setWasherDone);
+router.put("/setWasherDone", findOrder, setWasherDone);
 
 module.exports = router;

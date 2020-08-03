@@ -1,56 +1,56 @@
+const { showConsoleError, caughtError } = require("../helpers/errors");
 const Order = require("../models/Order");
 
-const setWasherDone = async (req, res) => {
-  let order_id = "";
-
-  await Order.findOne({ "orderInfo.orderID": req.body.orderID })
-    .then(async (order) => {
-      if (order) {
-        if (order.orderInfo.status === 3) {
-          order_id = order._id;
-
-          await Order.findByIdAndUpdate(
-            order_id,
-            {
-              "orderInfo.status": 4,
-            },
-            { new: true }
-          )
-            .then((order) => {
-              if (order) {
-                return res.json({
-                  success: true,
-                  message: "Order successfully marked as done by washer",
-                });
-              } else {
-                return res.json({
-                  success: false,
-                  message: "Error with marking as done by washer",
-                });
-              }
-            })
-            .catch((error) => {
-              return res.json({
-                success: false,
-                message: error,
-              });
-            });
-        } else {
-          return res.json({
-            success: false,
-            message: "Order does not have the correct status",
-          });
-        }
-      } else {
-        return res.json({
-          success: false,
-          message: "Order could not be found",
-        });
-      }
-    })
-    .catch((error) => {
-      return res.json({ success: false, message: error });
+const findOrder = async (req, res, next) => {
+  try {
+    const order = await Order.findOne({
+      "orderInfo.orderID": req.body.orderID,
     });
+
+    if (order) {
+      res.locals.order = order;
+      next();
+    } else {
+      return res.json({
+        success: false,
+        message: "Order could not be found.",
+      });
+    }
+  } catch (error) {
+    showConsoleError("finding order", error);
+    return res.json({
+      success: false,
+      message: caughtError("finding order"),
+    });
+  }
 };
 
-module.exports = { setWasherDone };
+const setWasherDone = async (req, res) => {
+  try {
+    const order = res.locals.order;
+
+    if (order.orderInfo.status === 3) {
+      order.orderInfo.status = 4;
+
+      await order.save();
+
+      return res.json({
+        success: true,
+        message: "Order successfully marked as done.",
+      });
+    } else {
+      return res.json({
+        success: false,
+        message: "Order has the incorrect status. Please contact us.",
+      });
+    }
+  } catch (error) {
+    showConsoleError("setting order as done by washer", error);
+    return res.json({
+      success: false,
+      message: caughtError("setting order as done by washer"),
+    });
+  }
+};
+
+module.exports = { findOrder, setWasherDone };
