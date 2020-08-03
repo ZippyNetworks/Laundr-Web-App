@@ -1,4 +1,4 @@
-export default (theme) => ({
+const orderTableStyles = (theme) => ({
   root: {},
   inner: {},
   nameContainer: {
@@ -28,3 +28,5 @@ export default (theme) => ({
     },
   },
 });
+
+export default orderTableStyles;

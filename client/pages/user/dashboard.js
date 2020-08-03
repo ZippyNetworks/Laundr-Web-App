@@ -24,7 +24,7 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //-implement update token helper
 //-fix places autocomplete on address
 //-imports (use index.js) from root for images, styles, deep components, etc.
-//-styles as named exports
+//-styles as named exports, restructure folders and change file names?
 //-server stuff: error messages (need to update frontend to consume them), middleware, remove chained promises, put/post/get
 //fix MUI grid spacing causing negative margin (horizontal scrollbar)
 

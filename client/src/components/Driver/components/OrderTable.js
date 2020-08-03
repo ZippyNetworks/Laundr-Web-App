@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import PerfectScrollbar from "react-perfect-scrollbar";
 import {
   Card,
   CardContent,
@@ -23,6 +21,8 @@ import {
   TableContainer,
   Grid,
 } from "@material-ui/core";
+import PropTypes from "prop-types";
+import PerfectScrollbar from "react-perfect-scrollbar";
 import Close from "@material-ui/icons/Close";
 import orderTableStyles from "../../../styles/Driver/components/orderTableStyles";
 
@@ -446,187 +446,185 @@ class OrderTable extends Component {
     return (
       <Card>
         <CardContent className={classes.noPaddingCard}>
-          <PerfectScrollbar>
-            <React.Fragment>
-              <Dialog
-                open={this.state.showActionDialog}
-                onClose={this.handleDialogClose}
-              >
-                <DialogTitle>{this.state.actionDialogTitle}</DialogTitle>
-                <DialogContent>{this.renderDialogContent()}</DialogContent>
-                <DialogActions>
-                  {this.renderDialogActions(classes)}
-                </DialogActions>
-              </Dialog>
-            </React.Fragment>
-            <div className={classes.inner}>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell align="left">Date/Time</TableCell>
-                      <TableCell align="left">Address</TableCell>
-                      <TableCell align="left">Phone</TableCell>
-                      <TableCell align="left">Instructions</TableCell>
-                      <TableCell align="left">Load Size</TableCell>
-                      <TableCell align="left">Stage</TableCell>
-                      <TableCell align="left">Actions</TableCell>
+          {/* <PerfectScrollbar> */}
+          <React.Fragment>
+            <Dialog
+              open={this.state.showActionDialog}
+              onClose={this.handleDialogClose}
+            >
+              <DialogTitle>{this.state.actionDialogTitle}</DialogTitle>
+              <DialogContent>{this.renderDialogContent()}</DialogContent>
+              <DialogActions>{this.renderDialogActions(classes)}</DialogActions>
+            </Dialog>
+          </React.Fragment>
+          <div className={classes.inner}>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell align="left">Date/Time</TableCell>
+                    <TableCell align="left">Address</TableCell>
+                    <TableCell align="left">Phone</TableCell>
+                    <TableCell align="left">Instructions</TableCell>
+                    <TableCell align="left">Load Size</TableCell>
+                    <TableCell align="left">Stage</TableCell>
+                    <TableCell align="left">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {orders.map((order) => (
+                    <TableRow key={order.orderInfo.orderID}>
+                      <TableCell>
+                        <div className={classes.nameContainer}>
+                          <Typography variant="body1">
+                            {`${order.userInfo.fname} ${order.userInfo.lname}`}
+                          </Typography>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Grid
+                          container
+                          direction="column"
+                          justify="center"
+                          alignItems="flex-start"
+                          spacing={1}
+                        >
+                          <Grid item>
+                            <Paper elevation={1}>
+                              <div className={classes.cardCell}>
+                                <Typography
+                                  variant="body1"
+                                  style={{ fontWeight: 600 }}
+                                >
+                                  Pickup:&nbsp;
+                                </Typography>
+                                <Typography variant="body1">{` ${order.pickupInfo.date} @ ${order.pickupInfo.time}`}</Typography>
+                              </div>
+                            </Paper>
+                          </Grid>
+                          <Grid item>
+                            <Paper elevation={1}>
+                              <div className={classes.cardCell}>
+                                <Typography
+                                  variant="body1"
+                                  style={{ fontWeight: 600 }}
+                                >
+                                  Dropoff:&nbsp;
+                                </Typography>
+                                <Typography variant="body1">
+                                  {` ${order.dropoffInfo.date} @ ${order.dropoffInfo.time}`}
+                                </Typography>
+                              </div>
+                            </Paper>
+                          </Grid>
+                        </Grid>
+                      </TableCell>
+                      <TableCell>
+                        <Grid
+                          container
+                          direction="column"
+                          justify="center"
+                          alignItems="flex-start"
+                          spacing={1}
+                        >
+                          <Grid item>
+                            <Paper elevation={1}>
+                              <div className={classes.cardCell}>
+                                <Typography
+                                  variant="body1"
+                                  style={{ fontWeight: 600 }}
+                                >
+                                  User:&nbsp;
+                                </Typography>
+                                <Typography variant="body1">{` ${order.orderInfo.address}`}</Typography>
+                              </div>
+                            </Paper>
+                          </Grid>
+                          <Grid item>
+                            <Paper elevation={1}>
+                              <div className={classes.cardCell}>
+                                <Typography
+                                  variant="body1"
+                                  style={{ fontWeight: 600 }}
+                                >
+                                  Washer:&nbsp;
+                                </Typography>
+                                <Typography variant="body1">
+                                  {` ${order.washerInfo.address}`}
+                                </Typography>
+                              </div>
+                            </Paper>
+                          </Grid>
+                        </Grid>
+                      </TableCell>
+                      <TableCell>
+                        <Grid
+                          container
+                          direction="column"
+                          justify="center"
+                          alignItems="flex-start"
+                          spacing={1}
+                        >
+                          <Grid item>
+                            <Paper elevation={1}>
+                              <div className={classes.cardCell}>
+                                <Typography
+                                  variant="body1"
+                                  style={{ fontWeight: 600 }}
+                                >
+                                  User:&nbsp;
+                                </Typography>
+                                <Typography variant="body1">
+                                  {order.userInfo.phone}
+                                </Typography>
+                              </div>
+                            </Paper>
+                          </Grid>
+                          <Grid item>
+                            <Paper elevation={1}>
+                              <div className={classes.cardCell}>
+                                <Typography
+                                  variant="body1"
+                                  style={{ fontWeight: 600 }}
+                                >
+                                  Washer:&nbsp;
+                                </Typography>
+                                <Typography variant="body1">
+                                  {order.washerInfo.phone}
+                                </Typography>
+                              </div>
+                            </Paper>
+                          </Grid>
+                        </Grid>
+                      </TableCell>
+                      <TableCell>{order.pickupInfo.prefs}</TableCell>
+                      <TableCell>{420}</TableCell>
+                      <TableCell>
+                        {this.renderStage(order.orderInfo.status)}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          className={classes.gradient}
+                          color="primary"
+                          onClick={() => {
+                            this.handleActionClicked(
+                              order.orderInfo.status,
+                              order
+                            );
+                          }}
+                        >
+                          {this.renderActions(order.orderInfo.status)}
+                        </Button>
+                      </TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {orders.map((order) => (
-                      <TableRow key={order.orderInfo.orderID}>
-                        <TableCell>
-                          <div className={classes.nameContainer}>
-                            <Typography variant="body1">
-                              {`${order.userInfo.fname} ${order.userInfo.lname}`}
-                            </Typography>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Grid
-                            container
-                            direction="column"
-                            justify="center"
-                            alignItems="flex-start"
-                            spacing={1}
-                          >
-                            <Grid item>
-                              <Paper elevation={1}>
-                                <div className={classes.cardCell}>
-                                  <Typography
-                                    variant="body1"
-                                    style={{ fontWeight: 600 }}
-                                  >
-                                    Pickup:&nbsp;
-                                  </Typography>
-                                  <Typography variant="body1">{` ${order.pickupInfo.date} @ ${order.pickupInfo.time}`}</Typography>
-                                </div>
-                              </Paper>
-                            </Grid>
-                            <Grid item>
-                              <Paper elevation={1}>
-                                <div className={classes.cardCell}>
-                                  <Typography
-                                    variant="body1"
-                                    style={{ fontWeight: 600 }}
-                                  >
-                                    Dropoff:&nbsp;
-                                  </Typography>
-                                  <Typography variant="body1">
-                                    {` ${order.dropoffInfo.date} @ ${order.dropoffInfo.time}`}
-                                  </Typography>
-                                </div>
-                              </Paper>
-                            </Grid>
-                          </Grid>
-                        </TableCell>
-                        <TableCell>
-                          <Grid
-                            container
-                            direction="column"
-                            justify="center"
-                            alignItems="flex-start"
-                            spacing={1}
-                          >
-                            <Grid item>
-                              <Paper elevation={1}>
-                                <div className={classes.cardCell}>
-                                  <Typography
-                                    variant="body1"
-                                    style={{ fontWeight: 600 }}
-                                  >
-                                    User:&nbsp;
-                                  </Typography>
-                                  <Typography variant="body1">{` ${order.orderInfo.address}`}</Typography>
-                                </div>
-                              </Paper>
-                            </Grid>
-                            <Grid item>
-                              <Paper elevation={1}>
-                                <div className={classes.cardCell}>
-                                  <Typography
-                                    variant="body1"
-                                    style={{ fontWeight: 600 }}
-                                  >
-                                    Washer:&nbsp;
-                                  </Typography>
-                                  <Typography variant="body1">
-                                    {` ${order.washerInfo.address}`}
-                                  </Typography>
-                                </div>
-                              </Paper>
-                            </Grid>
-                          </Grid>
-                        </TableCell>
-                        <TableCell>
-                          <Grid
-                            container
-                            direction="column"
-                            justify="center"
-                            alignItems="flex-start"
-                            spacing={1}
-                          >
-                            <Grid item>
-                              <Paper elevation={1}>
-                                <div className={classes.cardCell}>
-                                  <Typography
-                                    variant="body1"
-                                    style={{ fontWeight: 600 }}
-                                  >
-                                    User:&nbsp;
-                                  </Typography>
-                                  <Typography variant="body1">
-                                    {order.userInfo.phone}
-                                  </Typography>
-                                </div>
-                              </Paper>
-                            </Grid>
-                            <Grid item>
-                              <Paper elevation={1}>
-                                <div className={classes.cardCell}>
-                                  <Typography
-                                    variant="body1"
-                                    style={{ fontWeight: 600 }}
-                                  >
-                                    Washer:&nbsp;
-                                  </Typography>
-                                  <Typography variant="body1">
-                                    {order.washerInfo.phone}
-                                  </Typography>
-                                </div>
-                              </Paper>
-                            </Grid>
-                          </Grid>
-                        </TableCell>
-                        <TableCell>{order.pickupInfo.prefs}</TableCell>
-                        <TableCell>{420}</TableCell>
-                        <TableCell>
-                          {this.renderStage(order.orderInfo.status)}
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            className={classes.gradient}
-                            color="primary"
-                            onClick={() => {
-                              this.handleActionClicked(
-                                order.orderInfo.status,
-                                order
-                              );
-                            }}
-                          >
-                            {this.renderActions(order.orderInfo.status)}
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-          </PerfectScrollbar>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+          {/* </PerfectScrollbar> */}
         </CardContent>
 
         {/* <React.Fragment>
