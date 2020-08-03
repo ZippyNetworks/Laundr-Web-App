@@ -63,8 +63,10 @@ class Dashboard extends Component {
     try {
       const currentUser = getCurrentUser();
 
-      const response = await axios.post(`${baseURL}/order/getCurrentOrder`, {
-        userEmail: currentUser.email,
+      const response = await axios.get(`${baseURL}/order/getExistingOrder`, {
+        params: {
+          email: currentUser.email,
+        },
       });
 
       if (response.data.success) {

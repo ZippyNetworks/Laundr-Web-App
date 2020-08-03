@@ -38,15 +38,13 @@ class AssignedDashboard extends Component {
   getOrders = async () => {
     try {
       const currentUser = getCurrentUser();
-      const response = await axios.get(baseURL + "/order/getOrders");
+      const response = await axios.post(baseURL + "/order/fetchOrders", {
+        statuses: [3],
+      });
 
       if (response.data.success) {
-        //filter only status 0 and 4
         const filteredOrders = response.data.message.filter((order) => {
-          return (
-            order.orderInfo.status === 3 &&
-            order.washerInfo.email === washerEmail
-          );
+          return order.washerInfo.email === washerEmail;
         });
 
         this.setState({ orders: filteredOrders, userFname: currentUser.fname });

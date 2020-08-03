@@ -42,15 +42,15 @@ class AvailableDashboard extends Component {
   getOrders = async () => {
     try {
       const currentUser = getCurrentUser();
-      const response = await axios.get(baseURL + "/order/getOrders");
+      const response = await axios.post(baseURL + "/order/fetchOrders", {
+        statuses: [0, 4],
+      });
 
       if (response.data.success) {
-        //filter only status 0 and 4
-        const filteredOrders = response.data.message.filter((order) => {
-          return order.orderInfo.status === 0 || order.orderInfo.status === 4;
+        this.setState({
+          orders: response.data.message,
+          userFname: currentUser.fname,
         });
-
-        this.setState({ orders: filteredOrders, userFname: currentUser.fname });
       } else {
         showDefaultError("getting orders", 99);
       }

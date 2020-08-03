@@ -1,15 +1,15 @@
 const {
-    findOrder,
+    checkExistingOrder,
     countOrders,
     placeOrder,
-    getOrders,
-    getCurrentOrder,
+    fetchOrders,
+    getExistingOrder,
   } = require("../controllers/orderController"),
   express = require("express"),
   router = express.Router();
 
-router.post("/placeOrder", findOrder, countOrders, placeOrder);
-router.get("/getOrders", getOrders);
-router.post("/getCurrentOrder", getCurrentOrder);
+router.post("/placeOrder", checkExistingOrder, countOrders, placeOrder);
+router.post("/fetchOrders", fetchOrders);
+router.get("/getExistingOrder", getExistingOrder);
 
 module.exports = router;

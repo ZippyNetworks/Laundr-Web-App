@@ -44,17 +44,14 @@ class AcceptedDashboard extends Component {
   getOrders = async () => {
     try {
       const currentUser = getCurrentUser();
-      const response = await axios.get(baseURL + "/order/getOrders");
+      const response = await axios.post(baseURL + "/order/fetchOrders", {
+        statuses: [1, 2, 5],
+      });
 
       if (response.data.success) {
         //filter only status 0 and 4
         const filteredOrders = response.data.message.filter((order) => {
-          return (
-            (order.orderInfo.status === 1 ||
-              order.orderInfo.status === 2 ||
-              order.orderInfo.status === 5) &&
-            order.pickupInfo.driverEmail === currentUser.email
-          );
+          return order.pickupInfo.driverEmail === currentUser.email;
         });
 
         this.setState({ orders: filteredOrders });
