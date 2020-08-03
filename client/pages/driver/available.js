@@ -38,6 +38,7 @@ class AvailableDashboard extends Component {
     await this.getOrders();
   };
 
+  //todo: move to helper
   getOrders = async () => {
     try {
       const currentUser = getCurrentUser();
@@ -105,7 +106,7 @@ class AvailableDashboard extends Component {
   };
 
   render() {
-    const classes = this.props.classes;
+    const { classes } = this.props;
 
     return (
       <Layout>
