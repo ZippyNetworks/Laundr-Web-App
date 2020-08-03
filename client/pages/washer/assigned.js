@@ -40,14 +40,16 @@ class AssignedDashboard extends Component {
       const currentUser = getCurrentUser();
       const response = await axios.post(baseURL + "/order/fetchOrders", {
         statuses: [3],
+        filter: true,
+        filterConfig: "washerAssigned",
+        filterEmail: currentUser.email,
       });
 
       if (response.data.success) {
-        const filteredOrders = response.data.message.filter((order) => {
-          return order.washerInfo.email === washerEmail;
+        this.setState({
+          orders: response.data.message,
+          userFname: currentUser.fname,
         });
-
-        this.setState({ orders: filteredOrders, userFname: currentUser.fname });
       } else {
         showDefaultError("getting orders", 99);
       }

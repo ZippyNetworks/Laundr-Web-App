@@ -44,6 +44,7 @@ class AvailableDashboard extends Component {
       const currentUser = getCurrentUser();
       const response = await axios.post(baseURL + "/order/fetchOrders", {
         statuses: [0, 4],
+        filter: false,
       });
 
       if (response.data.success) {

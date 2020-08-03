@@ -105,10 +105,35 @@ const placeOrder = async (req, res) => {
 };
 
 const fetchOrders = async (req, res) => {
+  //filter by email here so other info not leaked
   try {
     const statuses = req.body.statuses;
+    const filter = req.body.filter;
 
     const orders = await Order.find().where("orderInfo.status").in(statuses);
+
+    //if any filtering by email needs to be applied
+    if (filter) {
+      const filterConfig = req.body.filterConfig;
+      const filterEmail = req.body.filterEmail;
+
+      switch (filterConfig) {
+        case "driverAccepted":
+          orders = orders.filter((order) => {
+            return (
+              order.pickupInfo.driverEmail === filterEmail ||
+              order.dropoffInfo.driverEmail === filterEmail
+            );
+          });
+          break;
+
+        case "washerAssigned":
+          orders = orders.filter((order) => {
+            return order.washerInfo.email === filterEmail;
+          });
+          break;
+      }
+    }
 
     return res.json({ success: true, message: orders });
   } catch (error) {
