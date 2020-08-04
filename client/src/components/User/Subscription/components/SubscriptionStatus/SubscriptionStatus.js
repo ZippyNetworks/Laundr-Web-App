@@ -11,16 +11,13 @@ import {
   CardActions,
 } from "@material-ui/core";
 import { getCurrentUser, updateToken } from "../../../../../helpers/session";
-import {
-  showDefaultError,
-  showConsoleError,
-} from "../../../../../helpers/errors";
+import { caughtError, showConsoleError } from "../../../../../helpers/errors";
 import PropTypes from "prop-types";
 import axios from "axios";
 import ReactScoreIndicator from "react-score-indicator";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import jwtDecode from "jwt-decode";
+import MainAppContext from "../../../../../contexts/MainAppContext";
 import baseURL from "../../../../../baseURL";
 import subscriptionStatusStyles from "../../../../../styles/User/Subscription/components/SubscriptionStatus/subscriptionStatusStyles";
 
@@ -38,6 +35,8 @@ const doughnutColors = [
 ];
 
 class SubscriptionStatus extends Component {
+  static contextType = MainAppContext;
+
   renderMaxLbs = () => {
     switch (this.props.subscription.plan) {
       case "Student":
@@ -76,11 +75,13 @@ class SubscriptionStatus extends Component {
       if (response.data.success) {
         window.open(response.data.message, "_self");
       } else {
-        showDefaultError("creating self-service portal", 99);
+        this.context.showAlert(response.data.message);
       }
     } catch (error) {
-      showConsoleError("creating self-service portal", error);
-      showDefaultError("creating self-service portal", error, 99);
+      showConsoleError("creating self service portal", error);
+      this.context.showAlert(
+        caughtError("creating self service portal", error, 99)
+      );
     }
   };
 

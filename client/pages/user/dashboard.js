@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { Grid, withStyles, Paper, Typography } from "@material-ui/core";
 import { Layout } from "../../src/layouts";
 import { getCurrentUser } from "../../src/helpers/session";
-import { showDefaultError, showConsoleError } from "../../src/helpers/errors";
+import { caughtError, showConsoleError } from "../../src/helpers/errors";
 import { Loading } from "../../src/utility";
 import PropTypes from "prop-types";
 import axios from "axios";
+import MainAppContext from "../../src/contexts/MainAppContext";
 import baseURL from "../../src/baseURL";
 import NewOrder from "../../src/components/User/Dashboard/components/NewOrder/NewOrder";
 import OrderStatus from "../../src/components/User/Dashboard/components/OrderStatus/OrderStatus";
@@ -50,6 +51,8 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //todo: add progress circle to buttons for submission actions
 
 class Dashboard extends Component {
+  static contextType = MainAppContext;
+
   state = {
     loading: true,
     orderComponent: null,
@@ -90,12 +93,11 @@ class Dashboard extends Component {
           loading: false,
         });
       } else {
-        //todo: this will be the error message from the server. like in eat me
-        showDefaultError("fetching orders", 1);
+        this.context.showAlert(response.data.message);
       }
     } catch (error) {
-      showConsoleError("Error with fetching order info: ", error);
-      showDefaultError("fetching order info", error, 2);
+      showConsoleError("fetching order info", error);
+      this.context.showAlert(caughtError("fetching order info", error, 99));
     }
   };
 

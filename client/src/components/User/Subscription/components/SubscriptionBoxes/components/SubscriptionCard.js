@@ -12,12 +12,12 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 import { getCurrentUser, updateToken } from "../../../../../../helpers/session";
 import {
-  showDefaultError,
+  caughtError,
   showConsoleError,
 } from "../../../../../../helpers/errors";
 import PropTypes from "prop-types";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import MainAppContext from "../../../../../../contexts/MainAppContext";
 import baseURL from "../../../../../../baseURL";
 import subscriptionCardStyles from "../../../../../../styles/User/Subscription/components/SubscriptionBoxes/components/subscriptionCardStyles";
 
@@ -30,6 +30,8 @@ const stripeKEY =
 const stripePromise = loadStripe(stripeKEY);
 
 class SubscriptionCard extends Component {
+  static contextType = MainAppContext;
+
   handlePurchase = async () => {
     // When the customer clicks on the button, redirect them to Checkout.
     // Call your backend to create the Checkout session.
@@ -57,11 +59,13 @@ class SubscriptionCard extends Component {
           showDefaultError(error.message, 99);
         }
       } else {
-        showDefaultError("creating checkout session", 99);
+        this.context.showAlert(response.data.message);
       }
     } catch (error) {
       showConsoleError("creating checkout session", error);
-      showDefaultError("creating checkout session", error, 99);
+      this.context.showAlert(
+        caughtError("creating checkout session", error, 99)
+      );
     }
   };
 

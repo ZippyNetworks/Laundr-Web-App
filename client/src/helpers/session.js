@@ -1,4 +1,4 @@
-import { showDefaultError } from "./errors";
+import { caughtError, showConsoleError } from "./errors";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import baseURL from "../baseURL";
@@ -20,7 +20,7 @@ export const getCurrentUser = () => {
   } else {
     //todo: will change when switch to cookies
     console.log(
-      "Error with retrieving current user. Please make sure localStorage is enabled, relog, and try again."
+      "Error with retrieving current user. Please make sure localStorage is enabled."
     );
     return null;
   }
@@ -39,11 +39,10 @@ export const updateToken = async (userEmail) => {
       const token = response.data.token;
       localStorage.setItem("token", token);
     } else {
-      //will change based on server error msg
-      showDefaultError("updating token", 100);
+      alert(response.data.message);
     }
   } catch (error) {
-    console.log("Error with updating token: ", error);
-    showDefaultError("updating token", error, 99);
+    showConsoleError("updating token", error);
+    alert(caughtError("updating token", error, 99));
   }
 };

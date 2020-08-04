@@ -19,10 +19,10 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { getCurrentUser, updateToken } from "../../../../helpers/session";
-import { showDefaultError, showConsoleError } from "../../../../helpers/errors";
+import { caughtError, showConsoleError } from "../../../../helpers/errors";
 import PropTypes from "prop-types";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import MainAppContext from "../../../../contexts/MainAppContext";
 import baseURL from "../../../../baseURL";
 import paymentInfoStyles from "../../../../styles/User/Account/components/paymentInfoStyles";
 
@@ -57,6 +57,8 @@ const CARD_ELEMENT_OPTIONS = {
 };
 
 class PaymentInfo extends Component {
+  static contextType = MainAppContext;
+
   state = {
     showPaymentUpdate: false,
     card: {
@@ -89,10 +91,12 @@ class PaymentInfo extends Component {
           this.setState({
             card: cardInfo,
           });
+        } else {
+          this.context.showAlert(response.data.message);
         }
       } catch (error) {
         showConsoleError("getting card details", error);
-        showDefaultError("getting card details", error, 99);
+        this.context.showAlert(caughtError("getting card details", error, 99));
       }
     }
   };
@@ -114,11 +118,11 @@ class PaymentInfo extends Component {
       if (response.data.success) {
         secret = response.data.message;
       } else {
-        showDefaultError("creating setup intent", 99);
+        this.context.showAlert(response.data.message);
       }
     } catch (error) {
       showConsoleError("creating setup intent", error);
-      showDefaultError("creating setup intent", error, 99);
+      this.context.showAlert(caughtError("creating setup intent", error, 99));
     }
 
     return secret;
@@ -165,11 +169,11 @@ class PaymentInfo extends Component {
           await updateToken(currentuser.email);
           alert("Card successfully updated!");
         } else {
-          showDefaultError("updating card", 99);
+          this.context.showAlert(response.data.message);
         }
       } catch (error) {
         showConsoleError("updating card", error);
-        showDefaultError("updating card", error, 99);
+        this.context.showAlert(caughtError("updating card", error, 99));
       }
     }
   };
