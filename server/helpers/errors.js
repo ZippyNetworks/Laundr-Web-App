@@ -1,5 +1,5 @@
 const showConsoleError = (task, error) => {
-  console.log(`Error with ${task}: ${error}`);
+  console.error(`Error with ${task}: ${error}`);
 };
 
 const caughtError = (task) => {

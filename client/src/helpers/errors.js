@@ -6,5 +6,5 @@ export const showDefaultError = (task, code) => {
 };
 
 export const showConsoleError = (task, error) => {
-  console.log(`Error with ${task}: ${error}`);
+  console.warn(`Error with ${task}: ${error}`);
 };

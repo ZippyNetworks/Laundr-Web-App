@@ -18,7 +18,7 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //-add loading...only to components that need to fetch data from the user? for example login doesnt have it and uses localstorage, but not while rendering i guess? whereas dashboard needs it to prevent localstorage error.
 //^^ figure out, also use getstaticprops for fetching something like orders? keep loading until everything is fetched, so if theres an error the loading stays
 //^^also, loading on only main pages (after logged in, before main component rendered aka sidebar and topbar are there tho)? or different loading for individual components/fullscreen (like from login)
-//findOneAndUpdate where possible, add ${error} to caughtError string
+//findOneAndUpdate where possible, add ${error} to caughtError string and also shown error
 
 //-individual components (use helpers and loading component)
 //-change error messages to use console and default error/restructure frontend error messages properly
