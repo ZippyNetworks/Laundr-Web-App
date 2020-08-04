@@ -157,7 +157,7 @@ class PaymentInfo extends Component {
       // card to a Customer
       try {
         const response = await axios.post(baseURL + "/stripe/setRegPaymentID", {
-          userEmail: currentUser.email,
+          email: currentUser.email,
           regPaymentID: result.setupIntent.payment_method,
         });
 

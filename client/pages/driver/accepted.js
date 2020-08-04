@@ -122,7 +122,7 @@ class AcceptedDashboard extends Component {
 
       const response = await axios.post(baseURL + "/stripe/chargeCustomer", {
         weight: this.state.weight,
-        userEmail: email,
+        email: email,
       });
 
       success.status = response.data.success;

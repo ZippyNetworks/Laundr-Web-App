@@ -1,7 +1,7 @@
 const {
     createCheckoutSession,
     createSetupIntent,
-    fetchUser,
+    findUser,
     chargeCustomer,
     updateSubscriptionLbs,
     createSelfPortal,
@@ -14,16 +14,9 @@ const {
 
 router.post("/createCheckoutSession", createCheckoutSession);
 router.post("/createSetupIntent", createSetupIntent);
-//todo: add middleware to routes like this! move fetchuser middleware to usercontroller. have one for findbyphone and findbyemail
-//think of other middlewares to add to reduce repeated code!
-router.post(
-  "/chargeCustomer",
-  fetchUser,
-  chargeCustomer,
-  updateSubscriptionLbs
-);
+router.post("/chargeCustomer", findUser, chargeCustomer, updateSubscriptionLbs);
 router.post("/getCardDetails", getCardDetails);
-router.post("/setRegPaymentID", setRegPaymentID, detachOldPaymentID);
+router.post("/setRegPaymentID", findUser, setRegPaymentID);
 router.post("/createSelfPortal", createSelfPortal);
 
 module.exports = router;

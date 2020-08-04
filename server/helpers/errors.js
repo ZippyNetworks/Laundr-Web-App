@@ -3,7 +3,7 @@ const showConsoleError = (task, error) => {
 };
 
 const caughtError = (task) => {
-  return `Error with ${task}. Please try again. If this issue continues, contact us.`;
+  return `Error with ${task}. Please contact us.`;
 };
 
 module.exports = { showConsoleError, caughtError };
