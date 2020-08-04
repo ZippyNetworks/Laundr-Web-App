@@ -24,9 +24,10 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import { withRouter } from "next/router";
-import { showDefaultError } from "../src/helpers/errors";
+import { caughtError, showConsoleError } from "../src/helpers/errors";
 import compose from "recompose/compose";
 import PropTypes from "prop-types";
+import MainAppContext from "../src/contexts/MainAppContext";
 import registerStyles from "../src/styles/registerStyles";
 import axios from "axios";
 import baseURL from "../src/baseURL";
@@ -67,6 +68,8 @@ function Copyright() {
 }
 
 class Register extends Component {
+  static contextType = MainAppContext;
+
   state = {
     fname: "", //inputs
     lname: "",
@@ -123,11 +126,13 @@ class Register extends Component {
                     }
                   );
                 } else {
-                  showDefaultError("sending verification code", 10);
+                  this.context.showAlert(response.data.message);
                 }
               } catch (error) {
-                console.log("Error with sending verification code: ", error);
-                showDefaultError("sending verification code", 9);
+                showConsoleError("sending verification code", error);
+                this.context.showAlert(
+                  caughtError("sending verification code", error, 99)
+                );
               }
               break;
 
@@ -156,13 +161,13 @@ class Register extends Component {
               break;
           }
         } else {
-          //todo: might be different depending on how error messages change in server
-          console.log("Error with checking for duplicate email/phone.");
-          showDefaultError("checking for duplicate phone/email", 8);
+          this.context.showAlert(response.data.message);
         }
       } catch (error) {
-        console.log("Error with checking for duplicate email/phone: ", error);
-        showDefaultError("checking for duplicate phone/email", 7);
+        showConsoleError("checking for duplicate phone/email", error);
+        this.context.showAlert(
+          caughtError("checking for duplicate phone/email", error, 99)
+        );
       }
     }
   };
@@ -365,15 +370,11 @@ class Register extends Component {
             }
           );
         } else {
-          this.setState({
-            showGeneralDialog: true,
-            generalDialogMsg:
-              "There was an error during registration. Please try again.",
-          });
+          this.context.showAlert(response.data.message);
         }
       } catch (error) {
-        console.log("Error with registering: ", error);
-        showDefaultError("registering", 11);
+        showConsoleError("registering", error);
+        this.context.showAlert(caughtError("registering", error, 99));
       }
     }
   };
@@ -429,23 +430,6 @@ class Register extends Component {
           <Typography component="h1" variant="h5">
             Register
           </Typography>
-          <Dialog
-            open={this.state.showGeneralDialog}
-            onClose={this.toggleGeneralDialog}
-            aria-labelledby="form-dialog-title"
-          >
-            <DialogTitle id="form-dialog-title">Alert</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                {this.state.generalDialogMsg}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.toggleGeneralDialog} color="primary">
-                Okay
-              </Button>
-            </DialogActions>
-          </Dialog>
           <Dialog
             open={this.state.showVerifyDialog}
             onClose={this.toggleVerifyDialog}

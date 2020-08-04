@@ -61,7 +61,7 @@ class SubscriptionCard extends Component {
       }
     } catch (error) {
       showConsoleError("creating checkout session", error);
-      showDefaultError("creating checkout session", 99);
+      showDefaultError("creating checkout session", error, 99);
     }
   };
 

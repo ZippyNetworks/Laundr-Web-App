@@ -17,10 +17,11 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 import { withRouter } from "next/router";
-import { showDefaultError } from "../src/helpers/errors";
+import { caughtError, showConsoleError } from "../src/helpers/errors";
 import compose from "recompose/compose";
 import PropTypes from "prop-types";
 import jwtDecode from "jwt-decode";
+import MainAppContext from "../src/contexts/MainAppContext";
 import loginStyles from "../src/styles/loginStyles";
 import axios from "axios";
 import baseURL from "../src/baseURL";
@@ -52,12 +53,15 @@ function Copyright() {
 }
 
 class Login extends Component {
+  static contextType = MainAppContext;
+
   state = {
     email: "",
     password: "",
     emailError: false,
     passwordError: false,
     showErrorDialog: false,
+    errorDialogMsg: "",
     emailErrorMsg: "",
     passwordErrorMsg: "",
     loggedIn: false,
@@ -94,12 +98,11 @@ class Login extends Component {
             isAdmin: data.isAdmin,
           });
         } else {
-          //todo: will include a message from the server when error messages are refactored there
-          this.setState({ showErrorDialog: true });
+          this.context.showAlert(response.data.message);
         }
       } catch (error) {
-        console.log("Error with logging in: ", error);
-        showDefaultError("logging in", 6);
+        showConsoleError("logging in", error);
+        this.context.showAlert(caughtError("logging in", error, 99));
       }
     }
   };
@@ -194,23 +197,6 @@ class Login extends Component {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Dialog
-            open={this.state.showErrorDialog}
-            onClose={this.toggleDialog}
-            aria-labelledby="form-dialog-title"
-          >
-            <DialogTitle id="form-dialog-title">Alert</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Email or password is incorrect. Please try again.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.toggleDialog} color="primary">
-                Okay
-              </Button>
-            </DialogActions>
-          </Dialog>
           <form className={classes.form} onSubmit={this.handleLogin}>
             <TextField
               variant="outlined"

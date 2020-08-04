@@ -62,7 +62,7 @@ const createCheckoutSession = async (req, res) => {
     showConsoleError("creating Checkout session", error);
     return res.json({
       success: false,
-      message: caughtError("creating Checkout session"),
+      message: caughtError("creating Checkout session", error),
     });
   }
 };
@@ -78,7 +78,7 @@ const createSetupIntent = async (req, res) => {
     showConsoleError("creating card setup intent", error);
     return res.json({
       success: false,
-      message: caughtError("creating card setup intent"),
+      message: caughtError("creating card setup intent", error),
     });
   }
 };
@@ -97,7 +97,7 @@ const getCardDetails = async (req, res) => {
     showConsoleError("getting card details", error);
     return res.json({
       success: false,
-      message: caughtError("getting card details"),
+      message: caughtError("getting card details", error),
     });
   }
 };
@@ -123,7 +123,7 @@ const setRegPaymentID = async (req, res, next) => {
     showConsoleError("setting payment ID", error);
     return res.json({
       success: false,
-      message: caughtError("setting payment ID"),
+      message: caughtError("setting payment ID", error),
     });
   }
 };
@@ -208,7 +208,7 @@ const updateSubscriptionLbs = async (req, res) => {
     showConsoleError("updating subscription lbs", error);
     return res.json({
       success: false,
-      message: caughtError("updating subscription lbs"),
+      message: caughtError("updating subscription lbs", error, 99),
     });
   }
 };
@@ -232,7 +232,7 @@ const findUser = async (req, res, next) => {
     showConsoleError("finding user", error);
     return res.json({
       success: false,
-      message: caughtError("finding user"),
+      message: caughtError("finding user", error, 99),
     });
   }
 };
@@ -251,7 +251,7 @@ const createSelfPortal = async (req, res) => {
   } catch (error) {
     return res.json({
       success: false,
-      message: error,
+      message: caughtError("creating self service portal", error, 99),
     });
   }
 };

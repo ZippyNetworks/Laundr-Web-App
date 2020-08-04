@@ -92,7 +92,7 @@ class PaymentInfo extends Component {
         }
       } catch (error) {
         showConsoleError("getting card details", error);
-        showDefaultError("getting card details", 99);
+        showDefaultError("getting card details", error, 99);
       }
     }
   };
@@ -118,7 +118,7 @@ class PaymentInfo extends Component {
       }
     } catch (error) {
       showConsoleError("creating setup intent", error);
-      showDefaultError("creating setup intent", 99);
+      showDefaultError("creating setup intent", error, 99);
     }
 
     return secret;
@@ -169,7 +169,7 @@ class PaymentInfo extends Component {
         }
       } catch (error) {
         showConsoleError("updating card", error);
-        showDefaultError("updating card", 99);
+        showDefaultError("updating card", error, 99);
       }
     }
   };

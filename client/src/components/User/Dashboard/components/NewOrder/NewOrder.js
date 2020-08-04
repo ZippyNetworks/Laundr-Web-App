@@ -12,7 +12,10 @@ import {
   CardContent,
 } from "@material-ui/core";
 import { getCurrentUser } from "../../../../../helpers/session";
-import { showDefaultError } from "../../../../../helpers/errors";
+import {
+  showDefaultError,
+  showConsoleError,
+} from "../../../../../helpers/errors";
 import PropTypes from "prop-types";
 import Geocode from "react-geocode";
 import jwtDecode from "jwt-decode";
@@ -268,8 +271,8 @@ class NewOrder extends Component {
         return false;
       }
     } catch (error) {
-      console.log("Error with placing order: ", error);
-      showDefaultError("placing order", 4);
+      showConsoleError("Error with placing order: ", error);
+      showDefaultError("placing order", error, 4);
       return false;
     }
   };
@@ -369,8 +372,8 @@ class NewOrder extends Component {
         });
       },
       (error) => {
-        console.log("Error with selecting address: ", error);
-        showDefaultError("selecting address", 5);
+        showConsoleError("Error with selecting address: ", error);
+        showDefaultError("selecting address", error, 5);
       }
     );
   };

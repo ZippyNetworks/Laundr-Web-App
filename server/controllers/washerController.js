@@ -20,7 +20,7 @@ const findOrder = async (req, res, next) => {
     showConsoleError("finding order", error);
     return res.json({
       success: false,
-      message: caughtError("finding order"),
+      message: caughtError("finding order", error, 99),
     });
   }
 };
@@ -48,7 +48,7 @@ const setWasherDone = async (req, res) => {
     showConsoleError("setting order as done by washer", error);
     return res.json({
       success: false,
-      message: caughtError("setting order as done by washer"),
+      message: caughtError("setting order as done by washer", error, 99),
     });
   }
 };

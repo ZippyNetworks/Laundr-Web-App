@@ -8,7 +8,7 @@ const authToken =
 const client = require("twilio")(accountSID, authToken);
 const from = process.env.TWILIO_FROM || require("../config/config").twilio.from;
 
-const twilioVerify = async (req, res) => {
+const verifyPhone = async (req, res) => {
   try {
     const code = cryptoRandomString({ length: 6, type: "numeric" });
 
@@ -29,9 +29,9 @@ const twilioVerify = async (req, res) => {
     showConsoleError("sending verification code", error);
     return res.json({
       success: false,
-      message: caughtError("sending verification code"),
+      message: caughtError("sending verification code", error, 99),
     });
   }
 };
 
-module.exports = { twilioVerify };
+module.exports = { verifyPhone };

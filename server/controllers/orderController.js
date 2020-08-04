@@ -22,7 +22,7 @@ const checkExistingOrder = async (req, res, next) => {
     showConsoleError("checking existing order", error);
     return res.json({
       success: false,
-      message: caughtError("checking existing order"),
+      message: caughtError("checking existing order", error, 99),
     });
   }
 };
@@ -42,7 +42,7 @@ const countOrders = async (req, res, next) => {
     showConsoleError("counting orders", error);
     return res.json({
       success: false,
-      message: caughtError("counting orders"),
+      message: caughtError("counting orders", error, 99),
     });
   }
 };
@@ -99,7 +99,7 @@ const placeOrder = async (req, res) => {
     showConsoleError("placing order", error);
     return res.json({
       success: false,
-      message: caughtError("placing order"),
+      message: caughtError("placing order", error, 99),
     });
   }
 };
@@ -140,7 +140,7 @@ const fetchOrders = async (req, res) => {
     showConsoleError("getting orders", error);
     return res.json({
       success: false,
-      message: caughtError("getting orders"),
+      message: caughtError("getting orders", error, 99),
     });
   }
 };
@@ -168,7 +168,7 @@ const getExistingOrder = async (req, res) => {
     showConsoleError("getting existing order", error);
     return res.json({
       success: false,
-      message: caughtError("getting existing order"),
+      message: caughtError("getting existing order", error, 99),
     });
   }
 };

@@ -55,7 +55,7 @@ class AssignedDashboard extends Component {
       }
     } catch (error) {
       showConsoleError("getting orders", error);
-      showDefaultError("getting orders", 99);
+      showDefaultError("getting orders", error, 99);
     }
   };
 
@@ -72,7 +72,7 @@ class AssignedDashboard extends Component {
       success = response.data.success;
     } catch (error) {
       showConsoleError("setting order as done by washer", error);
-      showDefaultError("setting order as done by washer");
+      showDefaultError("setting order as done by washer", error, 99);
     }
 
     return success;

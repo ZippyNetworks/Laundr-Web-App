@@ -44,6 +44,6 @@ export const updateToken = async (userEmail) => {
     }
   } catch (error) {
     console.log("Error with updating token: ", error);
-    showDefaultError("updating token", 99);
+    showDefaultError("updating token", error, 99);
   }
 };

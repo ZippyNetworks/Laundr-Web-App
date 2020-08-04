@@ -57,7 +57,7 @@ class AvailableDashboard extends Component {
       }
     } catch (error) {
       showConsoleError("getting orders", error);
-      showDefaultError("getting orders", 99);
+      showDefaultError("getting orders", error, 99);
     }
   };
 
@@ -76,7 +76,7 @@ class AvailableDashboard extends Component {
       success = response.data.success;
     } catch (error) {
       showConsoleError("accepting order", error);
-      showDefaultError("accepting order");
+      showDefaultError("accepting order", error, 99);
     }
 
     return success;
@@ -97,7 +97,7 @@ class AvailableDashboard extends Component {
       success = response.data.success;
     } catch (error) {
       showConsoleError("setting order as dropped off", error);
-      showDefaultError("setting order as dropped off");
+      showDefaultError("setting order as dropped off", error, 99);
     }
 
     return success;

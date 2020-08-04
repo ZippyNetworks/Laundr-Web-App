@@ -27,7 +27,7 @@ const checkDuplicate = async (req, res) => {
     showConsoleError("checking for duplicate email and phone", error);
     return res.json({
       success: false,
-      message: caughtError("checking for duplicate email and phone"),
+      message: caughtError("checking for duplicate email and phone", error, 99),
     });
   }
 };
@@ -76,7 +76,7 @@ const register = async (req, res) => {
     showConsoleError("creating user", error);
     return res.json({
       success: false,
-      message: caughtError("creating user"),
+      message: caughtError("creating user", error, 99),
     });
   }
 };
@@ -102,10 +102,9 @@ const login = async (req, res) => {
     }
   } catch (error) {
     showConsoleError("logging in", error);
-
     return res.json({
       success: false,
-      message: caughtError("logging in"),
+      message: caughtError("logging in", error, 99),
     });
   }
 };
@@ -131,10 +130,9 @@ const updateToken = async (req, res) => {
     }
   } catch (error) {
     showConsoleError("updating token", error);
-
     return res.json({
       success: false,
-      message: caughtError("updating token"),
+      message: caughtError("updating token", error, 99),
     });
   }
 };

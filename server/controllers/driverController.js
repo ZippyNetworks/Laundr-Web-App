@@ -23,7 +23,7 @@ const findOrder = async (req, res, next) => {
     showConsoleError("finding order", error);
     return res.json({
       success: false,
-      message: caughtError("finding order"),
+      message: caughtError("finding order", error, 99),
     });
   }
 };
@@ -53,7 +53,7 @@ const assignOrderPickup = async (req, res) => {
     showConsoleError("assigning initial pickup driver", error);
     return res.json({
       success: false,
-      message: caughtError("assigning initial pickup driver"),
+      message: caughtError("assigning initial pickup driver", error, 99),
     });
   }
 };
@@ -82,7 +82,7 @@ const enterOrderWeight = async (req, res) => {
     showConsoleError("entering order weight", error);
     return res.json({
       success: false,
-      message: caughtError("entering order weight"),
+      message: caughtError("entering order weight", error, 99),
     });
   }
 };
@@ -110,7 +110,7 @@ const setWasherDelivered = async (req, res) => {
     showConsoleError("confirming washer delivery", error);
     return res.json({
       success: false,
-      message: caughtError("confirming washer delivery"),
+      message: caughtError("confirming washer delivery", error, 99),
     });
   }
 };
@@ -139,7 +139,7 @@ const assignOrderDropoff = async (req, res) => {
     showConsoleError("assigning final dropoff driver", error);
     return res.json({
       success: false,
-      message: caughtError("assigning final dropoff driver"),
+      message: caughtError("assigning final dropoff driver", error, 99),
     });
   }
 };
@@ -167,7 +167,7 @@ const setUserDelivered = async (req, res) => {
     showConsoleError("marking as delivered to user", error);
     return res.json({
       success: false,
-      message: caughtError("marking as delivered to user"),
+      message: caughtError("marking as delivered to user", error, 99),
     });
   }
 };

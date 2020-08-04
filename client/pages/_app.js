@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -12,10 +12,13 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import MainAppContext from "../src/contexts/MainAppContext";
 import theme from "../src/theme";
 
 const MyApp = (props) => {
   const { Component, pageProps } = props;
+  const [showAlertDialog, setShowAlertDialog] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -24,6 +27,15 @@ const MyApp = (props) => {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
+
+  const closeAlertDialog = () => {
+    setShowAlertDialog(false);
+  };
+
+  const showAlert = (message) => {
+    setAlertMessage(message);
+    setShowAlertDialog(true);
+  };
 
   return (
     <React.Fragment>
@@ -37,30 +49,25 @@ const MyApp = (props) => {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        {/* <Dialog
-          open={true}
-          // onClose={this.toggleDialog}
-          PaperProps={{
-            style: {
-              backgroundColor: "transparent",
-              boxShadow: "none",
-              justifyContent: "center",
-              alignItems: "center",
-            },
-          }}
-          container={() => document.getElementById("mainAppContainer")}
-          style={{
-            position: "absolute",
-            zIndex: 1,
-            display: "flex",
-            justifyContent: "center",
-          }}
+        {/*todo: make zindex of this high enough to be able to click out of it if youre also in the middle of loading */}
+        <Dialog
+          open={showAlertDialog}
+          onClose={closeAlertDialog}
+          aria-labelledby="form-dialog-title"
         >
+          <DialogTitle id="form-dialog-title">Alert</DialogTitle>
           <DialogContent>
-            <CircularProgress size={50} thickness={5} />
+            <DialogContentText>{alertMessage}</DialogContentText>
           </DialogContent>
-        </Dialog> */}
-        <Component {...pageProps} />
+          <DialogActions>
+            <Button onClick={closeAlertDialog} color="primary">
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <MainAppContext.Provider value={{ showAlert: showAlert }}>
+          <Component {...pageProps} />
+        </MainAppContext.Provider>
       </ThemeProvider>
     </React.Fragment>
   );

@@ -80,7 +80,7 @@ class SubscriptionStatus extends Component {
       }
     } catch (error) {
       showConsoleError("creating self-service portal", error);
-      showDefaultError("creating self-service portal", 99);
+      showDefaultError("creating self-service portal", error, 99);
     }
   };
 

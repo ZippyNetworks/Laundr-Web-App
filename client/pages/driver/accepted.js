@@ -58,7 +58,7 @@ class AcceptedDashboard extends Component {
       }
     } catch (error) {
       showConsoleError("getting orders", error);
-      showDefaultError("getting orders", 99);
+      showDefaultError("getting orders", error, 99);
     }
   };
 
@@ -108,7 +108,7 @@ class AcceptedDashboard extends Component {
       success = response.data.success;
     } catch (error) {
       showConsoleError("entering weight", error);
-      showDefaultError("entering weight", 99);
+      showDefaultError("entering weight", error, 99);
     }
 
     return success;
@@ -129,7 +129,7 @@ class AcceptedDashboard extends Component {
       success.message = response.data.message;
     } catch (error) {
       showConsoleError("charging customer", error);
-      showDefaultError("charging customer", 99);
+      showDefaultError("charging customer", error, 99);
     }
 
     return success;
@@ -148,7 +148,7 @@ class AcceptedDashboard extends Component {
       success = response.data.success;
     } catch (error) {
       showConsoleError("setting order as received by washer", error);
-      showDefaultError("setting order as received by washer", 99);
+      showDefaultError("setting order as received by washer", error, 99);
     }
 
     return success;
@@ -167,7 +167,7 @@ class AcceptedDashboard extends Component {
       success = response.data.success;
     } catch (error) {
       showConsoleError("setting order as delivered", error);
-      showDefaultError("setting order as delivered", 99);
+      showDefaultError("setting order as delivered", error, 99);
     }
 
     return success;

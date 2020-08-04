@@ -1,9 +1,9 @@
-const showConsoleError = (task, error) => {
-  console.error(`Error with ${task}: ${error}`);
+const caughtError = (task, error, code) => {
+  return `Error with ${task}: ${error}. Please contact us or try again later. Error code: ${code}`;
 };
 
-const caughtError = (task) => {
-  return `Error with ${task}. Please contact us.`;
+const showConsoleError = (task, error) => {
+  console.warn(`Error with ${task}: ${error}`);
 };
 
 module.exports = { showConsoleError, caughtError };

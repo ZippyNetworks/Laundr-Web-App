@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Grid, withStyles, Paper, Typography } from "@material-ui/core";
 import { Layout } from "../../src/layouts";
 import { getCurrentUser } from "../../src/helpers/session";
-import { showDefaultError } from "../../src/helpers/errors";
+import { showDefaultError, showConsoleError } from "../../src/helpers/errors";
 import { Loading } from "../../src/utility";
 import PropTypes from "prop-types";
 import axios from "axios";
@@ -28,6 +28,7 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //-styles as named exports, restructure folders and change file names?
 //-server stuff: error messages (need to update frontend to consume them), middleware, remove chained promises, put/post/get
 //fix MUI grid spacing causing negative margin (horizontal scrollbar)
+//errors: caught (use showConsole and this.context.showAlert(caughtError(stuff))), res.data.success (use this.context.showalert(res.data.message))
 
 //todo: implement status 8 feature for order status when order is delivered
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile
@@ -93,8 +94,8 @@ class Dashboard extends Component {
         showDefaultError("fetching orders", 1);
       }
     } catch (error) {
-      console.log("Error with fetching order info: ", error);
-      showDefaultError("fetching order info", 2);
+      showConsoleError("Error with fetching order info: ", error);
+      showDefaultError("fetching order info", error, 2);
     }
   };
 
