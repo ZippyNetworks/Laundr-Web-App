@@ -30,9 +30,9 @@ class OrderTable extends Component {
     showActionDialog: false,
     actionDialogTitle: "",
     currentOrder: null,
-    // openSnackbar: false,
-    // snackbarMessage: "",
-    // snackbarSuccess: true,
+    showNotification: false,
+    notificationMessage: "",
+    notificationSuccess: false,
   };
 
   renderStage = (stage) => {
@@ -101,14 +101,10 @@ class OrderTable extends Component {
             </Button>
             <Button
               onClick={async () => {
-                let success = await this.props.handleWasherDone(
+                const response = await this.props.handleWasherDone(
                   this.state.currentOrder
                 );
-                if (success) {
-                  this.renderDoneMsg();
-                } else {
-                  this.renderErrorDoneMsg();
-                }
+                this.showNotification(response.message, response.success);
               }}
               color="primary"
               variant="contained"
@@ -131,14 +127,6 @@ class OrderTable extends Component {
       //clear weight text field
       this.props.handleWeightChange("");
     }
-  };
-
-  renderDoneMsg = async () => {
-    await this.props.getOrders();
-  };
-
-  renderErrorDoneMsg = () => {
-    alert("error - placeholder");
   };
 
   renderWasherPrefs = (order) => {
@@ -172,6 +160,24 @@ class OrderTable extends Component {
     }
 
     return prefs;
+  };
+
+  showNotification = (message, success) => {
+    //close action dialog first
+    this.setState({ showActionDialog: false }, () => {
+      //show the notification
+      this.setState(
+        {
+          notificationMessage: message,
+          notificationSuccess: success,
+          showNotification: true,
+        },
+        () => {
+          //fetch orders after showing notification, so an invalid or valid order disappears
+          this.props.fetchOrders();
+        }
+      );
+    });
   };
 
   render() {
@@ -286,20 +292,20 @@ class OrderTable extends Component {
             </div>
           </PerfectScrollbar>
         </CardContent>
-        {/* <React.Fragment>
+        <React.Fragment>
           <Snackbar
             anchorOrigin={{
               vertical: "bottom",
               horizontal: "center",
             }}
-            open={this.state.openSnackbar}
-            autoHideDuration={6000}
+            open={this.state.showNotification}
+            autoHideDuration={10000}
             onClose={(event, reason) => {
               if (reason !== "clickaway") {
-                this.setState({ openSnackbar: false });
+                this.setState({ showNotification: false });
               }
             }}
-            message={this.state.snackbarMessage}
+            message={this.state.notificationMessage}
             action={
               <React.Fragment>
                 <IconButton
@@ -307,7 +313,7 @@ class OrderTable extends Component {
                   aria-label="close"
                   color="inherit"
                   onClick={() => {
-                    this.setState({ openSnackbar: false });
+                    this.setState({ showNotification: false });
                   }}
                 >
                   <Close fontSize="small" />
@@ -316,11 +322,13 @@ class OrderTable extends Component {
             }
             ContentProps={{
               style: {
-                backgroundColor: this.state.snackbarSuccess ? "green" : "red",
+                backgroundColor: this.state.notificationSuccess
+                  ? "green"
+                  : "red",
               },
             }}
           />
-        </React.Fragment> */}
+        </React.Fragment>
       </Card>
     );
   }

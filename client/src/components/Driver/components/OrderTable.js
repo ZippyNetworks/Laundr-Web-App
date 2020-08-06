@@ -588,7 +588,6 @@ class OrderTable extends Component {
           </div>
           {/* </PerfectScrollbar> */}
         </CardContent>
-
         <React.Fragment>
           <Snackbar
             anchorOrigin={{
@@ -596,7 +595,7 @@ class OrderTable extends Component {
               horizontal: "center",
             }}
             open={this.state.showNotification}
-            autoHideDuration={6000}
+            autoHideDuration={10000}
             onClose={(event, reason) => {
               if (reason !== "clickaway") {
                 this.setState({ showNotification: false });

@@ -33,10 +33,8 @@ const apiKEY =
   process.env.GOOGLE_MAPS_API_KEY ||
   require("../../../../../config").google.mapsKEY;
 
-//todo: add functionality for orlando users, check which city user is from
-
-//refactor priorities:
-//fix handlers in components (the change methods), fix address
+//refactor priorities: fix address
+//todo: no new order when payment method not added yet
 
 const steps = ["Scheduling", "Preferences", "Address", "Pricing", "Review"];
 

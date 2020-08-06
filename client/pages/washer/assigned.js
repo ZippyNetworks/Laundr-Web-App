@@ -8,11 +8,11 @@ import {
   Paper,
 } from "@material-ui/core";
 import { getCurrentUser, updateToken } from "../../src/helpers/session";
-import { showDefaultError, showConsoleError } from "../../src/helpers/errors";
+import { caughtError, showConsoleError } from "../../src/helpers/errors";
 import { Layout } from "../../src/layouts";
 import PropTypes from "prop-types";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import MainAppContext from "../../src/contexts/MainAppContext";
 import OrderTable from "../../src/components/Washer/AssignedDashboard/components/OrderTable";
 import baseURL from "../../src/baseURL";
 import assignedDashboardStyles from "../../src/styles/Washer/AssignedDashboard/assignedDashboardStyles";
@@ -29,13 +29,15 @@ import assignedDashboardStyles from "../../src/styles/Washer/AssignedDashboard/a
 //only display status 0 and 4, ones able to be "accepted"
 
 class AssignedDashboard extends Component {
+  static contextType = MainAppContext;
+
   state = { orders: [], userFname: "" };
 
   componentDidMount = async () => {
-    await this.getOrders();
+    await this.fetchOrders();
   };
 
-  getOrders = async () => {
+  fetchOrders = async () => {
     try {
       const currentUser = getCurrentUser();
       const response = await axios.post(baseURL + "/order/fetchOrders", {
@@ -51,17 +53,15 @@ class AssignedDashboard extends Component {
           userFname: currentUser.fname,
         });
       } else {
-        showDefaultError("getting orders", 99);
+        this.context.showAlert(response.data.message);
       }
     } catch (error) {
-      showConsoleError("getting orders", error);
-      showDefaultError("getting orders", error, 99);
+      showConsoleError("fetching orders", error);
+      this.context.showAlert(caughtError("fetching orders", error, 99));
     }
   };
 
   handleWasherDone = async (order) => {
-    let success = false;
-
     try {
       const orderID = order.orderInfo.orderID;
 
@@ -69,13 +69,14 @@ class AssignedDashboard extends Component {
         orderID,
       });
 
-      success = response.data.success;
+      return { success: response.data.success, message: response.data.message };
     } catch (error) {
       showConsoleError("setting order as done by washer", error);
-      showDefaultError("setting order as done by washer", error, 99);
+      return {
+        success: false,
+        message: caughtError("setting order as done by washer", error, 99),
+      };
     }
-
-    return success;
   };
 
   render() {
@@ -127,7 +128,7 @@ class AssignedDashboard extends Component {
         </Grid>
         <OrderTable
           orders={this.state.orders}
-          getOrders={this.getOrders}
+          fetchOrders={this.fetchOrders}
           handleWasherDone={this.handleWasherDone}
         />
       </Layout>

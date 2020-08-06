@@ -19,13 +19,13 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //-add loading...only to components that need to fetch data from the user? for example login doesnt have it and uses localstorage, but not while rendering i guess? whereas dashboard needs it to prevent localstorage error.
 //^^ figure out, also use getstaticprops for fetching something like orders? keep loading until everything is fetched, so if theres an error the loading stays
 //^^also, loading on only main pages (after logged in, before main component rendered aka sidebar and topbar are there tho)? or different loading for individual components/fullscreen (like from login)
-//findOneAndUpdate where possible, add ${error} to caughtError string and also shown error
+//findOneAndUpdate where possible,
 
 //-individual components (use helpers and loading component)
 //-implement update token helper
 //-fix places autocomplete on address
 //-imports (use index.js) from root for images, styles, deep components, etc.
-//-styles restructure folders and change file names?
+//-styles restructure folders and change file names, also restructure components folder
 //fix MUI grid spacing causing negative margin (horizontal scrollbar)
 //errors: caught (use showConsole and this.context.showAlert(caughtError(stuff))), res.data.success=false (use this.context.showalert(res.data.message))
 
