@@ -3,7 +3,7 @@ const caughtError = (task, error, code) => {
 };
 
 const showConsoleError = (task, error) => {
-  console.warn(`Error with ${task}: ${error}`);
+  console.warn(`Server: Error with ${task}: ${error}`);
 };
 
 module.exports = { showConsoleError, caughtError };

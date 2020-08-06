@@ -7,11 +7,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import { getCurrentUser, updateToken } from "../../src/helpers/session";
-import { showDefaultError, showConsoleError } from "../../src/helpers/errors";
+import { caughtError, showConsoleError } from "../../src/helpers/errors";
 import { Layout } from "../../src/layouts";
 import PropTypes from "prop-types";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import MainAppContext from "../../src/contexts/MainAppContext";
 import OrderTable from "../../src/components/Driver/components/OrderTable";
 import baseURL from "../../src/baseURL";
 import acceptedDashboardStyles from "../../src/styles/Driver/AcceptedDashboard/acceptedDashboardStyles";
@@ -30,6 +30,8 @@ import acceptedDashboardStyles from "../../src/styles/Driver/AcceptedDashboard/a
 //only display status 1 (need to enter weight), 2: (mark dropped to washer), 5: (mark delivered to user)
 
 class AcceptedDashboard extends Component {
+  static contextType = MainAppContext;
+
   state = {
     orders: [],
     weight: "",
@@ -38,10 +40,10 @@ class AcceptedDashboard extends Component {
   };
 
   componentDidMount = async () => {
-    await this.getOrders();
+    await this.fetchOrders();
   };
 
-  getOrders = async () => {
+  fetchOrders = async () => {
     try {
       const currentUser = getCurrentUser();
       const response = await axios.post(baseURL + "/order/fetchOrders", {
@@ -54,11 +56,11 @@ class AcceptedDashboard extends Component {
       if (response.data.success) {
         this.setState({ orders: response.data.message });
       } else {
-        showDefaultError("getting orders", 99);
+        this.context.showAlert(response.data.message);
       }
     } catch (error) {
       showConsoleError("getting orders", error);
-      showDefaultError("getting orders", error, 99);
+      this.context.showAlert(caughtError("fetching orders", error, 99));
     }
   };
 
@@ -94,29 +96,7 @@ class AcceptedDashboard extends Component {
     this.setState({ weightError: false, weightErrorMsg: "" });
   };
 
-  handleWeightEntered = async (order) => {
-    let success = false;
-
-    try {
-      const orderID = order.orderInfo.orderID;
-
-      const response = await axios.put(baseURL + "/driver/updateOrderWeight", {
-        weight: this.state.weight,
-        orderID,
-      });
-
-      success = response.data.success;
-    } catch (error) {
-      showConsoleError("entering weight", error);
-      showDefaultError("entering weight", error, 99);
-    }
-
-    return success;
-  };
-
   handleChargeCustomer = async (order) => {
-    let success = { status: false, message: "N/A" };
-
     try {
       const email = order.userInfo.email;
 
@@ -125,19 +105,36 @@ class AcceptedDashboard extends Component {
         email: email,
       });
 
-      success.status = response.data.success;
-      success.message = response.data.message;
+      return { success: response.data.success, message: response.data.message };
     } catch (error) {
       showConsoleError("charging customer", error);
-      showDefaultError("charging customer", error, 99);
+      return {
+        success: false,
+        message: caughtError("charging customer", error, 99),
+      };
     }
+  };
 
-    return success;
+  handleWeightEntered = async (order) => {
+    try {
+      const orderID = order.orderInfo.orderID;
+
+      const response = await axios.put(baseURL + "/driver/updateOrderWeight", {
+        weight: this.state.weight,
+        orderID,
+      });
+
+      return { success: response.data.success, message: response.data.message };
+    } catch (error) {
+      showConsoleError("entering weight", error);
+      return {
+        success: false,
+        message: caughtError("entering weight", error, 99),
+      };
+    }
   };
 
   handleWasherReceived = async (order) => {
-    let success = false;
-
     try {
       const orderID = order.orderInfo.orderID;
 
@@ -145,18 +142,17 @@ class AcceptedDashboard extends Component {
         orderID,
       });
 
-      success = response.data.success;
+      return { success: response.data.success, message: response.data.message };
     } catch (error) {
       showConsoleError("setting order as received by washer", error);
-      showDefaultError("setting order as received by washer", error, 99);
+      return {
+        success: false,
+        message: caughtError("setting order as received by washer", error, 99),
+      };
     }
-
-    return success;
   };
 
   handleUserReceived = async (order) => {
-    let success = false;
-
     try {
       const orderID = order.orderInfo.orderID;
 
@@ -164,13 +160,14 @@ class AcceptedDashboard extends Component {
         orderID,
       });
 
-      success = response.data.success;
+      return { success: response.data.success, message: response.data.message };
     } catch (error) {
       showConsoleError("setting order as delivered", error);
-      showDefaultError("setting order as delivered", error, 99);
+      return {
+        success: false,
+        message: caughtError("setting order as delivered", error, 99),
+      };
     }
-
-    return success;
   };
 
   render() {
@@ -215,7 +212,7 @@ class AcceptedDashboard extends Component {
         </Grid>
         <OrderTable
           orders={this.state.orders}
-          getOrders={this.getOrders}
+          fetchOrders={this.fetchOrders}
           weight={this.state.weight}
           weightError={this.state.weightError}
           weightErrorMsg={this.state.weightErrorMsg}
@@ -227,9 +224,6 @@ class AcceptedDashboard extends Component {
           handleWasherReceived={this.handleWasherReceived}
           handleUserReceived={this.handleUserReceived}
         />
-        <Backdrop className={classes.backdrop} open={this.state.showLoading}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
       </Layout>
     );
   }

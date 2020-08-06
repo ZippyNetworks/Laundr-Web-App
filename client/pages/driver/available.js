@@ -8,11 +8,11 @@ import {
   Paper,
 } from "@material-ui/core";
 import { getCurrentUser, updateToken } from "../../src/helpers/session";
-import { showDefaultError, showConsoleError } from "../../src/helpers/errors";
+import { showConsoleError, caughtError } from "../../src/helpers/errors";
 import { Layout } from "../../src/layouts";
 import PropTypes from "prop-types";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import MainAppContext from "../../src/contexts/MainAppContext";
 import OrderTable from "../../src/components/Driver/components/OrderTable";
 import baseURL from "../../src/baseURL";
 import availableDashboardStyles from "../../src/styles/Driver/AvailableDashboard/availableDashboardStyles";
@@ -32,14 +32,17 @@ import availableDashboardStyles from "../../src/styles/Driver/AvailableDashboard
 //only display status 0 and 4, ones able to be "accepted"
 
 class AvailableDashboard extends Component {
+  static contextType = MainAppContext;
+
   state = { orders: [], userFname: "" };
 
   componentDidMount = async () => {
-    await this.getOrders();
+    await this.fetchOrders();
   };
 
-  //todo: move to helper
-  getOrders = async () => {
+  //high level dialog for errors
+  //todo: change to fetchorders for others too
+  fetchOrders = async () => {
     try {
       const currentUser = getCurrentUser();
       const response = await axios.post(baseURL + "/order/fetchOrders", {
@@ -53,17 +56,16 @@ class AvailableDashboard extends Component {
           userFname: currentUser.fname,
         });
       } else {
-        showDefaultError("getting orders", 99);
+        this.context.showAlert(response.data.message);
       }
     } catch (error) {
-      showConsoleError("getting orders", error);
-      showDefaultError("getting orders", error, 99);
+      showConsoleError("fetching orders", error);
+      this.context.showAlert(caughtError("fetching orders", error, 99));
     }
   };
 
+  //snackbar
   handlePickupAccept = async (order) => {
-    let success = false;
-
     try {
       const currentUser = getCurrentUser();
       const orderID = order.orderInfo.orderID;
@@ -73,18 +75,17 @@ class AvailableDashboard extends Component {
         orderID,
       });
 
-      success = response.data.success;
+      return { success: response.data.success, message: response.data.message };
     } catch (error) {
       showConsoleError("accepting order", error);
-      showDefaultError("accepting order", error, 99);
+      return {
+        success: false,
+        message: caughtError("accepting order", error, 99),
+      };
     }
-
-    return success;
   };
 
   handleDropoffAccept = async (order) => {
-    let success = false;
-
     try {
       const currentUser = getCurrentUser();
       const orderID = order.orderInfo.orderID;
@@ -94,13 +95,14 @@ class AvailableDashboard extends Component {
         orderID,
       });
 
-      success = response.data.success;
+      return { success: response.data.success, message: response.data.message };
     } catch (error) {
-      showConsoleError("setting order as dropped off", error);
-      showDefaultError("setting order as dropped off", error, 99);
+      showConsoleError("accepting order for dropoff", error);
+      return {
+        success: false,
+        message: caughtError("accepting order for dropoff", error, 99),
+      };
     }
-
-    return success;
   };
 
   render() {
@@ -152,7 +154,7 @@ class AvailableDashboard extends Component {
         </Grid>
         <OrderTable
           orders={this.state.orders}
-          getOrders={this.getOrders}
+          fetchOrders={this.fetchOrders}
           handlePickupAccept={this.handlePickupAccept}
           handleDropoffAccept={this.handleDropoffAccept}
         />

@@ -22,14 +22,12 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //findOneAndUpdate where possible, add ${error} to caughtError string and also shown error
 
 //-individual components (use helpers and loading component)
-//-change error messages to use console and default error/restructure frontend error messages properly
 //-implement update token helper
 //-fix places autocomplete on address
 //-imports (use index.js) from root for images, styles, deep components, etc.
-//-styles as named exports, restructure folders and change file names?
-//-server stuff: error messages (need to update frontend to consume them), middleware, remove chained promises, put/post/get
+//-styles restructure folders and change file names?
 //fix MUI grid spacing causing negative margin (horizontal scrollbar)
-//errors: caught (use showConsole and this.context.showAlert(caughtError(stuff))), res.data.success (use this.context.showalert(res.data.message))
+//errors: caught (use showConsole and this.context.showAlert(caughtError(stuff))), res.data.success=false (use this.context.showalert(res.data.message))
 
 //todo: implement status 8 feature for order status when order is delivered
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile

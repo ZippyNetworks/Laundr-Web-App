@@ -34,9 +34,9 @@ class OrderTable extends Component {
     showActionDialog: false,
     actionDialogTitle: "",
     currentOrder: null,
-    // openSnackbar: false,
-    // snackbarMessage: "",
-    // snackbarSuccess: true,
+    showNotification: false,
+    notificationMessage: "",
+    notificationSuccess: false,
   };
 
   renderStage = (stage) => {
@@ -230,14 +230,10 @@ class OrderTable extends Component {
               </Button>
               <Button
                 onClick={async () => {
-                  let success = await this.props.handlePickupAccept(
+                  const response = await this.props.handlePickupAccept(
                     this.state.currentOrder
                   );
-                  if (success) {
-                    this.renderAcceptedMsg();
-                  } else {
-                    this.renderErrorAcceptMsg();
-                  }
+                  this.showNotification(response.message, response.success);
                 }}
                 color="primary"
                 variant="contained"
@@ -283,14 +279,10 @@ class OrderTable extends Component {
               </Button>
               <Button
                 onClick={async () => {
-                  let success = await this.props.handleWasherReceived(
+                  const response = await this.props.handleWasherReceived(
                     this.state.currentOrder
                   );
-                  if (success) {
-                    this.renderWasherReceivedMsg();
-                  } else {
-                    this.renderWasherReceivedErrorMsg();
-                  }
+                  this.showNotification(response.message, response.success);
                 }}
                 color="primary"
                 variant="contained"
@@ -314,14 +306,10 @@ class OrderTable extends Component {
               </Button>
               <Button
                 onClick={async () => {
-                  let success = await this.props.handleDropoffAccept(
+                  const response = await this.props.handleDropoffAccept(
                     this.state.currentOrder
                   );
-                  if (success) {
-                    this.renderAcceptedMsg();
-                  } else {
-                    this.renderErrorAcceptMsg();
-                  }
+                  this.showNotification(response.message, response.success);
                 }}
                 color="primary"
                 variant="contained"
@@ -345,14 +333,10 @@ class OrderTable extends Component {
               </Button>
               <Button
                 onClick={async () => {
-                  let success = await this.props.handleUserReceived(
+                  const response = await this.props.handleUserReceived(
                     this.state.currentOrder
                   );
-                  if (success) {
-                    this.renderUserReceivedMsg();
-                  } else {
-                    this.renderUserReceivedErrorMsg();
-                  }
+                  this.showNotification(response.message, response.success);
                 }}
                 color="primary"
                 variant="contained"
@@ -380,64 +364,42 @@ class OrderTable extends Component {
     });
   };
 
-  renderAcceptedMsg = async () => {
-    await this.props.getOrders();
-  };
-
-  renderErrorAcceptMsg = () => {
-    alert("Error - placeholder");
-  };
-
-  renderWeightSuccessMsg = async () => {
-    await this.props.getOrders();
-  };
-
-  renderWeightErrorMsg = () => {
-    alert("Error - placeholder");
-  };
-
-  renderWasherReceivedMsg = async () => {
-    await this.props.getOrders();
-  };
-
-  renderWasherReceivedErrorMsg = () => {
-    alert("Error - placeholder");
-  };
-
-  renderUserReceivedMsg = async () => {
-    await this.props.getOrders();
-  };
-
-  renderUserReceivedErrorMsg = () => {
-    alert("Error - placeholder");
-  };
-
   handleWeightEntered = async () => {
     if (this.props.handleWeightMinimum()) {
-      const charged = await this.props.handleChargeCustomer(
+      const response = await this.props.handleChargeCustomer(
         this.state.currentOrder
       );
 
-      if (!charged.status) {
-        this.renderChargeErrorMsg();
+      //if charge didnt succeed for whatever reason, todo: test w/NO payment method
+      if (!response.success) {
+        this.showNotification(response.message, response.success);
       } else {
-        const weightChanged = await this.props.handleWeightEntered(
+        //otherwise update weight after successful charge
+        const response = await this.props.handleWeightEntered(
           this.state.currentOrder
         );
 
-        if (weightChanged) {
-          this.renderWeightSuccessMsg();
-        } else {
-          this.renderWeightErrorMsg();
-        }
+        this.showNotification(response.message, response.success);
       }
     }
   };
 
-  renderChargeErrorMsg = (message) => {
-    alert("error - placeholder");
-    //clear weight text field
-    this.props.handleWeightChange("");
+  showNotification = (message, success) => {
+    //close action dialog first
+    this.setState({ showActionDialog: false }, () => {
+      //show the notification
+      this.setState(
+        {
+          notificationMessage: message,
+          notificationSuccess: success,
+          showNotification: true,
+        },
+        () => {
+          //fetch orders after showing notification, so an invalid or valid order disappears
+          this.props.fetchOrders();
+        }
+      );
+    });
   };
 
   render() {
@@ -627,20 +589,20 @@ class OrderTable extends Component {
           {/* </PerfectScrollbar> */}
         </CardContent>
 
-        {/* <React.Fragment>
+        <React.Fragment>
           <Snackbar
             anchorOrigin={{
               vertical: "bottom",
               horizontal: "center",
             }}
-            open={this.state.openSnackbar}
+            open={this.state.showNotification}
             autoHideDuration={6000}
             onClose={(event, reason) => {
               if (reason !== "clickaway") {
-                this.setState({ openSnackbar: false });
+                this.setState({ showNotification: false });
               }
             }}
-            message={this.state.snackbarMessage}
+            message={this.state.notificationMessage}
             action={
               <React.Fragment>
                 <IconButton
@@ -648,7 +610,7 @@ class OrderTable extends Component {
                   aria-label="close"
                   color="inherit"
                   onClick={() => {
-                    this.setState({ openSnackbar: false });
+                    this.setState({ showNotification: false });
                   }}
                 >
                   <Close fontSize="small" />
@@ -657,11 +619,13 @@ class OrderTable extends Component {
             }
             ContentProps={{
               style: {
-                backgroundColor: this.state.snackbarSuccess ? "green" : "red",
+                backgroundColor: this.state.notificationSuccess
+                  ? "green"
+                  : "red",
               },
             }}
           />
-        </React.Fragment> */}
+        </React.Fragment>
       </Card>
     );
   }

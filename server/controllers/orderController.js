@@ -110,7 +110,7 @@ const fetchOrders = async (req, res) => {
     const statuses = req.body.statuses;
     const filter = req.body.filter;
 
-    const orders = await Order.find().where("orderInfo.status").in(statuses);
+    let orders = await Order.find().where("orderInfo.status").in(statuses);
 
     //if any filtering by email needs to be applied
     if (filter) {

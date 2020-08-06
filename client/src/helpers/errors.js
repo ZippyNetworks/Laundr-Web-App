@@ -4,5 +4,5 @@ export const caughtError = (task, error, code) => {
 };
 
 export const showConsoleError = (task, error) => {
-  console.warn(`Error with ${task}: ${error}`);
+  console.warn(`Client: Error with ${task}: ${error}`);
 };
