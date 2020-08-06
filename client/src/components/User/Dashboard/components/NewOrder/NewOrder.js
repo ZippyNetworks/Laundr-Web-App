@@ -50,7 +50,6 @@ class NewOrder extends Component {
     this.nowFormattedTime = moment(this.now, "HH:mm:ss").format("LT");
 
     this.state = {
-      loading: true,
       activeStep: 0,
       error: false,
       errorMessage: "",

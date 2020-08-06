@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { withStyles, Grid, Typography } from "@material-ui/core";
 import { Layout } from "../../src/layouts";
 import { getCurrentUser, updateToken } from "../../src/helpers/session";
-import { Loading } from "../../src/utility";
 import PropTypes from "prop-types";
 import AccountInfo from "../../src/components/User/Account/components/AccountInfo";
 import PaymentInfo from "../../src/components/User/Account/components/PaymentInfo";
@@ -10,7 +9,6 @@ import accountStyles from "../../src/styles/User/Account/accountStyles";
 
 class Account extends Component {
   state = {
-    loading: true,
     user: null,
     accountInfoComponent: null,
     paymentInfoComponent: null,
@@ -26,7 +24,6 @@ class Account extends Component {
     this.setState({
       accountInfoComponent: <AccountInfo user={currentUser} />,
       paymentInfoComponent: <PaymentInfo user={currentUser} />,
-      loading: false,
     });
   };
 
@@ -35,7 +32,6 @@ class Account extends Component {
 
     return (
       <Layout>
-        {this.state.loading && <Loading />}
         <Grid
           container
           spacing={2}

@@ -3,7 +3,6 @@ import { Grid, withStyles, Paper, Typography } from "@material-ui/core";
 import { Layout } from "../../src/layouts";
 import { getCurrentUser } from "../../src/helpers/session";
 import { caughtError, showConsoleError } from "../../src/helpers/errors";
-import { Loading } from "../../src/utility";
 import PropTypes from "prop-types";
 import axios from "axios";
 import MainAppContext from "../../src/contexts/MainAppContext";
@@ -56,7 +55,6 @@ class Dashboard extends Component {
   static contextType = MainAppContext;
 
   state = {
-    loading: true,
     orderComponent: null,
     orderComponentName: "",
     userFname: "",
@@ -92,7 +90,6 @@ class Dashboard extends Component {
           orderComponent: component,
           orderComponentName: componentName,
           userFname: currentUser.fname,
-          loading: false,
         });
       } else {
         this.context.showAlert(response.data.message);
@@ -108,7 +105,6 @@ class Dashboard extends Component {
 
     return (
       <Layout>
-        {this.state.loading && <Loading />}
         <Grid
           container
           spacing={0}
