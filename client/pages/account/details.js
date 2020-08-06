@@ -8,10 +8,6 @@ import AccountInfo from "../../src/components/User/Account/components/AccountInf
 import PaymentInfo from "../../src/components/User/Account/components/PaymentInfo";
 import accountStyles from "../../src/styles/User/Account/accountStyles";
 
-//method for loading: do all data fetching in main parent component, apply loading bool
-//hold child components that rely on loaded data in state as null first, then change after gathered loaded data
-//render this.state.childComponent
-
 class Account extends Component {
   state = {
     loading: true,

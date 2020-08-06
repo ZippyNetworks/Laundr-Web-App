@@ -79,9 +79,9 @@ class PaymentInfo extends Component {
         });
 
         if (response.data.success) {
-          let card = response.data.message.card;
+          const card = response.data.message.card;
 
-          let cardInfo = {
+          const cardInfo = {
             brand: card.brand.toUpperCase(),
             expMonth: card.exp_month,
             expYear: card.exp_year,
@@ -105,7 +105,7 @@ class PaymentInfo extends Component {
     this.setState({ showPaymentUpdate: !this.state.showPaymentUpdate });
   };
 
-  handleSetupIntent = async (type) => {
+  handleSetupIntent = async () => {
     let secret = "";
 
     try {
@@ -154,7 +154,9 @@ class PaymentInfo extends Component {
 
     if (result.error) {
       // Display result.error.message in your UI.
-      alert("Error: " + result.error.message);
+      this.context.showAlert(
+        caughtError("setting payment method", result.error.message, 99)
+      );
     } else {
       // The setup has succeeded. Display a success message and send
       // result.setupIntent.payment_method to your server to save the
@@ -167,7 +169,7 @@ class PaymentInfo extends Component {
 
         if (response.data.success) {
           await updateToken(currentuser.email);
-          alert("Card successfully updated!");
+          this.context.showAlert(response.data.message);
         } else {
           this.context.showAlert(response.data.message);
         }

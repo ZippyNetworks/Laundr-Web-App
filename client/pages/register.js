@@ -362,11 +362,7 @@ class Register extends Component {
               enteredCode: "",
             },
             () => {
-              this.setState({
-                showGeneralDialog: true,
-                generalDialogMsg:
-                  "You've successfully registered. Welcome to the Laundr family! Please sign in to continue.",
-              });
+              this.context.showAlert(response.data.message);
             }
           );
         } else {
@@ -381,17 +377,6 @@ class Register extends Component {
 
   handleResendCode = () => {
     alert("code will be resent");
-  };
-
-  toggleGeneralDialog = () => {
-    this.setState(
-      {
-        showGeneralDialog: !this.state.showGeneralDialog,
-      },
-      () => {
-        this.setState({ generalDialogMsg: "" });
-      }
-    );
   };
 
   toggleVerifyDialog = () => {
@@ -409,9 +394,9 @@ class Register extends Component {
 
   render() {
     //todo: dont set registered as soon as they verify phone because itll redirect before they can click "ok"
-    if (this.state.registered) {
-      this.props.router.push("/login");
-    }
+    // if (this.state.registered) {
+    //   this.props.router.push("/login");
+    // }
 
     const classes = this.props.classes;
 

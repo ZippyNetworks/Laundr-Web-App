@@ -56,7 +56,9 @@ class SubscriptionCard extends Component {
         });
 
         if (error) {
-          showDefaultError(error.message, 99);
+          this.context.showAlert(
+            caughtError("creating checkout session", error, 99)
+          );
         }
       } else {
         this.context.showAlert(response.data.message);

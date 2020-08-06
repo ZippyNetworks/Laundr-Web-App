@@ -21,6 +21,10 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //^^also, loading on only main pages (after logged in, before main component rendered aka sidebar and topbar are there tho)? or different loading for individual components/fullscreen (like from login)
 //findOneAndUpdate where possible,
 
+//method for loading: do all data fetching in main parent component, apply loading bool
+//hold child components that rely on loaded data in state as null first, then change after gathered loaded data
+//render this.state.childComponent
+
 //-individual components (use helpers and loading component)
 //-implement update token helper
 //-fix places autocomplete on address

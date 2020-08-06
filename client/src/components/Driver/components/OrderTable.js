@@ -27,7 +27,6 @@ import Close from "@material-ui/icons/Close";
 import orderTableStyles from "../../../styles/Driver/components/orderTableStyles";
 
 //todo: change snackbars to https://github.com/iamhosseindhv/notistack to make it prettier
-//todo: better way for snackbar errors (to replace current crapton of handlers)
 
 class OrderTable extends Component {
   state = {
