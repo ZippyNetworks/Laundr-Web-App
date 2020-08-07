@@ -4,11 +4,6 @@ import {
   Button,
   Typography,
   Fade,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   CardContent,
 } from "@material-ui/core";
 import { getCurrentUser } from "../../../../../helpers/session";
@@ -33,7 +28,7 @@ const apiKEY =
   process.env.GOOGLE_MAPS_API_KEY ||
   require("../../../../../config").google.mapsKEY;
 
-//refactor priorities: fix address
+//todo: maybe scroll to top at advancing? or make size of pages same
 //todo: no new order when payment method not added yet
 
 const steps = ["Scheduling", "Preferences", "Address", "Pricing", "Review"];
@@ -51,8 +46,6 @@ class NewOrder extends Component {
 
     this.state = {
       activeStep: 0,
-      error: false,
-      errorMessage: "",
       date: "N/A", //scheduling
       todaySelected: false,
       tomorrowSelected: false,
@@ -70,8 +63,6 @@ class NewOrder extends Component {
       },
       zoom: 12,
       address: "",
-      markerLat: 0,
-      markerLong: 0,
       renderMarker: false,
       addressPreferences: "",
       orderID: -1, //done screen
@@ -100,6 +91,12 @@ class NewOrder extends Component {
         console.log("address: " + this.state.address);
         console.log("driver instructions: " + this.state.addressPreferences);
         console.log("====================================");
+        if (this.evaluateWhitespace(this.state.address) === "N/A") {
+          this.context.showAlert("Please enter an address.");
+          canNext = false;
+          break;
+        }
+
         let addressCords = { lat: -1, lng: -1 };
 
         //coordinates of entered address
@@ -126,18 +123,11 @@ class NewOrder extends Component {
         console.log("lat: " + addressCords.lat);
         console.log("lng: " + addressCords.lng);
 
-        if (this.state.address === "") {
-          this.setState({
-            error: true,
-            errorMessage: "Please enter an address.",
-          });
-          canNext = false;
-        } else if (distance > 16094) {
-          this.setState({
-            error: true,
-            errorMessage:
-              "The address entered is not valid or is not within our service range. Please try again.",
-          });
+        if (distance > 16094) {
+          this.context.showAlert(
+            "The address entered is not valid or is not within our service range. Please try again."
+          );
+
           console.log("distance: " + distance);
           console.log("====================================");
           canNext = false;
@@ -195,28 +185,20 @@ class NewOrder extends Component {
 
     if (!this.state.todaySelected && !this.state.tomorrowSelected) {
       //if no date selected
-      this.setState({
-        error: true,
-        errorMessage: "Please select a pickup date.",
-      });
+      this.context.showAlert("Please select a pickup date.");
       canNext = false;
     } else if (
       this.state.todaySelected &&
       hourFromNow.isAfter(moment("19:00:00", "HH:mm:ss"))
     ) {
       //if selected today and its after 7 PM
-      this.setState({
-        error: true,
-        errorMessage:
-          "Sorry! We are closed after 7 PM. Please select a different day.",
-      });
+      this.context.showAlert(
+        "Sorry! We are closed after 7 PM. Please select a different day."
+      );
       canNext = false;
     } else if (!scheduledTime.isBetween(lowerBound, upperBound)) {
       //if pickup time isnt between 10 am and 7 pm
-      this.setState({
-        error: true,
-        errorMessage: "The pickup time must be between 10 AM and 7 PM.",
-      });
+      this.context.showAlert("The pickup time must be between 10 AM and 7 PM.");
       canNext = false;
     } else if (
       hourFromNow.isBetween(lowerBound, upperBound) &&
@@ -224,10 +206,9 @@ class NewOrder extends Component {
       this.state.todaySelected
     ) {
       //if 1 hr in advance is between 10 and 7 AND pickup time is before that AND the date selected is today
-      this.setState({
-        error: true,
-        errorMessage: "The pickup time must be at least 1 hour in advance.",
-      });
+      this.context.showAlert(
+        "The pickup time must be at least 1 hour in advance."
+      );
       canNext = false;
     }
 
@@ -330,6 +311,7 @@ class NewOrder extends Component {
 
       case "address":
         this.setState({ [property]: value });
+        console.log("value: ", value);
         break;
 
       case "addressPreferences":
@@ -351,34 +333,42 @@ class NewOrder extends Component {
     }
   };
 
-  handleAddressSelect = async (suggestion) => {
-    this.setState({ address: suggestion.description });
+  handleAddressSelect = async (address) => {
+    //if address was cleared, reset center, zoom, and clear marker
+    if (address === "") {
+      this.setState({
+        center: {
+          lat: 29.6516,
+          lng: -82.3248,
+        },
+        zoom: 12,
+        address: "",
+        renderMarker: false,
+      });
+    } else {
+      this.setState({ address: address });
+      //maybe chain
 
-    Geocode.setApiKey(apiKEY);
-    await Geocode.fromAddress(suggestion.description).then(
-      (res) => {
-        const { lat, lng } = res.results[0].geometry.location;
-        this.setState({
-          center: {
-            lat: lat,
-            lng: lng,
-          },
-          zoom: 16,
-          markerLat: lat,
-          markerLong: lng,
-          renderMarker: true,
-        });
-      },
-      (error) => {
-        showConsoleError("Error with selecting address: ", error);
-        this.context.showAlert(caughtError("selecting address", error, 99));
-      }
-    );
-  };
+      Geocode.setApiKey(apiKEY);
+      await Geocode.fromAddress(address).then(
+        (res) => {
+          const { lat, lng } = res.results[0].geometry.location;
 
-  //todo add to the button
-  toggleErrorMessage = () => {
-    this.setState({ error: !this.state.error });
+          this.setState({
+            center: {
+              lat: lat,
+              lng: lng,
+            },
+            zoom: 16,
+            renderMarker: true,
+          });
+        },
+        (error) => {
+          showConsoleError("Error with selecting address: ", error);
+          this.context.showAlert(caughtError("selecting address", error, 99));
+        }
+      );
+    }
   };
 
   evaluateWhitespace = (text) => {
@@ -399,7 +389,7 @@ class NewOrder extends Component {
             <CardContent id="newOrderContainer">
               <ProgressBar step={this.state.activeStep} />
               <React.Fragment>
-                <Dialog
+                {/* <Dialog
                   disableEnforceFocus
                   disableAutoFocus
                   disableRestoreFocus
@@ -426,7 +416,7 @@ class NewOrder extends Component {
                       Okay
                     </Button>
                   </DialogActions>
-                </Dialog>
+                </Dialog> */}
                 {this.state.activeStep === steps.length ? (
                   <React.Fragment>
                     <Typography variant="h5" gutterBottom>
@@ -471,17 +461,6 @@ class NewOrder extends Component {
                           rawTime={this.state.rawTime}
                           handleInputChange={this.handleInputChange}
                         />
-                        <Address
-                          center={this.state.center}
-                          zoom={this.state.zoom}
-                          address={this.state.address}
-                          markerLat={this.state.markerLat}
-                          markerLong={this.state.markerLong}
-                          renderMarker={this.state.renderMarker}
-                          addressPreferences={this.state.addressPreferences}
-                          handleAddressSelect={this.handleAddressSelect}
-                          handleInputChange={this.handleInputChange}
-                        />
                       </div>
                     </Fade>
                     <Fade
@@ -516,7 +495,7 @@ class NewOrder extends Component {
                       }}
                     >
                       <div>
-                        {/* <Address
+                        <Address
                           center={this.state.center}
                           zoom={this.state.zoom}
                           address={this.state.address}
@@ -526,7 +505,7 @@ class NewOrder extends Component {
                           addressPreferences={this.state.addressPreferences}
                           handleAddressSelect={this.handleAddressSelect}
                           handleInputChange={this.handleInputChange}
-                        /> */}
+                        />
                       </div>
                     </Fade>
                     <Fade

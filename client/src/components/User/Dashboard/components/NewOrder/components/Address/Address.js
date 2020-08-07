@@ -7,7 +7,7 @@ import {
   Icon,
   Box,
 } from "@material-ui/core";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import PlacesAutocomplete from "./components/PlacesAutocomplete";
 import PropTypes from "prop-types";
 import addressStyles from "../../../../../../../styles/User/Dashboard/components/NewOrder/components/addressStyles";
@@ -16,32 +16,30 @@ const apiKEY =
   process.env.GOOGLE_MAPS_API_KEY ||
   require("../../../../../../../config").google.mapsKEY;
 
-const Marker = () => (
-  <div>
-    <Icon
-      style={{
-        textAlign: "center",
-        transform: "translate(-50%, -50%)",
-        position: "absolute",
-      }}
-    >
-      <img
-        alt="Marker"
-        style={{ height: "100%" }}
-        src="/images/NewOrder/Marker.png"
-      />
-    </Icon>
-  </div>
-);
+const libraries = ["places"];
 
 class Address extends Component {
   state = { charCount: 0 };
 
   renderMarker = () => {
-    const { renderMarker, marketLat, markerLong } = this.props;
+    //todo: maybe style not needed
+    const { renderMarker, center } = this.props;
 
     if (renderMarker) {
-      return <Marker lat={marketLat} lng={markerLong} />;
+      return (
+        <Marker
+          position={{
+            lat: center.lat,
+            lng: center.lng,
+          }}
+          style={{
+            textAlign: "center",
+            transform: "translate(-50%, -50%)",
+            position: "absolute",
+          }}
+          icon="/images/NewOrder/Marker.png"
+        />
+      );
     }
   };
 
@@ -74,50 +72,29 @@ class Address extends Component {
         <Typography component="h1" variant="h6" gutterBottom>
           What's your address?
         </Typography>
-        <LoadScript googleMapsApiKey={apiKEY} libraries={["places"]}>
+        <LoadScript googleMapsApiKey={apiKEY} libraries={libraries}>
           <Box
             bgcolor="background.paper"
             borderColor="grey.400"
             border={1}
             style={{ marginBottom: 20 }}
           >
-            {/* <div style={{ height: "40vh", width: "100%" }}> */}
-            {/* <GoogleMapReact
-              center={center}
-              zoom={zoom}
-              onChange={(properties) => {
-                handleInputChange("map", properties);
-              }}
-            >
-              {this.renderMarker()}
-            </GoogleMapReact> */}
-
             <GoogleMap
               mapContainerStyle={{ height: "40vh", width: "100%" }}
               center={center}
               zoom={zoom}
             >
-              {/* Child components, such as markers, info windows, etc. */}
+              {this.renderMarker()}
             </GoogleMap>
-
-            {/* </div> */}
           </Box>
           <Grid container>
             <Grid item xs={12}>
               <div style={{ position: "relative" }}>
-                <PlacesAutocomplete address={address} />
-                {/* <MUIPlacesAutocomplete
-                onSuggestionSelected={() => {
-                  alert("ahh");
-                }}
-                renderTarget={() => <div />}
-                textFieldProps={{
-                  variant: "outlined",
-                  fullWidth: true,
-                  label: "Street Address",
-                  autoComplete: "none",
-                }}
-              /> */}
+                <PlacesAutocomplete
+                  address={address}
+                  handleInputChange={handleInputChange}
+                  handleAddressSelect={handleAddressSelect}
+                />
               </div>
             </Grid>
           </Grid>

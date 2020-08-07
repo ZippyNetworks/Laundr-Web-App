@@ -19,6 +19,7 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //^^ figure out, also use getstaticprops for fetching something like orders? keep loading until everything is fetched, so if theres an error the loading stays
 //^^also, loading on only main pages (after logged in, before main component rendered aka sidebar and topbar are there tho)? or different loading for individual components/fullscreen (like from login)
 //findOneAndUpdate where possible,
+//use cardheader for titles of various cards, color, etc.
 
 //method for loading: do all data fetching in main parent component, apply loading bool
 //hold child components that rely on loaded data in state as null first, then change after gathered loaded data

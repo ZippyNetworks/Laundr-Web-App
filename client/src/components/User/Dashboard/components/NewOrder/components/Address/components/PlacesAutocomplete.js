@@ -8,18 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import parse from "autosuggest-highlight/parse";
 import throttle from "lodash/throttle";
 
-function loadScript(src, position, id) {
-  if (!position) {
-    return;
-  }
-
-  const script = document.createElement("script");
-  script.setAttribute("async", "");
-  script.setAttribute("id", id);
-  script.src = src;
-  position.appendChild(script);
-}
-
 const autocompleteService = { current: null };
 
 const useStyles = makeStyles((theme) => ({
@@ -29,39 +17,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function GoogleMaps(props) {
-  const { address } = props;
+const PlacesAutocomplete = (props) => {
+  const { address, handleInputChange, handleAddressSelect } = props;
 
   const classes = useStyles();
-  const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState([]);
-  const loaded = React.useRef(false);
-
-  if (typeof window !== "undefined" && !loaded.current) {
-    if (!document.querySelector("#google-maps")) {
-      // loadScript(
-      //   "https://maps.googleapis.com/maps/api/js?key=KEY&libraries=places",
-      //   document.querySelector("head"),
-      //   "google-maps"
-      // );
-    }
-
-    loaded.current = true;
-  }
 
   const handleChange = (event) => {
-    setInputValue(event.target.value);
+    handleInputChange("address", event.target.value);
     console.log(event.target.value);
   };
 
   const handleAutocompleteChange = (event, value, reason) => {
     if (reason === "select-option") {
       console.log(value);
-      setInputValue(value.description);
+      handleAddressSelect(value.description);
     } else if (reason === "clear") {
       //value is null if cleared
       console.log(value || "");
-      setInputValue("");
+      handleAddressSelect("");
     }
   };
 
@@ -83,12 +57,12 @@ export default function GoogleMaps(props) {
       return undefined;
     }
 
-    if (inputValue === "") {
+    if (address === "") {
       setOptions([]);
       return undefined;
     }
 
-    fetch({ input: inputValue }, (results) => {
+    fetch({ input: address }, (results) => {
       if (active) {
         setOptions(results || []);
       }
@@ -97,7 +71,7 @@ export default function GoogleMaps(props) {
     return () => {
       active = false;
     };
-  }, [inputValue, fetch]);
+  }, [address, fetch]);
 
   return (
     <Autocomplete
@@ -118,7 +92,7 @@ export default function GoogleMaps(props) {
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Add a location"
+          label="Address"
           variant="outlined"
           fullWidth
           onChange={handleChange}
@@ -135,7 +109,10 @@ export default function GoogleMaps(props) {
         return (
           <Grid container alignItems="center">
             <Grid item>
-              <LocationOnIcon className={classes.icon} />
+              <LocationOnIcon
+                className={classes.icon}
+                style={{ color: "rgb(1, 201, 226)" }}
+              />
             </Grid>
             <Grid item xs>
               {parts.map((part, index) => (
@@ -156,4 +133,6 @@ export default function GoogleMaps(props) {
       }}
     />
   );
-}
+};
+
+export default PlacesAutocomplete;

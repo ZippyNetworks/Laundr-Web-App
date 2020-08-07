@@ -7,6 +7,8 @@ import AccountInfo from "../../src/components/User/Account/components/AccountInf
 import PaymentInfo from "../../src/components/User/Account/components/PaymentInfo";
 import accountStyles from "../../src/styles/User/Account/accountStyles";
 
+//todo: revise data fetching flow here
+
 class Account extends Component {
   state = {
     user: null,

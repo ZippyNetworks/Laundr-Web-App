@@ -1,4 +1,4 @@
-//todo: add to where whitespaces are checked?
+//todo: add to where whitespaces are checked
 
 export const evaluateWhitespaceBool = (text) => {
   if (!text.replace(/\s/g, "").length) {
