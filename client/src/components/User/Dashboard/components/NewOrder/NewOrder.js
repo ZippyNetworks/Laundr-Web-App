@@ -20,7 +20,7 @@ import axios from "axios";
 import MainAppContext from "../../../../../contexts/MainAppContext";
 import Scheduling from "./components/Scheduling";
 import Preferences from "./components/Preferences/Preferences";
-import Address from "./components/Address";
+import Address from "./components/Address/Address";
 import Pricing from "./components/Pricing";
 import Review from "./components/Review";
 import ProgressBar from "./components/ProgressBar";
@@ -110,7 +110,10 @@ class NewOrder extends Component {
             addressCords.lng = lng;
           },
           (error) => {
-            //todo: handle
+            showConsoleError("getting address coordinates", error);
+            this.context.showAlert(
+              caughtError("getting address coordinates", error, 99)
+            );
           }
         );
 

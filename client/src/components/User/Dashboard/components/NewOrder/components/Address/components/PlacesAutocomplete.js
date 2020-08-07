@@ -29,7 +29,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function GoogleMaps() {
+export default function GoogleMaps(props) {
+  const { address } = props;
+
   const classes = useStyles();
   const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState([]);
@@ -50,6 +52,17 @@ export default function GoogleMaps() {
   const handleChange = (event) => {
     setInputValue(event.target.value);
     console.log(event.target.value);
+  };
+
+  const handleAutocompleteChange = (event, value, reason) => {
+    if (reason === "select-option") {
+      console.log(value);
+      setInputValue(value.description);
+    } else if (reason === "clear") {
+      //value is null if cleared
+      console.log(value || "");
+      setInputValue("");
+    }
   };
 
   const fetch = React.useMemo(
@@ -93,10 +106,15 @@ export default function GoogleMaps() {
       getOptionLabel={(option) =>
         typeof option === "string" ? option : option.description
       }
-      filterOptions={(x) => x}
+      noOptionsText={"Type to search for a location"}
+      // filterOptions={(x) => x}
       options={options}
       autoComplete
       includeInputInList
+      onChange={handleAutocompleteChange}
+      getOptionSelected={(option, value) =>
+        option.description === value.description
+      }
       renderInput={(params) => (
         <TextField
           {...params}
