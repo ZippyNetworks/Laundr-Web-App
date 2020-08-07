@@ -17,8 +17,8 @@ import OrderTable from "../../src/components/Driver/components/OrderTable";
 import baseURL from "../../src/baseURL";
 import availableDashboardStyles from "../../src/styles/Driver/AvailableDashboard/availableDashboardStyles";
 
-//todo: add isDriver to user, also iswasher, etc.
-//todo: conditional redirects
+//todo: https://www.npmjs.com/package/react-infinite-scroll-component for orders and stuff
+//also put inside of a scrollview type thing, or pad so table doesnt stretch all the way
 
 //0: order just placed
 //1: order accepted by driver to be picked up from user

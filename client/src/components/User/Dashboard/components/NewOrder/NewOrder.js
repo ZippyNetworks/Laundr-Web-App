@@ -368,7 +368,7 @@ class NewOrder extends Component {
       },
       (error) => {
         showConsoleError("Error with selecting address: ", error);
-        showDefaultError("selecting address", error, 5);
+        this.context.showAlert(caughtError("selecting address", error, 99));
       }
     );
   };
@@ -468,6 +468,17 @@ class NewOrder extends Component {
                           rawTime={this.state.rawTime}
                           handleInputChange={this.handleInputChange}
                         />
+                        <Address
+                          center={this.state.center}
+                          zoom={this.state.zoom}
+                          address={this.state.address}
+                          markerLat={this.state.markerLat}
+                          markerLong={this.state.markerLong}
+                          renderMarker={this.state.renderMarker}
+                          addressPreferences={this.state.addressPreferences}
+                          handleAddressSelect={this.handleAddressSelect}
+                          handleInputChange={this.handleInputChange}
+                        />
                       </div>
                     </Fade>
                     <Fade
@@ -502,7 +513,7 @@ class NewOrder extends Component {
                       }}
                     >
                       <div>
-                        <Address
+                        {/* <Address
                           center={this.state.center}
                           zoom={this.state.zoom}
                           address={this.state.address}
@@ -512,7 +523,7 @@ class NewOrder extends Component {
                           addressPreferences={this.state.addressPreferences}
                           handleAddressSelect={this.handleAddressSelect}
                           handleInputChange={this.handleInputChange}
-                        />
+                        /> */}
                       </div>
                     </Fade>
                     <Fade

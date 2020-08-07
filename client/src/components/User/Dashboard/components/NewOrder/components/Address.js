@@ -7,8 +7,8 @@ import {
   Icon,
   Box,
 } from "@material-ui/core";
-import MUIPlacesAutocomplete from "mui-places-autocomplete";
-import GoogleMapReact from "google-map-react";
+import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import MUIPlacesAutocomplete from "./GooglePlacesAutocomplete";
 import PropTypes from "prop-types";
 import addressStyles from "../../../../../../styles/User/Dashboard/components/NewOrder/components/addressStyles";
 
@@ -74,17 +74,15 @@ class Address extends Component {
         <Typography component="h1" variant="h6" gutterBottom>
           What's your address?
         </Typography>
-        <Box
-          bgcolor="background.paper"
-          borderColor="grey.400"
-          border={1}
-          style={{ marginBottom: 20 }}
-        >
-          <div style={{ height: "40vh", width: "100%" }}>
-            <GoogleMapReact
-              bootstrapURLKeys={{
-                key: apiKEY,
-              }}
+        <LoadScript googleMapsApiKey={apiKEY} libraries={["places"]}>
+          <Box
+            bgcolor="background.paper"
+            borderColor="grey.400"
+            border={1}
+            style={{ marginBottom: 20 }}
+          >
+            {/* <div style={{ height: "40vh", width: "100%" }}> */}
+            {/* <GoogleMapReact
               center={center}
               zoom={zoom}
               onChange={(properties) => {
@@ -92,60 +90,63 @@ class Address extends Component {
               }}
             >
               {this.renderMarker()}
-            </GoogleMapReact>
-          </div>
-        </Box>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <div style={{ position: "relative" }}>
-              {/* <MUIPlacesAutocomplete
-                onSuggestionSelected={(suggestion) =>
-                  handleAddressSelect(suggestion)
-                }
-                renderTarget={() => (
-                  <React.Fragment>
-                    <Typography
-                      component="h1"
-                      variant="h6"
-                      gutterBottom
-                      className={classes.title}
-                    >
-                      Do you have any special instructions for our drivers? (ex:
-                      building number, unit, directions, etc.)
-                    </Typography>
-                    <Grid container spacing={3}>
-                      <Grid item xs={12}>
-                        <TextField
-                          label="Special Instructions"
-                          fullWidth
-                          multiline
-                          variant="outlined"
-                          helperText={`${this.state.charCount}/200`}
-                          value={addressPreferences}
-                          onChange={(event) => {
-                            handleInputChange(
-                              "addressPreferences",
-                              event.target.value
-                            );
-                            this.handleCharCount(event.target.value);
-                          }}
-                        />
-                      </Grid>
-                    </Grid>
-                  </React.Fragment>
-                )}
+            </GoogleMapReact> */}
+
+            <GoogleMap
+              mapContainerStyle={{ height: "40vh", width: "100%" }}
+              center={center}
+              zoom={zoom}
+            >
+              {/* Child components, such as markers, info windows, etc. */}
+            </GoogleMap>
+
+            {/* </div> */}
+          </Box>
+          <Grid container>
+            <Grid item xs={12}>
+              <div style={{ position: "relative" }}>
+                <MUIPlacesAutocomplete />
+                {/* <MUIPlacesAutocomplete
+                onSuggestionSelected={() => {
+                  alert("ahh");
+                }}
+                renderTarget={() => <div />}
                 textFieldProps={{
-                  fullWidth: true,
                   variant: "outlined",
-                  label: "Search for an address",
-                  value: address,
-                  onChange: (event) =>
-                    handleInputChange("address", event.target.value),
+                  fullWidth: true,
+                  label: "Street Address",
+                  autoComplete: "none",
                 }}
               /> */}
-            </div>
+              </div>
+            </Grid>
           </Grid>
-        </Grid>
+          <Typography
+            component="h1"
+            variant="h6"
+            gutterBottom
+            className={classes.title}
+          >
+            Do you have any special instructions for our drivers? (ex: building
+            number, unit, directions, etc.)
+          </Typography>
+          <Grid container>
+            <Grid item xs={12}>
+              <TextField
+                label="Special Instructions"
+                fullWidth
+                multiline
+                variant="outlined"
+                helperText={`${this.state.charCount}/200`}
+                value={addressPreferences}
+                onChange={(event) => {
+                  handleInputChange("addressPreferences", event.target.value);
+                  this.handleCharCount(event.target.value);
+                }}
+              />
+            </Grid>
+          </Grid>
+        </LoadScript>
       </React.Fragment>
     );
   }

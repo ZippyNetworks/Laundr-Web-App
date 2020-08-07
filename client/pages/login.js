@@ -184,7 +184,7 @@ class Login extends Component {
 
     return (
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
+        {/* <CssBaseline /> */}
         <div className={classes.paper}>
           <img
             alt="Company Logo"

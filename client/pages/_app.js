@@ -56,14 +56,13 @@ const MyApp = (props) => {
   return (
     <React.Fragment>
       <Head>
-        <title>My page</title>
-        <meta
+        <title>Laundr Test</title>
+        {/* <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
-        />
+        /> */}
       </Head>
       <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         {/*todo: make zindex of this high enough to be able to click out of it if youre also in the middle of loading, also maybe center it inside the component (for sidebar stuff) */}
         {/*ALERT DIALOG*/}
