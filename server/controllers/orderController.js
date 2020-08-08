@@ -174,10 +174,42 @@ const getExistingOrder = async (req, res) => {
   }
 };
 
+const cancelOrder = async (req, res) => {
+  try {
+    const order = await Order.findOne({
+      "orderInfo.orderID": req.query.orderID,
+    });
+
+    //if order has been picked up, since 2 is when weight is entered
+    if (order.orderInfo.status > 1) {
+      return res.json({
+        success: false,
+        message: "Order cannot be cancelled after pickup.",
+      });
+    }
+
+    order.orderInfo.status = 7;
+
+    await order.save();
+
+    return res.json({
+      success: true,
+      message: "Order successfully cancelled.",
+    });
+  } catch (error) {
+    showConsoleError("cancelling order", error, 99);
+    return res.json({
+      success: false,
+      message: caughtError("cancelling order", error, 99),
+    });
+  }
+};
+
 module.exports = {
   checkExistingOrder,
   countOrders,
   placeOrder,
   fetchOrders,
   getExistingOrder,
+  cancelOrder,
 };

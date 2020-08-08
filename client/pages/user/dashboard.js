@@ -20,6 +20,7 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //^^also, loading on only main pages (after logged in, before main component rendered aka sidebar and topbar are there tho)? or different loading for individual components/fullscreen (like from login)
 //findOneAndUpdate where possible,
 //use cardheader for titles of various cards, color, etc.
+//const vs let
 
 //method for loading: do all data fetching in main parent component, apply loading bool
 //hold child components that rely on loaded data in state as null first, then change after gathered loaded data
@@ -32,6 +33,9 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //-styles restructure folders and change file names, also restructure components folder
 //fix MUI grid spacing causing negative margin (horizontal scrollbar)
 //errors: caught (use showConsole and this.context.showAlert(caughtError(stuff))), res.data.success=false (use this.context.showalert(res.data.message))
+
+//FLOW: close dialog before showing success/error of successful request to backend, keep it open if its a caught error on frontend
+//make sure this is established for everything.
 
 //todo: implement status 8 feature for order status when order is delivered
 //todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile

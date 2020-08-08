@@ -394,6 +394,7 @@ class Register extends Component {
 
   render() {
     //todo: dont set registered as soon as they verify phone because itll redirect before they can click "ok"
+    //use new callback prop for showAlert
     // if (this.state.registered) {
     //   this.props.router.push("/login");
     // }

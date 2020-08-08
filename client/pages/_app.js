@@ -27,6 +27,7 @@ const MyApp = (props) => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [showLoadingDialog, setShowLoadingDialog] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [dialogCallback, setDialogCallback] = useState(null);
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -40,9 +41,17 @@ const MyApp = (props) => {
     setShowAlertDialog(false);
   };
 
-  const showAlert = (message) => {
+  const closeAlertDialogCallback = () => {
+    dialogCallback();
+    setShowAlertDialog(false);
+  };
+
+  //takes a callback to be executed when alert is dismissed
+  //todo: look into promises, how setstate is chained in hooks, etc.
+  const showAlert = (message, callback) => {
     setAlertMessage(message);
     setShowAlertDialog(true);
+    setDialogCallback(() => callback);
   };
 
   const showLoading = () => {
@@ -65,10 +74,11 @@ const MyApp = (props) => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {/*todo: make zindex of this high enough to be able to click out of it if youre also in the middle of loading, also maybe center it inside the component (for sidebar stuff) */}
+        {/*try to center properly, ex: cancel confirmation dialog vs this*/}
         {/*ALERT DIALOG*/}
         <Dialog
           open={showAlertDialog}
-          onClose={closeAlertDialog}
+          onClose={dialogCallback ? closeAlertDialogCallback : closeAlertDialog}
           aria-labelledby="form-dialog-title"
           style={{
             left: isDesktop ? "13%" : "",
@@ -79,7 +89,12 @@ const MyApp = (props) => {
             <DialogContentText>{alertMessage}</DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={closeAlertDialog} color="primary">
+            <Button
+              onClick={
+                dialogCallback ? closeAlertDialogCallback : closeAlertDialog
+              }
+              color="primary"
+            >
               Okay
             </Button>
           </DialogActions>

@@ -15,6 +15,10 @@ import {
   DialogTitle,
   CardActions,
 } from "@material-ui/core";
+import { caughtError, showConsoleError } from "../../../../../helpers/errors";
+import axios from "axios";
+import MainAppContext from "../../../../../contexts/MainAppContext";
+import baseURL from "../../../../../baseURL";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
@@ -32,10 +36,28 @@ import orderStatusStyles from "../../../../../styles/User/Dashboard/components/O
 //8: fulfilled (user confirmed theyve seen the status on it)
 
 class OrderStatus extends Component {
-  state = { showCancelDialog: false };
+  static contextType = MainAppContext;
 
-  handleOrderCancel = () => {
-    alert("Cancel clicked");
+  state = { showCancelDialog: false, hi: null };
+
+  handleOrderCancel = async (order) => {
+    try {
+      const response = await axios.delete(`${baseURL}/order/cancelOrder`, {
+        params: {
+          orderID: order.orderInfo.orderID,
+        },
+      });
+
+      this.setState({ showCancelDialog: false }, () => {
+        this.context.showAlert(
+          response.data.message,
+          this.props.fetchOrderInfo
+        );
+      });
+    } catch (error) {
+      showConsoleError("cancelling order", error);
+      this.context.showAlert(caughtError("cancelling order", error, 99));
+    }
   };
 
   toggleCancelDialog = () => {
@@ -74,7 +96,12 @@ class OrderStatus extends Component {
                 <Button onClick={this.toggleCancelDialog} color="primary">
                   Cancel
                 </Button>
-                <Button onClick={this.handleOrderCancel} color="primary">
+                <Button
+                  onClick={() => {
+                    this.handleOrderCancel(order);
+                  }}
+                  color="primary"
+                >
                   Confirm
                 </Button>
               </DialogActions>
