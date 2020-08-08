@@ -85,7 +85,7 @@ const MyApp = (props) => {
           onClose={dialogCallback ? closeAlertDialogCallback : closeAlertDialog}
           aria-labelledby="form-dialog-title"
           style={{
-            left: isDesktop ? "13%" : "",
+            left: isDesktop ? "13%" : "0%",
             zIndex: 20,
           }}
         >

@@ -15,7 +15,11 @@ import {
   DialogTitle,
   CardActions,
 } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { caughtError, showConsoleError } from "../../../../../helpers/errors";
+import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers";
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import DateFnsUtils from "@date-io/date-fns";
 import axios from "axios";
 import MainAppContext from "../../../../../contexts/MainAppContext";
 import baseURL from "../../../../../baseURL";
@@ -35,10 +39,64 @@ import orderStatusStyles from "../../../../../styles/User/Dashboard/components/O
 //7: canceled
 //8: fulfilled (user confirmed theyve seen the status on it)
 
+//todo: fix time picker dialog positioning for this and scheduling
+
+const moment = require("moment");
+
+const timeTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "rgb(0, 153, 255)",
+    },
+  },
+});
+
 class OrderStatus extends Component {
   static contextType = MainAppContext;
 
-  state = { showCancelDialog: false, hi: null };
+  constructor() {
+    super();
+
+    this.now = moment();
+    this.today = this.now.format("MM/DD/YYYY");
+    this.tomorrow = this.now.add(1, "days").format("MM/DD/YYYY");
+    this.nowFormattedTime = moment(this.now, "HH:mm:ss").format("LT");
+
+    this.state = {
+      showCancelDialog: false,
+      showDropoffDialog: false,
+      rawTime: new Date(),
+      formattedTime: this.nowFormattedTime,
+      date: "N/A",
+      todaySelected: false,
+      tomorrowSelected: false,
+    };
+  }
+
+  handleInputChange = (property, value) => {
+    switch (property) {
+      case "time":
+        const formattedTime = moment(value, "HH:mm:ss").format("LT");
+        this.setState({ rawTime: value, formattedTime });
+        break;
+
+      case "today":
+        this.setState({
+          todaySelected: true,
+          tomorrowSelected: false,
+          date: this.today,
+        });
+        break;
+
+      case "tomorrow":
+        this.setState({
+          todaySelected: false,
+          tomorrowSelected: true,
+          date: this.tomorrow,
+        });
+        break;
+    }
+  };
 
   handleOrderCancel = async (order) => {
     try {
@@ -60,6 +118,37 @@ class OrderStatus extends Component {
     }
   };
 
+  handleSetDropoffTime = async (order) => {
+    if (!this.state.todaySelected && !this.state.tomorrowSelected) {
+      //if no date selected
+      return this.context.showAlert("Please select a dropoff date.");
+    }
+
+    //todo: filter time/date when info received
+
+    try {
+      const response = await axios.put(`${baseURL}/order/setDropoff`, {
+        orderID: order.orderInfo.orderID,
+        date: this.state.date,
+        time: this.state.formattedTime,
+      });
+
+      this.setState({ showDropoffDialog: false }, () => {
+        this.context.showAlert(
+          response.data.message,
+          this.props.fetchOrderInfo
+        );
+      });
+    } catch (error) {
+      showConsoleError("setting dropoff", error);
+      this.context.showAlert(caughtError("setting dropoff", error, 99));
+    }
+  };
+
+  toggleDropoffDialog = () => {
+    this.setState({ showDropoffDialog: !this.state.showDropoffDialog });
+  };
+
   toggleCancelDialog = () => {
     this.setState({ showCancelDialog: !this.state.showCancelDialog });
   };
@@ -75,7 +164,7 @@ class OrderStatus extends Component {
     } else if (order.dropoffInfo.time !== "N/A") {
       return (
         <Typography variant="body1" color="textSecondary">
-          order.dropoffInfo.time
+          {order.dropoffInfo.date} @ {order.dropoffInfo.time}
         </Typography>
       );
     } else {
@@ -84,12 +173,10 @@ class OrderStatus extends Component {
           size="small"
           variant="contained"
           className={classes.gradient}
-          onClick={() => {
-            alert("dropoff");
-          }}
+          onClick={this.toggleDropoffDialog}
           style={{ marginBottom: 5 }}
         >
-          Set Dropoff Time
+          Set Dropoff
         </Button>
       );
     }
@@ -103,9 +190,6 @@ class OrderStatus extends Component {
         <div className={classes.layout}>
           <div className={classes.root}>
             <Dialog
-              disableEnforceFocus
-              disableAutoFocus
-              disableRestoreFocus
               open={this.state.showCancelDialog}
               onClose={this.toggleCancelDialog}
               container={() => document.getElementById("orderStatusContainer")}
@@ -137,13 +221,107 @@ class OrderStatus extends Component {
                 </Button>
               </DialogActions>
             </Dialog>
-            <CardContent id="orderStatusContainer">
+            {/*DROPOFF SCHEDULING*/}
+            <Dialog
+              open={this.state.showDropoffDialog}
+              onClose={this.toggleDropoffDialog}
+              container={() => document.getElementById("orderStatusContainer")}
+              style={{ position: "absolute", zIndex: 1 }}
+              BackdropProps={{
+                style: {
+                  position: "absolute",
+                  backgroundColor: "transparent",
+                },
+              }}
+              PaperProps={{
+                style: {
+                  width: "100%",
+                },
+              }}
+            >
+              <DialogTitle>Set Dropoff</DialogTitle>
+              <DialogContent>
+                <Grid container spacing={2} style={{ marginBottom: 5 }}>
+                  <Grid item xs={12} sm={6}>
+                    <Button
+                      disabled={this.state.todaySelected}
+                      onClick={() => {
+                        this.handleInputChange("today");
+                      }}
+                      variant="contained"
+                      className={classes.gradient}
+                      fullWidth
+                      size="large"
+                      startIcon={<CalendarTodayIcon />}
+                    >
+                      {this.today}
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Button
+                      disabled={this.state.tomorrowSelected}
+                      onClick={() => {
+                        this.handleInputChange("tomorrow");
+                      }}
+                      variant="contained"
+                      className={classes.gradient}
+                      fullWidth
+                      size="large"
+                      startIcon={<CalendarTodayIcon />}
+                    >
+                      {this.tomorrow}
+                    </Button>
+                  </Grid>
+                </Grid>
+                <ThemeProvider theme={timeTheme}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <TimePicker
+                      margin="normal"
+                      variant="inline"
+                      label="Click to set a time"
+                      multiline
+                      onChange={(value) => {
+                        this.handleInputChange("time", value);
+                      }}
+                      value={this.state.rawTime}
+                      PopoverProps={{
+                        anchorOrigin: {
+                          vertical: "center",
+                          horizontal: "center",
+                        },
+                        transformOrigin: {
+                          vertical: "bottom",
+                          horizontal: "center",
+                        },
+                      }}
+                      style={{ width: 130, marginTop: 5 }}
+                    />
+                  </MuiPickersUtilsProvider>
+                </ThemeProvider>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.toggleDropoffDialog} color="primary">
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    this.handleSetDropoffTime(order);
+                  }}
+                  color="primary"
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+            <CardContent>
               <ProgressBar status={order.orderInfo.status} />
               <Grid
                 container
                 direction="row"
                 alignItems="center"
                 justify="center"
+                id="orderStatusContainer"
+                style={{ position: "relative" }}
               >
                 <Grid item>
                   <Card className={classes.infoCard}>
@@ -168,20 +346,19 @@ class OrderStatus extends Component {
                           fontSize="small"
                           style={{ marginBottom: -4 }}
                         />{" "}
-                        Pickup Time
+                        Pickup
                       </Typography>
                       <Typography variant="body1" color="textSecondary">
-                        {order.pickupInfo.time}
+                        {order.pickupInfo.date} @ {order.pickupInfo.time}
                       </Typography>
                       <Typography variant="body1" style={{ fontWeight: 500 }}>
                         <QueryBuilderIcon
                           fontSize="small"
                           style={{ marginBottom: -4 }}
                         />{" "}
-                        Dropoff Time
+                        Dropoff
                       </Typography>
                       {this.renderDropoffComponent(classes, order)}
-
                       <Typography variant="body1" style={{ fontWeight: 500 }}>
                         <LocalMallIcon
                           fontSize="small"

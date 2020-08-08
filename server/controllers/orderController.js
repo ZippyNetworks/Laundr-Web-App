@@ -205,6 +205,30 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+const setDropoff = async (req, res) => {
+  try {
+    const order = await Order.findOne({
+      "orderInfo.orderID": req.body.orderID,
+    });
+
+    order.dropoffInfo.date = req.body.date;
+    order.dropoffInfo.time = req.body.time;
+
+    await order.save();
+
+    return res.json({
+      success: true,
+      message: "Dropoff successfully set.",
+    });
+  } catch (error) {
+    showConsoleError("setting dropoff time", error, 99);
+    return res.json({
+      success: false,
+      message: caughtError("setting dropoff time", error, 99),
+    });
+  }
+};
+
 module.exports = {
   checkExistingOrder,
   countOrders,
@@ -212,4 +236,5 @@ module.exports = {
   fetchOrders,
   getExistingOrder,
   cancelOrder,
+  setDropoff,
 };

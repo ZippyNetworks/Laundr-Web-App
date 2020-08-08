@@ -8,6 +8,13 @@ import DateFnsUtils from "@date-io/date-fns";
 import schedulingStyles from "../../../../../../styles/User/Dashboard/components/NewOrder/components/schedulingStyles";
 
 const timeTheme = createMuiTheme({
+  // overrides: {
+  //   MuiDialogActions: {
+  //     root: {
+  //       display: "none",
+  //     },
+  //   },
+  // },
   palette: {
     primary: {
       main: "rgb(0, 153, 255)",
@@ -34,12 +41,7 @@ class Scheduling extends Component {
         <Typography component="h1" variant="h6" gutterBottom>
           What day would you like your order to be picked up?
         </Typography>
-        <Grid
-          container
-          spacing={3}
-          className={classes.container}
-          id="schedulingContainer"
-        >
+        <Grid container spacing={3} className={classes.container}>
           <Grid item xs={12} sm={6}>
             <Button
               disabled={todaySelected}
@@ -80,30 +82,19 @@ class Scheduling extends Component {
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <TimePicker
                   margin="normal"
-                  variant="dialog"
+                  variant="inline"
                   label="Click to select a time"
-                  multiline
                   onChange={(value) => {
                     handleInputChange("time", value);
                   }}
                   helperText="*Must be at least 1 hour in advance"
                   value={rawTime}
-                  DialogProps={{
-                    container: document.getElementById("newOrderContainer"),
-                    disableEnforceFocus: true,
-                    disableAutoFocus: true,
-                    disableRestoreFocus: true,
-                    style: {
-                      position: "absolute",
-                      marginBottom: -25,
-                      zIndex: 1,
-                    },
-                    BackdropProps: {
-                      style: {
-                        position: "absolute",
-                        backgroundColor: "transparent",
-                      },
-                    },
+                  onAccept={(value) => {
+                    handleInputChange("time", value);
+                  }}
+                  PopoverProps={{
+                    anchorOrigin: { vertical: "bottom", horizontal: "center" },
+                    transformOrigin: { vertical: "bottom", horizontal: "left" },
                   }}
                 />
               </MuiPickersUtilsProvider>
