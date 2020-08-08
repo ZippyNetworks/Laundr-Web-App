@@ -192,7 +192,6 @@ class NewOrder extends Component {
         addressPrefs: this.evaluateWhitespace(this.state.addressPreferences),
         pickupDate: this.state.date,
         pickupTime: this.state.formattedTime,
-        cost: 99.99,
         created: new Date(),
       });
 
@@ -389,34 +388,6 @@ class NewOrder extends Component {
             <CardContent id="newOrderContainer">
               <ProgressBar step={this.state.activeStep} />
               <React.Fragment>
-                {/* <Dialog
-                  disableEnforceFocus
-                  disableAutoFocus
-                  disableRestoreFocus
-                  open={this.state.error}
-                  onClose={this.handleErrorClose}
-                  container={() => document.getElementById("newOrderContainer")}
-                  aria-labelledby="form-dialog-title"
-                  style={{ position: "absolute", zIndex: 1 }}
-                  BackdropProps={{
-                    style: {
-                      position: "absolute",
-                      backgroundColor: "transparent",
-                    },
-                  }}
-                >
-                  <DialogTitle id="form-dialog-title">Alert</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>
-                      {this.state.errorMessage}
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={this.toggleErrorMessage} color="primary">
-                      Okay
-                    </Button>
-                  </DialogActions>
-                </Dialog> */}
                 {this.state.activeStep === steps.length ? (
                   <React.Fragment>
                     <Typography variant="h5" gutterBottom>

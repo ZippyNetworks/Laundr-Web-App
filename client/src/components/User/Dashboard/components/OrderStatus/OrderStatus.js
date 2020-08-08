@@ -64,6 +64,37 @@ class OrderStatus extends Component {
     this.setState({ showCancelDialog: !this.state.showCancelDialog });
   };
 
+  renderDropoffComponent = (classes, order) => {
+    //if status is not at least 2 and no time is entered
+    if (order.orderInfo.status < 2 && order.dropoffInfo.time === "N/A") {
+      return (
+        <Typography variant="body1" color="textSecondary">
+          TBD
+        </Typography>
+      );
+    } else if (order.dropoffInfo.time !== "N/A") {
+      return (
+        <Typography variant="body1" color="textSecondary">
+          order.dropoffInfo.time
+        </Typography>
+      );
+    } else {
+      return (
+        <Button
+          size="small"
+          variant="contained"
+          className={classes.gradient}
+          onClick={() => {
+            alert("dropoff");
+          }}
+          style={{ marginBottom: 5 }}
+        >
+          Set Dropoff Time
+        </Button>
+      );
+    }
+  };
+
   render() {
     const { classes, order } = this.props;
 
@@ -118,7 +149,7 @@ class OrderStatus extends Component {
                   <Card className={classes.infoCard}>
                     <CardHeader
                       title={`Order ID: #${order.orderInfo.orderID}`}
-                      titleTypographyProps={{ variant: "h5" }}
+                      titleTypographyProps={{ variant: "h4" }}
                     />
                     <Divider />
                     <CardContent>
@@ -149,10 +180,8 @@ class OrderStatus extends Component {
                         />{" "}
                         Dropoff Time
                       </Typography>
-                      <Typography variant="body1" color="textSecondary">
-                        {order.dropoffInfo.time}
-                        "functionality later"
-                      </Typography>
+                      {this.renderDropoffComponent(classes, order)}
+
                       <Typography variant="body1" style={{ fontWeight: 500 }}>
                         <LocalMallIcon
                           fontSize="small"
@@ -161,10 +190,14 @@ class OrderStatus extends Component {
                         Weight
                       </Typography>
                       <Typography variant="body1" color="textSecondary">
-                        {order.orderInfo.weight} lbs
+                        {order.orderInfo.weight === "N/A"
+                          ? "TBD"
+                          : `${order.orderInfo.weight} lbs`}
                       </Typography>
-                      <Typography variant="h5">
-                        Price: {order.orderInfo.cost}
+                      <Typography variant="h5" style={{ marginBottom: -10 }}>
+                        {order.orderInfo.cost === -1
+                          ? "Price: TBD"
+                          : `Price: $${order.orderInfo.cost}`}
                       </Typography>
                     </CardContent>
                     <Divider />

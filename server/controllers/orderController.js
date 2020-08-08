@@ -84,7 +84,7 @@ const placeOrder = async (req, res) => {
         coupon: req.body.coupon,
         status: 0,
         weight: "N/A",
-        cost: req.body.cost,
+        cost: -1, //default, like N/A is
         created: req.body.created,
         address: req.body.address,
         orderID: orderCount + 1,

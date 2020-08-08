@@ -10,6 +10,7 @@ import {
   Grid,
   Typography,
   useMediaQuery,
+  Modal,
 } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
@@ -42,12 +43,13 @@ const MyApp = (props) => {
   };
 
   const closeAlertDialogCallback = () => {
-    dialogCallback();
     setShowAlertDialog(false);
+    dialogCallback();
   };
 
   //takes a callback to be executed when alert is dismissed
-  //todo: look into promises, how setstate is chained in hooks, etc.
+  //todo: look into promises, how setstate is chained in hooks, etc. since ideally youd want:
+  //dialog to close, THEN callback. alert message and callback set, THEN show dialog
   const showAlert = (message, callback) => {
     setAlertMessage(message);
     setShowAlertDialog(true);
@@ -74,7 +76,9 @@ const MyApp = (props) => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {/*todo: make zindex of this high enough to be able to click out of it if youre also in the middle of loading, also maybe center it inside the component (for sidebar stuff) */}
+        {/*also change zindex so scrollbar doesnt disappear */}
         {/*try to center properly, ex: cancel confirmation dialog vs this*/}
+        {/*add more configsl like title, buttons, to replace order cancel dialog*/}
         {/*ALERT DIALOG*/}
         <Dialog
           open={showAlertDialog}
@@ -82,6 +86,7 @@ const MyApp = (props) => {
           aria-labelledby="form-dialog-title"
           style={{
             left: isDesktop ? "13%" : "",
+            zIndex: 20,
           }}
         >
           <DialogTitle id="form-dialog-title">Alert</DialogTitle>
