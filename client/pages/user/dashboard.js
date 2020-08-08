@@ -80,10 +80,15 @@ class Dashboard extends Component {
         let componentName;
 
         if (response.data.message === "N/A") {
-          component = <NewOrder />;
+          component = <NewOrder fetchOrderInfo={this.fetchOrderInfo} />;
           componentName = "New Order";
         } else {
-          component = <OrderStatus order={response.data.message} />;
+          component = (
+            <OrderStatus
+              order={response.data.message}
+              fetchOrderInfo={this.fetchOrderInfo}
+            />
+          );
           componentName = "Order Status";
         }
 

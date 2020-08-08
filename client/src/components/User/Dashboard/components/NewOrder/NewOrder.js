@@ -141,17 +141,19 @@ class NewOrder extends Component {
         //check time again in case they waited and then came back to continue their order
         canNext = this.handleTimeCheck();
 
-        let orderPlaced;
+        let response;
 
         if (canNext) {
-          orderPlaced = await this.handlePlaceOrder();
+          response = await this.handlePlaceOrder();
         } else {
           return;
         }
 
-        if (!orderPlaced.success) {
-          this.context.showAlert(orderPlaced.message);
+        if (!response.success) {
+          this.context.showAlert(response.message);
           canNext = false;
+        } else {
+          this.setState({ orderID: response.message });
         }
         break;
 
@@ -167,6 +169,45 @@ class NewOrder extends Component {
 
   handleBack = () => {
     this.setState({ activeStep: this.state.activeStep - 1 });
+  };
+
+  handlePlaceOrder = async () => {
+    // axios.defaults.headers.common["token"] = token;
+
+    try {
+      const currentUser = getCurrentUser();
+
+      const response = await axios.post(baseURL + "/order/placeOrder", {
+        email: currentUser.email,
+        fname: currentUser.fname,
+        lname: currentUser.lname,
+        phone: currentUser.phone,
+        coupon: "placeholder",
+        scented: this.state.scented,
+        delicates: this.state.delicates,
+        separate: this.state.separate,
+        towelsSheets: this.state.towelsSheets,
+        washerPrefs: this.evaluateWhitespace(this.state.washerPreferences),
+        address: this.state.address,
+        addressPrefs: this.evaluateWhitespace(this.state.addressPreferences),
+        pickupDate: this.state.date,
+        pickupTime: this.state.formattedTime,
+        cost: 99.99,
+        created: new Date(),
+      });
+
+      if (response.data.success) {
+        return { success: true, message: response.data.orderID };
+      } else {
+        return { success: false, message: response.data.message };
+      }
+    } catch (error) {
+      showConsoleError("placing order: ", error);
+      return {
+        success: false,
+        message: caughtError("placing order", error, 99),
+      };
+    }
   };
 
   handleTimeCheck = () => {
@@ -215,49 +256,8 @@ class NewOrder extends Component {
     return canNext;
   };
 
-  handlePlaceOrder = async () => {
-    // axios.defaults.headers.common["token"] = token;
-
-    try {
-      const currentUser = getCurrentUser();
-
-      const response = await axios.post(baseURL + "/order/placeOrder", {
-        email: currentUser.email,
-        fname: currentUser.fname,
-        lname: currentUser.lname,
-        phone: currentUser.phone,
-        coupon: "placeholder",
-        scented: this.state.scented,
-        delicates: this.state.delicates,
-        separate: this.state.separate,
-        towelsSheets: this.state.towelsSheets,
-        washerPrefs: this.evaluateWhitespace(this.state.washerPreferences),
-        address: this.state.address,
-        addressPrefs: this.evaluateWhitespace(this.state.addressPreferences),
-        pickupDate: this.state.date,
-        pickupTime: this.state.formattedTime,
-        cost: 99.99,
-        created: new Date(),
-      });
-
-      if (response.data.success) {
-        this.setState({ orderID: response.data.orderID }, () => {
-          return { success: true, message: response.data.message };
-        });
-      } else {
-        return { success: false, message: response.data.message };
-      }
-    } catch (error) {
-      showConsoleError("placing order: ", error);
-      return {
-        success: false,
-        message: caughtError("placing order", error, 99),
-      };
-    }
-  };
-
   handleDone = () => {
-    alert("moved past confirmation screen");
+    this.props.fetchOrderInfo();
   };
 
   handleInputChange = (property, value) => {
@@ -423,8 +423,8 @@ class NewOrder extends Component {
                       Thank you for your order!
                     </Typography>
                     <Typography variant="subtitle1">
-                      Your order number is #{this.state.orderID}. You can track
-                      your order through your dashboard. Thanks for choosing
+                      Your order number is #{this.state.orderID} and can be
+                      tracked through your dashboard. Thanks for choosing
                       Laundr!
                     </Typography>
                     <div className={classes.buttons}>

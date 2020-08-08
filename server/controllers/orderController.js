@@ -13,7 +13,8 @@ const checkExistingOrder = async (req, res, next) => {
     if (order) {
       return res.json({
         success: false,
-        message: "User already has an active order.",
+        message:
+          "You already have an active order. Please refresh the page or contact us.",
       });
     } else {
       next();
