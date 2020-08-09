@@ -1,0 +1,107 @@
+/*bottom border dark purple*/
+.custom-shape-divider-top-1597013952 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.custom-shape-divider-top-1597013952 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 70px;
+}
+
+.custom-shape-divider-top-1597013952 .shape-fill {
+  fill: #0b0833;
+}
+
+/*top border dark purple*/
+.custom-shape-divider-bottom-1597014041 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1597014041 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 70px;
+}
+
+.custom-shape-divider-bottom-1597014041 .shape-fill {
+  fill: #0b0833;
+}
+
+/*top border light purple*/
+.custom-shape-divider-bottom-1597014401 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1597014401 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 70px;
+}
+
+.custom-shape-divider-bottom-1597014401 .shape-fill {
+  fill: #4231fd;
+}
+
+/*top border blue*/
+.custom-shape-divider-bottom-1597015391 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1597015391 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 70px;
+}
+
+.custom-shape-divider-bottom-1597015391 .shape-fill {
+  fill: #01c9e1;
+}
+
+/*bottom border blue*/
+.custom-shape-divider-top-1597015437 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.custom-shape-divider-top-1597015437 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 70px;
+}
+
+.custom-shape-divider-top-1597015437 .shape-fill {
+  fill: #01c9e1;
+}

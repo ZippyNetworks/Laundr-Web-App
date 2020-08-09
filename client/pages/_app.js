@@ -18,6 +18,7 @@ import Head from "next/head";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import MainAppContext from "../src/contexts/MainAppContext";
 import theme from "../src/theme";
+import "../src/styles/borders.css";
 
 const MyApp = (props) => {
   const { Component, pageProps } = props;

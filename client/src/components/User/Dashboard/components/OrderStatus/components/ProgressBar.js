@@ -24,14 +24,16 @@ const ColorlibConnector = withStyles({
   },
   active: {
     "& $line": {
-      backgroundImage:
-        "linear-gradient( 95deg, rgb(1, 201, 226) 15%, rgb(0, 153, 255) 50%, rgb(1, 201, 226) 100%)",
+      // backgroundImage:
+      //   "linear-gradient( 95deg, rgb(1, 201, 226) 15%, rgb(0, 153, 255) 50%, rgb(1, 201, 226) 100%)",
+      backgroundColor: "#01C9E1",
     },
   },
   completed: {
     "& $line": {
-      backgroundImage:
-        "linear-gradient( 95deg, rgb(1, 201, 226) 15%, rgb(0, 153, 255) 50%, rgb(1, 201, 226) 100%)",
+      // backgroundImage:
+      //   "linear-gradient( 95deg, rgb(1, 201, 226) 15%, rgb(0, 153, 255) 50%, rgb(1, 201, 226) 100%)",
+      backgroundColor: "#01C9E1",
     },
   },
   line: {
@@ -55,13 +57,15 @@ const useColorlibStepIconStyles = makeStyles({
     alignItems: "center",
   },
   active: {
-    backgroundImage:
-      "linear-gradient( 136deg, rgb(1, 201, 226) 15%, rgb(0, 153, 255) 50%, rgb(1, 201, 226) 100%)",
+    // backgroundImage:
+    //   "linear-gradient( 136deg, rgb(1, 201, 226) 15%, rgb(0, 153, 255) 50%, rgb(1, 201, 226) 100%)",
+    backgroundColor: "#01C9E1",
     boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)",
   },
   completed: {
-    backgroundImage:
-      "linear-gradient( 136deg, rgb(1, 201, 226) 15%, rgb(0, 153, 255) 50%, rgb(1, 201, 226) 100%)",
+    // backgroundImage:
+    //   "linear-gradient( 136deg, rgb(1, 201, 226) 15%, rgb(0, 153, 255) 50%, rgb(1, 201, 226) 100%)",
+    backgroundColor: "#01C9E1",
   },
 });
 

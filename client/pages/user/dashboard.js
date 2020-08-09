@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import { Grid, withStyles, Paper, Typography } from "@material-ui/core";
 import { Layout } from "../../src/layouts";
+import {
+  TopBorderDarkPurple,
+  BottomBorderDarkPurple,
+  TopBorderLightPurple,
+  TopBorderBlue,
+  BottomBorderBlue,
+} from "../../src/utility/borders";
 import { getCurrentUser } from "../../src/helpers/session";
 import { caughtError, showConsoleError } from "../../src/helpers/errors";
 import PropTypes from "prop-types";
@@ -39,16 +46,11 @@ import dashboardStyles from "../../src/styles/User/Dashboard/dashboardStyles";
 //FLOW: close dialog before showing success/error of successful request to backend, keep it open if its a caught error on frontend
 //make sure this is established for everything.
 
-//todo: implement status 8 feature for order status when order is delivered
-//todo: !!!change laundr bomb logo to less horizontal, or else scrollbar appears on mobile
-//todo: !!!configure rest of pages for mobile, for login and register use vw vh
 //todo: fix white line appearing when small mobile
 //todo: implement admin stuff...later
 //todo: research efficient querying, maybe better to sort in the query rather than grab all orders?
 //todo: maybe move logout button since if on mobile hitting sidebar button is close
 //todo: add isUser? maybe when im less lazy
-//todo: maybe remove help slide and on help pg just have call, chat, dm, ticket?
-//todo: add color scheme to gradients
 //todo: stripe self-serve portal handles all the payment info stuff??
 //todo: maybe just store their payment id, check if it exists every time a on-demand charge is made, use the id to modify method. sub is separate card?
 //todo: !!!cannot edit card #, so if user updates payment method then delete the old one and add the new one, also updating the user property id
@@ -125,7 +127,7 @@ class Dashboard extends Component {
           alignItems="center" /*main page column*/
           style={{
             paddingTop: 8,
-            backgroundColor: "#21d0e5",
+            backgroundImage: "linear-gradient(#4231fd, #0b0833)",
           }}
         >
           <Grid item>
@@ -147,26 +149,12 @@ class Dashboard extends Component {
             >
               {this.state.orderComponentName}
             </Typography>
-            {/* <CardHeader
-              title={this.state.orderComponentName}
-              titleTypographyProps={{ variant: "h1", align: "center" }}
-              classes={{ title: classes.orderComponentName }}
-            /> */}
           </Grid>
         </Grid>
-        <Grid
-          container
-          spacing={0}
-          direction="column"
-          justify="center"
-          alignItems="center" /*main page column*/
-        >
-          <img
-            src="/images/UserDashboard/sectionBorder.png"
-            style={{ width: "100%", height: "100%" }}
-            alt="Section border"
-          />
-        </Grid>
+        <div style={{ position: "relative", marginBottom: 50 }}>
+          <BottomBorderDarkPurple />
+        </div>
+        {/* </Grid> */}
         <Grid
           container
           spacing={0}
@@ -176,30 +164,17 @@ class Dashboard extends Component {
         >
           <Grid item>{this.state.orderComponent}</Grid>
         </Grid>
+        <div style={{ position: "relative", marginTop: 50 }}>
+          <TopBorderBlue />
+        </div>
+        {/* </Grid> */}
         <Grid
           container
           spacing={0}
           direction="column"
           justify="center"
           alignItems="center" /*main page column*/
-        >
-          <img
-            src="/images/UserDashboard/sectionBorderWhite.jpeg"
-            style={{
-              width: "100%",
-              height: "100%",
-              transform: "rotate(180deg)",
-            }}
-            alt="Section border"
-          />
-        </Grid>
-        <Grid
-          container
-          spacing={0}
-          direction="column"
-          justify="center"
-          alignItems="center" /*main page column*/
-          style={{ backgroundColor: "#21d0e5" }}
+          style={{ backgroundColor: "#01C9E1" }}
         >
           <Grid item>
             <Typography variant="h1" className={classes.carouselTitle}>
@@ -277,19 +252,9 @@ class Dashboard extends Component {
             </div>
           </Grid>
         </Grid>
-        <Grid
-          container
-          spacing={0}
-          direction="column"
-          justify="center"
-          alignItems="center" /*main page column*/
-        >
-          <img
-            src="/images/UserDashboard/sectionBorder.png"
-            style={{ width: "100%", height: "100%" }}
-            alt="Section border"
-          />
-        </Grid>
+        <div style={{ position: "relative", marginBottom: 50 }}>
+          <BottomBorderBlue />
+        </div>
       </Layout>
     );
   }

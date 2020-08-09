@@ -40,7 +40,8 @@ import orderStatusStyles from "../../../../../styles/User/Dashboard/components/O
 //7: canceled
 //8: fulfilled (user confirmed theyve seen the status on it)
 
-//todo: fix time picker dialog positioning for this and scheduling
+//todo: fix time picker dialog positioning for this and scheduling?
+//todo: status 8 for when user confirms receipt
 
 const moment = require("moment");
 
@@ -277,7 +278,7 @@ class OrderStatus extends Component {
         <Button
           size="small"
           variant="contained"
-          className={classes.gradient}
+          className={classes.mainButton}
           onClick={this.toggleDropoffDialog}
           style={{ marginBottom: 5 }}
         >
@@ -432,7 +433,13 @@ class OrderStatus extends Component {
                   <Card className={classes.infoCard}>
                     <CardHeader
                       title={`Order ID: #${order.orderInfo.orderID}`}
-                      titleTypographyProps={{ variant: "h4" }}
+                      titleTypographyProps={{
+                        variant: "h4",
+                        style: {
+                          color: "white",
+                        },
+                      }}
+                      className={classes.cardHeader}
                     />
                     <Divider />
                     <CardContent>
@@ -483,11 +490,11 @@ class OrderStatus extends Component {
                       </Typography>
                     </CardContent>
                     <Divider />
-                    <CardActions style={{ justifyContent: "center" }}>
+                    <CardActions className={classes.cardFooter}>
                       <Button
                         size="small"
                         variant="contained"
-                        className={classes.gradient}
+                        className={classes.secondaryButton}
                         onClick={this.toggleCancelDialog}
                       >
                         Cancel
