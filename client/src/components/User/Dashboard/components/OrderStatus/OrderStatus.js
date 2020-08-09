@@ -184,12 +184,14 @@ class OrderStatus extends Component {
       );
       canNext = false;
     } else if (
-      nowTime.isBetween(lowerBound, upperBound) &&
-      dropoffTime.isBefore(nowTime) &&
+      nowTime.add(1, "hours").isBetween(lowerBound, upperBound) &&
+      dropoffTime.isBefore(nowTime.add(1, "hours")) &&
       this.state.todaySelected
     ) {
       //if now is between 10 and 7 AND dropoff time is before that AND the date selected is today
-      this.context.showAlert("The dropoff time cannot be before now.");
+      this.context.showAlert(
+        "The dropoff time must be at least 1 hour hour from now."
+      );
       canNext = false;
     } else {
       //passed general checks, move on to weight limitations

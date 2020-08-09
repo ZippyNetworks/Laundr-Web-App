@@ -148,6 +148,14 @@ const setUserDelivered = async (req, res) => {
   try {
     const order = res.locals.order;
 
+    if (order.dropoffInfo.date === "N/A" && order.dropoffInfo.time === "N/A") {
+      return res.json({
+        success: false,
+        message:
+          "Order cannot be delivered until user has scheduled a dropoff time. If this is a mistake, please contact us.",
+      });
+    }
+
     if (order.orderInfo.status === 5) {
       order.orderInfo.status = 6;
 

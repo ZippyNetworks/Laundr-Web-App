@@ -50,6 +50,7 @@ const MyApp = (props) => {
   //takes a callback to be executed when alert is dismissed
   //todo: look into promises, how setstate is chained in hooks, etc. since ideally youd want:
   //dialog to close, THEN callback. alert message and callback set, THEN show dialog
+  //todo: await on this? ex: fetchorderinfo in orderstatus
   const showAlert = (message, callback) => {
     setAlertMessage(message);
     setShowAlertDialog(true);
