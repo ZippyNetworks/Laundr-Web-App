@@ -216,7 +216,7 @@ class NewOrder extends Component {
     //time checks, military time format: check if logged in user is gainesville or etc, hardcode gnv for now
     const scheduledTime = moment(this.state.rawTime, "HH:mm:ss"); //note: converting Date() to moment obj
     const lowerBound = moment("10:00:00", "HH:mm:ss");
-    const upperBound = moment("19:00:00", "HH:mm:ss").add(1, "minutes"); //so accepts 7 PM as a time
+    const upperBound = moment("19:00:00", "HH:mm:ss").add(1, "minutes"); //so accepts 7 PM as a time, todo: test
 
     console.log("scheduled time raw:" + scheduledTime);
 
@@ -229,11 +229,11 @@ class NewOrder extends Component {
       canNext = false;
     } else if (
       this.state.todaySelected &&
-      hourFromNow.isAfter(moment("19:00:00", "HH:mm:ss"))
+      hourFromNow.isAfter(moment("19:00:00", "HH:mm:ss")) //can replace with upperbound?
     ) {
       //if selected today and its after 7 PM
       this.context.showAlert(
-        "Sorry! We are closed after 7 PM. Please select a different day."
+        "Sorry! The pickup time must be at least 1 hour from now and we are closed after 7 PM. Please select a different day."
       );
       canNext = false;
     } else if (!scheduledTime.isBetween(lowerBound, upperBound)) {
@@ -247,7 +247,7 @@ class NewOrder extends Component {
     ) {
       //if 1 hr in advance is between 10 and 7 AND pickup time is before that AND the date selected is today
       this.context.showAlert(
-        "The pickup time must be at least 1 hour in advance."
+        "The pickup time must be at least 1 hour hour from now."
       );
       canNext = false;
     }
