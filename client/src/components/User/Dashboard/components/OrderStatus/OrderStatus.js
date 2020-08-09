@@ -16,6 +16,7 @@ import {
   CardActions,
 } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { getCurrentUser } from "../../../../../helpers/session";
 import { caughtError, showConsoleError } from "../../../../../helpers/errors";
 import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
@@ -124,25 +125,119 @@ class OrderStatus extends Component {
       return this.context.showAlert("Please select a dropoff date.");
     }
 
-    //todo: filter time/date when info received
-
-    try {
-      const response = await axios.put(`${baseURL}/order/setDropoff`, {
-        orderID: order.orderInfo.orderID,
-        date: this.state.date,
-        time: this.state.formattedTime,
-      });
-
-      this.setState({ showDropoffDialog: false }, () => {
-        this.context.showAlert(
-          response.data.message,
-          this.props.fetchOrderInfo
-        );
-      });
-    } catch (error) {
-      showConsoleError("setting dropoff", error);
-      this.context.showAlert(caughtError("setting dropoff", error, 99));
+    if (this.handleTimeCheck(order.orderInfo.weight, order.pickupInfo)) {
     }
+
+    // try {
+    //   const response = await axios.put(`${baseURL}/order/setDropoff`, {
+    //     orderID: order.orderInfo.orderID,
+    //     date: this.state.date,
+    //     time: this.state.formattedTime,
+    //   });
+
+    //   this.setState({ showDropoffDialog: false }, () => {
+    //     this.context.showAlert(
+    //       response.data.message,
+    //       this.props.fetchOrderInfo
+    //     );
+    //   });
+    // } catch (error) {
+    //   showConsoleError("setting dropoff", error);
+    //   this.context.showAlert(caughtError("setting dropoff", error, 99));
+    // }
+  };
+
+  handleTimeCheck = (weight, pickupInfo) => {
+    let canNext = true;
+
+    const currentUser = getCurrentUser();
+    console.log("pickup: " + `${pickupInfo.date} ${pickupInfo.time}`);
+    console.log("dropoff: " + `${this.state.date} ${this.state.formattedTime}`);
+    const pickup = moment(
+      `${pickupInfo.date} ${pickupInfo.time}`,
+      "MM/DD/YYYY LT"
+    );
+    const dropoff = moment(
+      `${this.state.date} ${this.state.formattedTime}`,
+      "MM/DD/YYYY LT"
+    );
+    const pickupDate = moment(pickupInfo.date, "MM/DD/YYYY");
+    const dropoffDate = moment(this.state.date, "MM/DD/YYYY");
+
+    //if currentuser is a sub, handle checks for weight and same day hours
+    if (currentUser.subscription.status === "active") {
+      if (weight > 29) {
+        //if chosen dropoff time is before x hrs have passed from pickup
+        if (dropoff.isBefore(pickup.add(20, "hours"))) {
+          canNext = false;
+          this.context.showAlert(
+            "Due to your order's weight, the dropoff time must be at least 20 hours after pickup."
+          );
+        }
+      } else if (weight <= 29) {
+        if (weight >= 25 && weight <= 29) {
+          if (dropoff.isBefore(pickup.add(7, "hours"))) {
+            canNext = false;
+            this.context.showAlert(
+              "Due to your order's weight, the dropoff time must be at least 7 hours after pickup."
+            );
+          }
+        } else if (weight >= 19 && weight <= 24) {
+          if (dropoff.isBefore(pickup.add(6, "hours"))) {
+            canNext = false;
+            this.context.showAlert(
+              "Due to your order's weight, the dropoff time must be at least 6 hours after pickup."
+            );
+          }
+        } else if (weight >= 13 && weight <= 18) {
+          if (dropoff.isBefore(pickup.add(5, "hours"))) {
+            canNext = false;
+            this.context.showAlert(
+              "Due to your order's weight, the dropoff time must be at least 5 hours after pickup."
+            );
+          }
+        } else if (weight >= 10 && weight <= 12) {
+          if (dropoff.isBefore(pickup.add(4, "hours"))) {
+            canNext = false;
+            this.context.showAlert(
+              "Due to your order's weight, the dropoff time must be at least 4 hours after pickup."
+            );
+          }
+        }
+      }
+    } else {
+      //otherwise, it should just be at least the next day after picku
+      if (dropoff.isBefore(pickup.add(1, "days"))) {
+        canNext = false;
+        this.context.showAlert(
+          "Dropoff must be at least the day after pickup."
+        );
+      }
+    }
+
+    if (dropoff.isBefore(pickup.add(5, "hours"))) {
+      console.log("dropoff must be at least x hours after pickup");
+    }
+    // console.log(pickupDate + " " + pickupTime);
+    // console.log("date: ");
+    // console.log(moment(pickupDate, "MM/DD/YYYY"));
+    // console.log("time: ");
+    // console.log(moment(pickupTime, "LT"));
+    // console.log("combined: ");
+    // console.log(moment(`${pickupDate} ${pickupTime}`, "MM/DD/YYYY LT"));
+
+    // if (weight > 29) {
+    //   console.log(1);
+    // } else if (weight <= 29) {
+    //   console.log(2);
+    // } else {
+    //   canNext = false;
+    //   this.context.showAlert(
+    //     "An invalid weight was entered for your order. Please contact us."
+    //   );
+    // }
+
+    return canNext;
   };
 
   toggleDropoffDialog = () => {

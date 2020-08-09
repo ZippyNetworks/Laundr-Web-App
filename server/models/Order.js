@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+//todo: sort out what is a string and what isnt
 const OrderSchema = new mongoose.Schema({
   userInfo: {
     email: {
