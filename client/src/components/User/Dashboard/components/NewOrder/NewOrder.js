@@ -215,7 +215,7 @@ class NewOrder extends Component {
     let canNext = true;
     //time checks, military time format: check if logged in user is gainesville or etc, hardcode gnv for now
     const scheduledTime = moment(this.state.rawTime, "HH:mm:ss"); //note: converting Date() to moment obj
-    const lowerBound = moment("10:00:00", "HH:mm:ss");
+    const lowerBound = moment("10:00:00", "HH:mm:ss").add(1, "minutes");
     const upperBound = moment("19:00:00", "HH:mm:ss").add(1, "minutes"); //so accepts 7 PM as a time, todo: test
 
     console.log("scheduled time raw:" + scheduledTime);
@@ -229,7 +229,7 @@ class NewOrder extends Component {
       canNext = false;
     } else if (
       this.state.todaySelected &&
-      hourFromNow.isAfter(moment("19:00:00", "HH:mm:ss")) //can replace with upperbound?
+      hourFromNow.isAfter(upperBound) //can replace with upperbound?
     ) {
       //if selected today and its after 7 PM
       this.context.showAlert(

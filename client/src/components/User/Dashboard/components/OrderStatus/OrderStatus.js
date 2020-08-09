@@ -147,9 +147,9 @@ class OrderStatus extends Component {
     let canNext = true;
     const currentUser = getCurrentUser();
 
-    const lowerBound = moment("10:00:00", "HH:mm:ss"); //10 AM
+    const lowerBound = moment("10:00:00", "HH:mm:ss").add(1, "minutes"); //10 AM
     const upperBound = moment("19:00:00", "HH:mm:ss").add(1, "minutes"); //7 PM
-    const nowTime = moment(moment(), "HH:mm:ss");
+    const hourFromNow = moment(moment(), "HH:mm:ss").add(1, "hours");
 
     const pickup = moment(
       `${pickupInfo.date} ${pickupInfo.time}`,
@@ -171,10 +171,10 @@ class OrderStatus extends Component {
       //if no date selected
       this.context.showAlert("Please select a dropoff date.");
       canNext = false;
-    } else if (this.state.todaySelected && nowTime.isAfter(upperBound)) {
+    } else if (this.state.todaySelected && hourFromNow.isAfter(upperBound)) {
       //if selected today and its after 7 PM
       this.context.showAlert(
-        "Sorry! We are closed after 7 PM. Please select a different day."
+        "Sorry! The dropoff time must be at least 1 hour from now and we are closed after 7 PM. Please select a different day."
       );
       canNext = false;
     } else if (!dropoffTime.isBetween(lowerBound, upperBound)) {
@@ -184,8 +184,8 @@ class OrderStatus extends Component {
       );
       canNext = false;
     } else if (
-      nowTime.add(1, "hours").isBetween(lowerBound, upperBound) &&
-      dropoffTime.isBefore(nowTime.add(1, "hours")) &&
+      hourFromNow.isBetween(lowerBound, upperBound) &&
+      dropoffTime.isBefore(hourFromNow) &&
       this.state.todaySelected
     ) {
       //if now is between 10 and 7 AND dropoff time is before that AND the date selected is today
@@ -241,7 +241,7 @@ class OrderStatus extends Component {
         if (dropoffDate.isBefore(pickupDate.add(1, "days"))) {
           canNext = false;
           this.context.showAlert(
-            "Dropoff must be at least the day after pickup."
+            "Dropoff must be at least the day after pickup. Same-day-delivery is only available for subscribers."
           );
         }
       }
